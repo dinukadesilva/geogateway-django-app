@@ -1,4 +1,4 @@
-/node_modules
+/frontend/node_modules
 yarn.lock
 /geogateway_django_app.egg-info
 /geogateway_django_app/apps.py
