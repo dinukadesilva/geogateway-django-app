@@ -25,17 +25,15 @@
         name: "ToolTabs",
         components: {
         },
+        
         data (){
             return {
                 tabIndex: 0,
             }
         },
-        mounted() {
-            //this.toPage(this.tabIndex);
- 
-            if (this.tabUrl == '/') {  
-                this.tabIndex = 0; this.toPage(this.tabIndex);} 
-            else {this.directUrl(this.tabUrl)}
+        
+        created() {
+            this.directUrl(this.tabUrl);
         },
         watch: {
             tabIndex: function(val){
@@ -53,45 +51,48 @@
         },
         methods: {
             toPage(page){
+                var route ='';
                 switch (page) {
                     case 0:
-                        this.$router.push('/maptools');
+                        route = '/maptools';
                         break;
                     case 1:
-                        this.$router.push('/uavsar');
+                        route = '/uavsar';
                         if(!this.overview) {
                           this.overview = true;
                           this.uavsarOverview();
                         }
                         break;
                     case 2:
-                        this.$router.push('/gnss');
+                        route = '/gnss';
                         break;
                     case 3:
-                        this.$router.push('/seismicity');
+                        route = '/seismicity';
                         break;
                     case 4:
-                        this.$router.push('/nowcast');
+                        route ='/nowcast';
                         break;
                     case 5:
-                        this.$router.push('/momentmagnitude');
+                        route =  '/momentmagnitude';
                         break;
                     case 6:
-                        this.$router.push('/disloc');
+                        route = '/disloc';
                         break;
                     case 7:
-                        this.$router.push('/specialstudies');
+                        route= '/specialstudies';
                         break;
                     case 8:
-                        this.$router.push('/3dimaging');
+                        route= '/3dimaging';
                         break;
                     case 9:
-                        this.$router.push('/report');
+                        route = '/report';
                         break;
                     case 10:
-                        this.$router.push('/help');
+                        route = '/help';
                         break;
                 }
+                if (this.$route.path !== route) {
+                    this.$router.push(route)}
             },
 
           uavsarOverview(){
@@ -114,40 +115,44 @@
             this.layers['uavsarWMS'].setOpacity(.7);
           },
             directUrl(page) {
+                var index = null;
                 switch (page) {
                     case "/maptools":
-                        this.tabIndex = 0;
+                        index = 0;
                         break;
                     case "/uavsar":
-                        this.tabIndex = 1;
+                        index = 1;
                         break;
                     case "/gnss":
-                        this.tabIndex = 2;
+                        index = 2;
                         break;
                     case "/seismicity":
-                        this.tabIndex = 3;
+                        index = 3;
                         break;
                     case "/nowcast":
-                        this.tabIndex = 4;
+                        index = 4;
                         break;
                     case "/momentmagnitude":
-                        this.tabIndex = 5;
+                        index = 5;
                         break;
                     case "/disloc":
-                        this.tabIndex = 6;
+                        index = 6;
                         break;
                     case "/specialstudies":
-                        this.tabIndex = 7;
+                        index = 7;
                         break;
                     case "/3dimaging":
-                        this.tabIndex = 8;
+                        index = 8;
                         break;
                     case "/report":
-                        this.tabIndex = 9;
+                        index = 9;
                         break;
                     case "/help":
-                        this.tabIndex = 10;
+                        index = 10;
                         break;
+                }
+                if (this.tabIndex!=index){
+                    this.tabIndex = index;
                 }
             },
         }
