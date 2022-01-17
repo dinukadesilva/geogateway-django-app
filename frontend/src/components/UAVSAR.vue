@@ -213,6 +213,7 @@ export default {
       pinDrop: null,
       rectDraw: null,
       areaLayer: null,
+      pinLayer: null,
       geometryActive: false,
       //wmsColorUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/InSAR/wms?',
       //wmsUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/highres/wms?',
@@ -362,10 +363,16 @@ export default {
       var vm = this;
       this.pinDrop = new L.Draw.Marker(this.globalMap, this.drawControl.options.marker);
       this.pinDrop.enable();
+      if (vm.pinLayer!=null){
+          vm.globalMap.removeLayer(vm.pinLayer);
+          vm.pinLayer = null;
+        }
       this.globalMap.on('draw:created', function (e) {
         vm.markerLayer = e.layer;
+        vm.globalMap.addLayer(e.layer);
         var lat = e.layer.getLatLng().lat;
         var lng = e.layer.getLatLng().lng;
+        vm.pinLayer=e.layer;
         vm.pointQuery(lat,lng);
         vm.pinDrop = null;
         vm.geometryActive = false;
@@ -783,7 +790,13 @@ export default {
         vm.areaLayer = null;
       }
     },
-
+  removePinLayer(){
+      let vm = this;
+      if (vm.pinLayer!=null){
+        vm.globalMap.removeLayer(vm.pinLayer);
+        vm.pinLayer = null;
+      }
+    },
 
 /////////////////////////////////////////////////////////////////////
 
@@ -827,6 +840,7 @@ export default {
       this.extendedBorder = null;
     },
     showOverview() {
+      this.removePinLayer();
       if (this.overview) {
         this.layers['uavsarWMS'] = L.tileLayer.wms('https://archive.geo-gateway.org/geoserver/InSAR/wms?', {
               layers: 'InSAR:thumbnailmosaic',
@@ -848,6 +862,7 @@ export default {
         this.LosPlotAvailable = false;
         this.overviewLegend.remove();
         this.overviewLegend = null;
+      
       }
     },
     showOverviewLegend(){
