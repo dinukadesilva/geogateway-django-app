@@ -14,8 +14,6 @@ from django.core.files.base import ContentFile
 from django.apps import apps
 from airavata_django_portal_sdk import user_storage
 
-
-
 GpsServiceUrl = "https://archive.geo-gateway.org/gpsservice/kml?"
 KmlPrefix = "https://archive.geo-gateway.org/static"
 #wmsColorUrl = 'http://js-168-95.jetstream-cloud.org/geoserver/InSAR/wms?'
