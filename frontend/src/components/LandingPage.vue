@@ -17,7 +17,7 @@
                 A search and analysis gateway to geodetic imaging data for scientific discovery, 
             field use and disaster response
             </span>
-            <b-button class="geogateway-button" @click="goToMap('/maptools')">Go to GeoGateway</b-button>
+            <b-button class="geogateway-button" @click="goToMap('/maptools')">Go to Map Tools</b-button>
     </div>
 
     <div id="features" ref="features">
@@ -75,11 +75,7 @@
                 </div>
             </div>
             <br><br>
-            <div class="row">
-                <div class="col">
-                    <b-button class="geogateway-button" @click="goToMap('/maptools')">Go to GeoGateway</b-button>
-                </div>
-            </div>
+            
         </div>
     </div>
 

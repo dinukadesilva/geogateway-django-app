@@ -13,7 +13,14 @@
         
         mounted(){
             bus.$on('switchPage',  (feature)=>{
-                this.$router.push(feature);
+                try{
+                   this.$router.push(feature);
+                }
+                catch (e) {
+                    console.log(e.name);
+                    if (e.name != 'NavigationDuplicated') {throw e}
+                }
+                
             });
         }
     }

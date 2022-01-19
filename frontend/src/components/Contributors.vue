@@ -83,9 +83,6 @@ export default {
                     ".png");
         },
         getName(index){
-            console.log(this.imageIndex);
-            console.log((index+this.imageIndex)%this.names.length);
-            console.log(this.names[(index+this.imageIndex)%this.names.length]);
             return this.names[(index+this.imageIndex)%this.names.length];
         },
         getTitle(index){

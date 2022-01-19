@@ -39,7 +39,7 @@ import VueResource from 'vue-resource';
 
 const routes = [
   {name: 'home', path:'/', components: {mainPage: LandinigPage}},
-  {name: 'home', path:'/map', components: {mainPage: MyMap},
+  {name: 'map', path:'/map', components: {mainPage: MyMap},
   children: [
   {name: 'maptools', path: '/maptools', component: MapTools },
   {name: 'gnss', path: '/gnss', component: GNSS },
@@ -63,6 +63,7 @@ const router = new VueRouter({
 Vue.use(VueResource);
 // Vue.prototype.$http = axios;
 Vue.http.options.emulateJSON = true;
+
 
 
 
