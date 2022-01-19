@@ -18,10 +18,11 @@ from airavata_django_portal_sdk import user_storage
 
 GpsServiceUrl = "https://archive.geo-gateway.org/gpsservice/kml?"
 KmlPrefix = "https://archive.geo-gateway.org/static"
-wmsColorUrl = 'http://js-169-62.jetstream-cloud.org/geoserver/InSAR/wms?'
-wmsUrl = 'http://js-169-62.jetstream-cloud.org/geoserver/highres/wms?'
+#wmsColorUrl = 'http://js-168-95.jetstream-cloud.org/geoserver/InSAR/wms?'
+#wmsUrl = 'http://js-168-95.jetstream-cloud.org/geoserver/highres/wms?'
+wmsColorUrl = 'https://archive.geo-gateway.org/color/InSAR/wms?'
+wmsUrl = 'https://archive.geo-gateway.org/color/highres/wms?'
 losQueryUrl = 'http://js-170-143.jetstream-cloud.org:8000/los/profile?dem=True&image=uid'
-#losQueryUrl = 'http://156.56.174.162:8000/los/profile?dem=True&debug=True&image=uid'
 
 WoForecastUrl = 'http://www.openhazards.com/Tools/kml/wo-forecast.kmz'
 CaForecastUrl = 'http://www.openhazards.com/Tools/kml/ca-forecast.kmz'
