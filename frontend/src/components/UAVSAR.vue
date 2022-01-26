@@ -214,6 +214,7 @@ export default {
       rectDraw: null,
       areaLayer: null,
       pinLayer: null,
+      pinShowing: false,
       geometryActive: false,
       //wmsColorUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/InSAR/wms?',
       //wmsUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/highres/wms?',
@@ -363,9 +364,10 @@ export default {
       var vm = this;
       this.pinDrop = new L.Draw.Marker(this.globalMap, this.drawControl.options.marker);
       this.pinDrop.enable();
-      if (vm.pinLayer!=null){
+      if (vm.pinShowing){//(vm.pinLayer!=null){
           vm.globalMap.removeLayer(vm.pinLayer);
           vm.pinLayer = null;
+          vm.pinShowing=!vm.pinShowing;
         }
       this.globalMap.on('draw:created', function (e) {
         vm.markerLayer = e.layer;
@@ -790,12 +792,24 @@ export default {
         vm.areaLayer = null;
       }
     },
-  removePinLayer(){
-      let vm = this;
+    removePinLayer(){
+      let vm=this;
       if (vm.pinLayer!=null){
         vm.globalMap.removeLayer(vm.pinLayer);
-        vm.pinLayer = null;
       }
+      vm.pinlayer=null;
+    },
+  showHidePinLayer(){
+      let vm = this;
+      if (!vm.pinShowing && vm.pinLayer!=null){
+        vm.globalMap.addLayer(vm.pinLayer);
+        //vm.pinLayer = null;
+      }
+      else{
+        
+        vm.globalMap.removeLayer(vm.pinLayer);
+      }
+      vm.pinShowing=!vm.pinShowing;
     },
 
 /////////////////////////////////////////////////////////////////////
@@ -810,7 +824,14 @@ export default {
       this.selDesel = !this.selDesel;
     },
     clearQuery(){
- 
+/*
+      //deselect all
+      for(var j = this.uavsarLayersFiltered.length-1; j >= 0; j--){
+        this.uavsarLayersFiltered[j].displayed = this.selDesel;
+        this.kmlLayerChange(this.uavsarLayersFiltered[j]);
+      }
+      this.selDesel = false;
+ */
       this.lat_lon = '';
       this.flight_path = '';
       for (var i = 0; i < this.uavsarLayersFiltered.length; i++) {
@@ -838,9 +859,11 @@ export default {
       this.uavsarLayers = [];
       this.extendedColor = null;
       this.extendedBorder = null;
+      //let vm=this;
+      //vm.removePinLayer();
     },
     showOverview() {
-      this.removePinLayer();
+      this.showHidePinLayer();
       if (this.overview) {
         this.layers['uavsarWMS'] = L.tileLayer.wms('https://archive.geo-gateway.org/geoserver/InSAR/wms?', {
               layers: 'InSAR:thumbnailmosaic',
