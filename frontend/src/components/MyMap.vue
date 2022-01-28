@@ -5,7 +5,12 @@
           crossorigin=""/>
 
     <TopNav/>
+    <ToolTabs/>
+    
     <ToolBar/>
+    <b-button @click=toggleBar() class="toggle"><i class="fas fa-bars"></i></b-button>
+    
+    
     <DraggableDiv v-resize @resize="resizeLOS" class="col-11" v-if="plotActive" id="plot-window">
       <vue-resize ></vue-resize>
       <template slot="header">
@@ -37,6 +42,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import 'leaflet-kml'
 import ToolBar from "./ToolBar";
+import ToolTabs from "./ToolTabs";
 import TopNav from "./TopNav";
 import {bus} from '../main'
 import 'leaflet-draw'
@@ -58,6 +64,7 @@ export default {
   name: 'MyMap',
   components: {
     ToolBar,
+    ToolTabs,
     TopNav,
     DraggableDiv,
     VueResize,
@@ -187,6 +194,13 @@ export default {
 
 
   methods: {
+    toggleBar(){
+      bus.$emit('ToggleBar');
+    },
+    toggleNav(){
+      bus.$emit('ToggleNav');
+    },
+
     removeLayer(layerName) {
       this.globalMap.removeLayer(this.layers[layerName])
     },
@@ -434,8 +448,6 @@ export default {
       var eps = data.urls[0]
       var numMag = data.urls[1]
       var seis = data.urls[2]
-
-      //TODO make images clickable
 
       this.layers['nowcastLayer'].bindPopup("<img src=" + eps + style + " >" + "<br/>"
           + "<img src=" + numMag + style + " >"
