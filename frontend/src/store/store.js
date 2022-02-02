@@ -127,6 +127,7 @@ export const store = new Vuex.Store({
             gs_eon: '',
             gs_vabs: '',
             gs_analysisCenter: '',
+            gs_interpolation:'',
             ranLayers: [],
             activeLayers: [],
             markerSize: false,

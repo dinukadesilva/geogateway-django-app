@@ -121,6 +121,12 @@
               Include error ellipses
             </label>
           </b-row>
+          <b-row class="checkbox" style="text-align: left" v-if="this.kmltype_sel === 'getdisplacement'">
+            <label class="checkbox" >
+              <input v-model="gs_interpolation" name="gsinterpolation" type="checkbox" id="gs_interpolation"/>
+              Interpolation
+            </label>
+          </b-row>
           <b-row>
             <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runButtonClick()">        Run
             </button>
@@ -198,6 +204,7 @@ export default {
       'gnss.gs_eon',
       'gnss.gs_vabs',
       'gnss.gs_analysisCenter',
+      'gnss.gs_interpolation',
       'gnss.ranLayers',
       'gnss.activeLayers',
       'gnss.markerSize',
@@ -259,10 +266,12 @@ export default {
         if (this.gs_analysisCenter == true) {this.gs_analysisCenter = "NGL";} else { this.gs_analysisCenter = "";}
         const baseURI = '/geogateway_django_app/gps_service'
         //request JSON dict of GPS_service details with query params from form
+        var gpsfunction = this.kmltype_sel;
+        if (this.gs_interpolation == true) {gpsfunction = "getInterpolation";}
         axios.get(baseURI, {
           params: {
             //
-            "function": this.kmltype_sel,
+            "function": gpsfunction,
             "lat": this.gs_latitude,
             "lon": this.gs_longitude,
             //"width":$('#gs_width').val(),
@@ -300,7 +309,7 @@ export default {
                 var parts = f.split('_');
                 return parts[parts.length - 1];
               }
-              for(var i = 0;i < 3;i++){
+              for(var i = 0;i < props.urls.length;i++){
                 var ext = getExtension(props.urls[i]);
                 if(ext == 'vertical.kml'){
                   verticalUrl = props.urls[i];
