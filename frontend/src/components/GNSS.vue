@@ -367,7 +367,7 @@ export default {
                 url: imagelist[j][0],
                 type: iname,
               });
-              vm.addImageLayer(imagelist[j][0],props.imagebounds,iname);
+              vm.addImageLayer(imagelist[j][0],props.imagebounds,prefix+iname);
               }
             }
             imagelist=[];
