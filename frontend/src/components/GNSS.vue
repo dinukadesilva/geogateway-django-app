@@ -358,15 +358,16 @@ export default {
 
             if (imagelist.length>0){
               for (var j = 0;j < imagelist.length;j++) {
+                var iname = imagelist[j][1].replace("contour_of_","");
               vm.gnssLayers.push({
                 pre: prefix,
-                name: imagelist[j][1],
+                name: iname,
                 folder: folder,
                 active: true,
                 url: imagelist[j][0],
-                type: imagelist[j][1],
+                type: iname,
               });
-              vm.addImageLayer(imagelist[j][0],props.imagebounds,imagelist[j][1]);
+              vm.addImageLayer(imagelist[j][0],props.imagebounds,iname);
               }
             }
             imagelist=[];
