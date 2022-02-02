@@ -138,11 +138,11 @@
         </b-col>
 
         <b-col >
-
+          <br><br>
           <div class="outputLayers" v-if="gnssLayers.length!==0 && !activeGnssQuery">
             <strong>Output</strong>
             <div  v-for="layer in gnssLayers" :key="layer.name">
-              <div v-if="layer.type !== 'table.txt'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
+              <div v-if="layer.type !== 'table.txt'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a target="_blank" :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
               <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
             </div>
           </div>
@@ -309,6 +309,7 @@ export default {
                 var parts = f.split('_');
                 return parts[parts.length - 1];
               }
+              var imagelist = [];
               for(var i = 0;i < props.urls.length;i++){
                 var ext = getExtension(props.urls[i]);
                 if(ext == 'vertical.kml'){
@@ -320,8 +321,13 @@ export default {
                 }else if(ext == 'table.txt'){
                   tableUrl = props.urls[i];
                   fileNameT = props.results[i];
+                }else if(ext != "colorbar.png" && ext.includes('.png')) {
+                  imagelist.push([props.urls[i],props.results[i]]);
                 }
               }
+              //console.log(imagelist);
+              //console.log(props.imagebounds);
+
 
               folder = props.folder;
               prefix = (1 + Math.floor(vm.gnssLayers.length/3)).toString() + prefix;
@@ -349,7 +355,22 @@ export default {
                 url: verticalUrl,
                 type: 'vertical.kml',
               })
-              const kmlURI = '/geogateway_django_app/get_kml'
+
+            if (imagelist.length>0){
+              for (var j = 0;j < imagelist.length;j++) {
+              vm.gnssLayers.push({
+                pre: prefix,
+                name: imagelist[j][1],
+                folder: folder,
+                active: true,
+                url: imagelist[j][0],
+                type: imagelist[j][1],
+              });
+              vm.addImageLayer(imagelist[j][0],props.imagebounds,imagelist[j][1]);
+              }
+            }
+            imagelist=[];
+              const kmlURI = '/geogateway_django_app/get_kml';
               axios.get(kmlURI, {
                 params: {
                   "file": fileNameH,
@@ -393,6 +414,10 @@ export default {
       this.layers[layerName] = new L.KML(kml);
       this.globalMap.addLayer(this.layers[layerName]);
 
+    },
+    addImageLayer(imageUrl,imageBounds,layerName){
+      this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds);
+      this.globalMap.addLayer(this.layers[layerName])
     },
     drawToolbar() {
       this.geometryActive = true;
