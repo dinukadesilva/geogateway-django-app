@@ -133,7 +133,9 @@
           </b-row>
           <br />
           <b-row>
-            <div style="float: left; text-align: left"><strong>Data source: <br/><a href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a></strong></div>
+            <div style="float: left; text-align: left">Data source: <br/><a href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a>
+            <br><a v-if="this.kmltype_sel === 'getdisplacement'" href="http://geodesy.unr.edu/NGLStationPages/gpsnetmap/GPSNetMap.html" target="_blank">NGL GPS Networks</a>
+          </div>
           </b-row>
         </b-col>
 
