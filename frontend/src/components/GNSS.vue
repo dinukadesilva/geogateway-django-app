@@ -127,6 +127,35 @@
               Interpolation
             </label>
           </b-row>
+        <b-container v-if="gs_interpolation && this.kmltype_sel === 'getdisplacement'" fluid="lg">
+        <b-row>
+        <b-input-group prepend="Mehtods">
+          <b-form-select  v-model="gs_interpolationtype" name="gs_interpolationtype">
+            <b-form-select-option value="linear">linear</b-form-select-option>
+            <b-form-select-option value="gaussian">gaussian</b-form-select-option>
+            <b-form-select-option value="power">power</b-form-select-option>
+            <b-form-select-option value="exponential">exponential</b-form-select-option>
+            <b-form-select-option value="spherical">spherical</b-form-select-option>
+          </b-form-select>
+        </b-input-group>
+        </b-row>
+        <b-row>
+        <b-input-group prepend="Grid spacing">
+          <b-form-input v-model="gs_gridspacing" name="gs_gridspacing" placeholder="0.018 degree"></b-form-input>
+        </b-input-group>
+        </b-row>
+        <b-row>
+        <b-input-group prepend="Azimuth">
+          <b-form-input v-model="gs_azimuth" name="gs_azimuth" placeholder="-5 degree"></b-form-input>
+        </b-input-group>
+        </b-row>
+        <b-row>
+        <b-input-group prepend="Elevation Angle">
+          <b-form-input v-model="gs_elevationangle" name="gs_elevationangle" placeholder="60 degree"></b-form-input>
+        </b-input-group>
+        </b-row>
+        </b-container>
+
           <b-row>
             <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runButtonClick()">        Run
             </button>
@@ -182,6 +211,7 @@ export default {
   data() {
     return {
       areaLayer: null,
+      gs_interpolationtype:'linear',
     }
   },
   computed: {
@@ -207,6 +237,11 @@ export default {
       'gnss.gs_vabs',
       'gnss.gs_analysisCenter',
       'gnss.gs_interpolation',
+      'gnss.gs_gridspacing',
+      'gnss.gs_interpolationtype',
+      'gnss.gs_azimuth',
+      'gnss.gs_elevationangle',
+
       'gnss.ranLayers',
       'gnss.activeLayers',
       'gnss.markerSize',
