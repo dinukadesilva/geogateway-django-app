@@ -330,6 +330,10 @@ export default {
             "eon": this.gs_eon,
             "vabs": this.gs_vabs,
             "analysisCenter": this.gs_analysisCenter,
+            "gridspacing": this.gs_gridspacing,
+            "interpolationtype": this.gs_interpolationtype,
+            "azimuth": this.gs_azimuth,
+            "elevation": this.gs_elevationangle,
             //
           }
         })
