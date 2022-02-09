@@ -468,13 +468,21 @@ export default {
     },
     addImageLegend(aimageUrl){
       var legendUrl = aimageUrl.replace(".png","_colorbar.png");
-      this.interpolationLegend = L.control({position: 'bottomright'});
-      this.interpolationLegend.onAdd = function () {
-        var div = L.DomUtil.create('div', 'uavsarLegend');
-        div.innerHTML = '<img src=' + legendUrl + '>' ;
-        return div;
-      };
-      this.interpolationLegend.addTo(this.globalMap);
+      if (this.interpolationLegend == null) {
+        this.interpolationLegend = L.control({position: 'bottomright'});
+        this.interpolationLegend.onAdd = function () {
+          var div = L.DomUtil.create('div', 'interpolationLegend');
+          div.id = "interpolationLegend";
+          div.innerHTML = '<img src=' + legendUrl + '>' ;
+          return div;
+        };
+        this.interpolationLegend.update = function (aurl) {
+          var div = document.getElementById('interpolationLegend');
+          div.innerHTML = '<img src=' + aurl + '>' ;
+        }
+        this.interpolationLegend.addTo(this.globalMap);
+      } else {this.interpolationLegend.update(legendUrl);}
+        
     },
     drawToolbar() {
       this.geometryActive = true;
