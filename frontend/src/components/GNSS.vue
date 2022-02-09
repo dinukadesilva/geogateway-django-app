@@ -458,7 +458,7 @@ export default {
 
     },
     addImageLayer(imageUrl,imageBounds,layerName){
-      this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds);
+      this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds,{opacity:0.85});
       this.globalMap.addLayer(this.layers[layerName])
     },
     drawToolbar() {
