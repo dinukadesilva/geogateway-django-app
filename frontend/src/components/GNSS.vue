@@ -471,7 +471,7 @@ export default {
       if (this.interpolationLegend == null) {
         this.interpolationLegend = L.control({position: 'bottomright'});
         this.interpolationLegend.onAdd = function () {
-          var div = L.DomUtil.create('div', 'interpolationLegend');
+          var div = L.DomUtil.create('div', 'leafletinfo');
           div.id = "interpolationLegend";
           div.innerHTML = '<img src=' + legendUrl + '>' ;
           return div;
@@ -588,4 +588,16 @@ a:link {
   background-color: transparent;
   text-decoration: underline;
 }
+
+</style>
+<style>
+.leafletinfo{
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
 </style>
