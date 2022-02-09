@@ -139,6 +139,7 @@ export const store = new Vuex.Store({
             activeGnssQuery: false,
             geometryActive: false,
             rectDraw: null,
+            interpolationLegend: null,
         },
         seismicity: {
             day: false,

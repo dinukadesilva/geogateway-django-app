@@ -248,8 +248,8 @@ export default {
       'gnss.layersActive',
       'gnss.activeGnssQuery',
       'gnss.geometryActive',
-        'gnss.gnssLayers',
-
+      'gnss.gnssLayers',
+      'gnss.interpolationLegend',
         'map.drawControl',
         'map.globalMap',
         'map.layers',
@@ -362,7 +362,7 @@ export default {
                 }else if(ext == 'table.txt'){
                   tableUrl = props.urls[i];
                   fileNameT = props.results[i];
-                }else if(ext != "colorbar.png" && ext.includes('.png')) {
+                }else if(!ext.includes('colorbar') && ext.includes('.png')) {
                   imagelist.push([props.urls[i],props.results[i]]);
                 }
               }
@@ -462,7 +462,18 @@ export default {
     addImageLayer(imageUrl,imageBounds,layerName,displayflag){
       this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds,{opacity:0.85});
       if (displayflag) {
-      this.globalMap.addLayer(this.layers[layerName]) }
+      this.globalMap.addLayer(this.layers[layerName]);
+      this.addImageLegend(imageUrl); }
+    },
+    addImageLegend(aimageUrl){
+      var legendUrl = aimageUrl.replace(".png","_colorbar.png");
+      this.interpolationLegend = L.control({position: 'bottomright'});
+      this.interpolationLegend.onAdd = function () {
+        var div = L.DomUtil.create('div', 'uavsarLegend');
+        div.innerHTML = '<img src=' + legendUrl + '>' ;
+        return div;
+      };
+      this.interpolationLegend.addTo(this.globalMap);
     },
     drawToolbar() {
       this.geometryActive = true;
