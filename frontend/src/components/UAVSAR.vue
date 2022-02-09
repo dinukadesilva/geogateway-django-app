@@ -214,7 +214,8 @@ export default {
       rectDraw: null,
       areaLayer: null,
       pinLayer: null,
-      pinShowing: false,
+      tempFilter: [],
+      tempLayers: [],
       geometryActive: false,
       //wmsColorUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/InSAR/wms?',
       //wmsUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/highres/wms?',
@@ -364,10 +365,9 @@ export default {
       var vm = this;
       this.pinDrop = new L.Draw.Marker(this.globalMap, this.drawControl.options.marker);
       this.pinDrop.enable();
-      if (vm.pinShowing){//(vm.pinLayer!=null){
+      if (vm.pinLayer!=null){
           vm.globalMap.removeLayer(vm.pinLayer);
           vm.pinLayer = null;
-          vm.pinShowing=!vm.pinShowing;
         }
       this.globalMap.on('draw:created', function (e) {
         vm.markerLayer = e.layer;
@@ -378,7 +378,6 @@ export default {
         vm.pointQuery(lat,lng);
         vm.pinDrop = null;
         vm.geometryActive = false;
-
       });
     },
     drawListenerOff(){
@@ -797,19 +796,21 @@ export default {
       if (vm.pinLayer!=null){
         vm.globalMap.removeLayer(vm.pinLayer);
       }
-      vm.pinlayer=null;
+      vm.pinLayer=null;
     },
-  showHidePinLayer(){
+
+    showPinLayer(){
       let vm = this;
-      if (!vm.pinShowing && vm.pinLayer!=null){
-        vm.globalMap.addLayer(vm.pinLayer);
-        //vm.pinLayer = null;
-      }
-      else{
-        
+        if (vm.pinLayer!=null){
+          vm.globalMap.addLayer(vm.pinLayer);
+        }
+      
+    },
+    hidePinLayer(){
+      let vm = this;
+      if (vm.pinLayer!=null){
         vm.globalMap.removeLayer(vm.pinLayer);
       }
-      vm.pinShowing=!vm.pinShowing;
     },
 
 /////////////////////////////////////////////////////////////////////
@@ -824,6 +825,7 @@ export default {
       this.selDesel = !this.selDesel;
     },
     clearQuery(){
+      
 /*
       //deselect all
       for(var j = this.uavsarLayersFiltered.length-1; j >= 0; j--){
@@ -847,6 +849,9 @@ export default {
         this.uavsarHighResLayer = null;
         this.uavsarLegend.remove();
       }
+      //added from showOverview:
+      this.tempFilter=[];
+      this.tempLayers=[];
       this.showOverview();
       if (this.overviewLegend === null) {
         this.showOverviewLegend();
@@ -859,11 +864,13 @@ export default {
       this.uavsarLayers = [];
       this.extendedColor = null;
       this.extendedBorder = null;
-      //let vm=this;
-      //vm.removePinLayer();
+      this.removePinLayer();
+
+      
+
     },
     showOverview() {
-      this.showHidePinLayer();
+      const _ = require('lodash');
       if (this.overview) {
         this.layers['uavsarWMS'] = L.tileLayer.wms('https://archive.geo-gateway.org/geoserver/InSAR/wms?', {
               layers: 'InSAR:thumbnailmosaic',
@@ -873,19 +880,45 @@ export default {
             }
         );
         if(!this.overviewLegend){this.showOverviewLegend();}
-        this.globalMap.addLayer(this.layers['uavsarWMS'])
-        this.layers['uavsarWMS'].setOpacity(.7)
+        
+        if (this.tempLayers.length>0){
+          this.uavsarLayers = this.tempLayers;
+          console.log("if");
+          console.log(this.tempLayers);
+        }else{
+            this.globalMap.addLayer(this.layers['uavsarWMS']);
+            this.layers['uavsarWMS'].setOpacity(.7)
+        }
 
-
+        if (this.tempFilter!=[]){
+          this.uavsarLayersFiltered = this.tempFilter;
+        }
+        this.showPinLayer();
+        for (var i = 0; i < this.uavsarLayersFiltered.length; i++) {
+        let uid = this.uavsarLayersFiltered[i].info['uid'];
+        this.globalMap.addLayer(this.uavsarDisplayedLayers[uid]);
+        }
 
       } else {
+
+        for (i = 0; i < this.uavsarLayersFiltered.length; i++) {
+        let uid = this.uavsarLayersFiltered[i].info['uid'];
+        if(this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
+          this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
+        }
+        }
+        
+        //save user progress
+        this.tempLayers= _.clone(this.uavsarLayers);
+        this.tempFilter = _.cloneDeep(this.uavsarLayersFiltered);
+
         this.uavsarLayers = [];
         this.uavsarLayersFiltered = [];
         this.layers['uavsarWMS'].remove();
         this.LosPlotAvailable = false;
         this.overviewLegend.remove();
         this.overviewLegend = null;
-      
+        this.hidePinLayer();
       }
     },
     showOverviewLegend(){
