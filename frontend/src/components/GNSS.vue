@@ -400,15 +400,17 @@ export default {
             if (imagelist.length>0){
               for (var j = 0;j < imagelist.length;j++) {
                 var iname = imagelist[j][1].replace("contour_of_","");
+                var activestatus = false;
+                if (j==0) {activestatus=true;}
               vm.gnssLayers.push({
                 pre: prefix,
                 name: iname,
                 folder: folder,
-                active: true,
+                active: activestatus,
                 url: imagelist[j][0],
                 type: iname,
               });
-              vm.addImageLayer(imagelist[j][0],props.imagebounds,prefix+iname);
+              vm.addImageLayer(imagelist[j][0],props.imagebounds,prefix+iname,activestatus);
               }
             }
             imagelist=[];
@@ -457,9 +459,10 @@ export default {
       this.globalMap.addLayer(this.layers[layerName]);
 
     },
-    addImageLayer(imageUrl,imageBounds,layerName){
+    addImageLayer(imageUrl,imageBounds,layerName,displayflag){
       this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds,{opacity:0.85});
-      this.globalMap.addLayer(this.layers[layerName])
+      if (displayflag) {
+      this.globalMap.addLayer(this.layers[layerName]) }
     },
     drawToolbar() {
       this.geometryActive = true;
