@@ -463,6 +463,7 @@ export default {
       this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds,{opacity:0.85});
       if (displayflag) {
       this.globalMap.addLayer(this.layers[layerName]);
+      this.globalMap.flyToBounds(this.layers[layerName].getBounds());
       this.addImageLegend(imageUrl); }
     },
     addImageLegend(aimageUrl){
