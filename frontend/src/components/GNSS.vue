@@ -269,7 +269,9 @@ export default {
         }else {
           this.globalMap.removeLayer(this.layers[name]);
         }
-
+        if (layer.type.includes(".png")){
+          this.interpolationLegend.update(layer.url);
+        }
       },
     runButtonClick(){
       let vm = this;
@@ -476,12 +478,13 @@ export default {
           div.innerHTML = '<img src=' + legendUrl + '>' ;
           return div;
         };
-        this.interpolationLegend.update = function (aurl) {
+        this.interpolationLegend.update = function (aimageUrl) {
+          var aurl = aimageUrl.replace(".png","_colorbar.png");
           var div = document.getElementById('interpolationLegend');
           div.innerHTML = '<img src=' + aurl + '>' ;
         }
         this.interpolationLegend.addTo(this.globalMap);
-      } else {this.interpolationLegend.update(legendUrl);}
+      } else {this.interpolationLegend.update(aimageUrl);}
         
     },
     drawToolbar() {
