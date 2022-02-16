@@ -214,6 +214,8 @@ export default {
       rectDraw: null,
       areaLayer: null,
       pinLayer: null,
+      tempFilter: [],
+      tempLayers: [],
       geometryActive: false,
       //wmsColorUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/InSAR/wms?',
       //wmsUrl: 'http://js-169-62.jetstream-cloud.org/geoserver/highres/wms?',
@@ -377,7 +379,6 @@ export default {
         vm.pointQuery(lat,lng);
         vm.pinDrop = null;
         vm.geometryActive = false;
-
       });
     },
     drawListenerOff(){
@@ -791,11 +792,25 @@ export default {
         vm.areaLayer = null;
       }
     },
-  removePinLayer(){
+    removePinLayer(){
+      let vm=this;
+      if (vm.pinLayer!=null){
+        vm.globalMap.removeLayer(vm.pinLayer);
+      }
+      vm.pinLayer=null;
+    },
+
+    showPinLayer(){
+      let vm = this;
+        if (vm.pinLayer!=null){
+          vm.globalMap.addLayer(vm.pinLayer);
+        }
+      
+    },
+    hidePinLayer(){
       let vm = this;
       if (vm.pinLayer!=null){
         vm.globalMap.removeLayer(vm.pinLayer);
-        vm.pinLayer = null;
       }
     },
 
@@ -811,7 +826,15 @@ export default {
       this.selDesel = !this.selDesel;
     },
     clearQuery(){
- 
+      
+/*
+      //deselect all
+      for(var j = this.uavsarLayersFiltered.length-1; j >= 0; j--){
+        this.uavsarLayersFiltered[j].displayed = this.selDesel;
+        this.kmlLayerChange(this.uavsarLayersFiltered[j]);
+      }
+      this.selDesel = false;
+ */
       this.lat_lon = '';
       this.flight_path = '';
       for (var i = 0; i < this.uavsarLayersFiltered.length; i++) {
@@ -827,6 +850,9 @@ export default {
         this.uavsarHighResLayer = null;
         this.uavsarLegend.remove();
       }
+      //added from showOverview:
+      this.tempFilter=[];
+      this.tempLayers=[];
       this.showOverview();
       if (this.overviewLegend === null) {
         this.showOverviewLegend();
@@ -839,9 +865,13 @@ export default {
       this.uavsarLayers = [];
       this.extendedColor = null;
       this.extendedBorder = null;
+      this.removePinLayer();
+
+      
+
     },
     showOverview() {
-      this.removePinLayer();
+      const _ = require('lodash');
       if (this.overview) {
         this.layers['uavsarWMS'] = L.tileLayer.wms('https://archive.geo-gateway.org/geoserver/InSAR/wms?', {
               layers: 'InSAR:thumbnailmosaic',
@@ -851,19 +881,45 @@ export default {
             }
         );
         if(!this.overviewLegend){this.showOverviewLegend();}
-        this.globalMap.addLayer(this.layers['uavsarWMS'])
-        this.layers['uavsarWMS'].setOpacity(.7)
+        
+        if (this.tempLayers.length>0){
+          this.uavsarLayers = this.tempLayers;
+          console.log("if");
+          console.log(this.tempLayers);
+        }else{
+            this.globalMap.addLayer(this.layers['uavsarWMS']);
+            this.layers['uavsarWMS'].setOpacity(.7)
+        }
 
-
+        if (this.tempFilter!=[]){
+          this.uavsarLayersFiltered = this.tempFilter;
+        }
+        this.showPinLayer();
+        for (var i = 0; i < this.uavsarLayersFiltered.length; i++) {
+        let uid = this.uavsarLayersFiltered[i].info['uid'];
+        this.globalMap.addLayer(this.uavsarDisplayedLayers[uid]);
+        }
 
       } else {
+
+        for (i = 0; i < this.uavsarLayersFiltered.length; i++) {
+        let uid = this.uavsarLayersFiltered[i].info['uid'];
+        if(this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
+          this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
+        }
+        }
+        
+        //save user progress
+        this.tempLayers= _.clone(this.uavsarLayers);
+        this.tempFilter = _.cloneDeep(this.uavsarLayersFiltered);
+
         this.uavsarLayers = [];
         this.uavsarLayersFiltered = [];
         this.layers['uavsarWMS'].remove();
         this.LosPlotAvailable = false;
         this.overviewLegend.remove();
         this.overviewLegend = null;
-      
+        this.hidePinLayer();
       }
     },
     showOverviewLegend(){
