@@ -173,7 +173,7 @@
           <div class="outputLayers" v-if="gnssLayers.length!==0 && !activeGnssQuery">
             <strong>Output</strong>
             <div  v-for="layer in gnssLayers" :key="layer.name">
-              <div v-if="layer.type !== 'table.txt'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a target="_blank" :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
+              <div v-if="layer.type !== 'table.txt' && layer.type !=='output.zip'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a target="_blank" :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
               <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
             </div>
           </div>
@@ -414,7 +414,7 @@ export default {
                 folder: folder,
                 active: true,
                 url: zipUrl,
-                type: 'table.zip',
+                type: 'output.zip',
               });              
             }
             if (imagelist.length>0){
