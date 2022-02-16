@@ -269,8 +269,12 @@ export default {
         }else {
           this.globalMap.removeLayer(this.layers[name]);
         }
-        if (layer.type.includes(".png")){
+        if ((active) && (layer.type.includes(".png"))) {
+          // add legend
           this.interpolationLegend.update(layer.url);
+        } else {
+          // remove legend
+          this.interpolationLegend.remove();
         }
       },
     runButtonClick(){
@@ -482,6 +486,11 @@ export default {
           var aurl = aimageUrl.replace(".png","_colorbar.png");
           var div = document.getElementById('interpolationLegend');
           div.innerHTML = '<img src=' + aurl + '>' ;
+        }
+        this.interpolationLegend.remove = function () {
+          var div = document.getElementById('interpolationLegend');
+          if (div != null) {
+          div.innerHTML = '';}
         }
         this.interpolationLegend.addTo(this.globalMap);
       } else {this.interpolationLegend.update(aimageUrl);}
