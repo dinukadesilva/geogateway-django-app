@@ -288,9 +288,9 @@ export default {
     rungpsservice(){
       this.activeGnssQuery = true;
       var vm = this;
-      var fileNameH, fileNameV, fileNameT, folder, props;
+      var fileNameH, fileNameV, fileNameT, folder, props,fileNameZ;
       //var markerSize = this.markerSize;
-      var verticalUrl, horizontalUrl, tableUrl;
+      var verticalUrl, horizontalUrl, tableUrl, zipUrl;
       var prefix = this.gs_outputprefix;
       if(this.kmltype_sel === ''){
         alert("Please select as least one plot!");
@@ -357,6 +357,7 @@ export default {
                 return parts[parts.length - 1];
               }
               var imagelist = [];
+              var hasZip = false;
               for(var i = 0;i < props.urls.length;i++){
                 var ext = getExtension(props.urls[i]);
                 if(ext == 'vertical.kml'){
@@ -370,6 +371,10 @@ export default {
                   fileNameT = props.results[i];
                 }else if(!ext.includes('colorbar') && ext.includes('.png')) {
                   imagelist.push([props.urls[i],props.results[i]]);
+                }else if (ext.includes(".zip")) {
+                  hasZip = true;
+                  zipUrl = props.urls[i];
+                  fileNameZ = props.results[i];
                 }
               }
               //console.log(imagelist);
@@ -402,7 +407,16 @@ export default {
                 url: verticalUrl,
                 type: 'vertical.kml',
               })
-
+            if (hasZip) {
+              vm.gnssLayers.push({
+                pre: prefix,
+                name: fileNameZ,
+                folder: folder,
+                active: true,
+                url: zipUrl,
+                type: 'table.zip',
+              });              
+            }
             if (imagelist.length>0){
               for (var j = 0;j < imagelist.length;j++) {
                 var iname = imagelist[j][1].replace("contour_of_","");
