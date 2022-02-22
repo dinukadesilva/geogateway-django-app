@@ -556,11 +556,16 @@ export default {
         let curr = this.gnssLayers[i];
         if ((curr.type !== 'table.txt') && (curr.type !=='output.zip')) {
           let name = curr.pre + curr.type;
-          console.log("remove layer " + name);
+          //console.log("remove layer " + name);
           this.globalMap.removeLayer(this.layers[name]);
         }
       }
-      
+      // remove gnss legend layer
+      if (this.interpolationLegend !== null) {
+          this.interpolationLegend.remove();
+        }
+      this.interpolationLegend == null;
+
       this.gs_latitude =null;
       this.gs_longitude = null;
       this.gs_width = null;
