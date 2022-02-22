@@ -180,9 +180,6 @@
 
         </b-col>
 
-
-
- 
       <div v-if="activeGnssQuery" style="overflow: hidden">
         <br/>
         <b-spinner variant="success" label="Spinning"></b-spinner>
@@ -557,8 +554,9 @@ export default {
       this.layersActive = false;
       for(var i = 0; i < this.gnssLayers.length; i++){
         let curr = this.gnssLayers[i];
-        if(curr.type !== 'table.txt') {
+        if ((curr.type !== 'table.txt') && (curr.type !=='output.zip')) {
           let name = curr.pre + curr.type;
+          console.log("remove layer " + name);
           this.globalMap.removeLayer(this.layers[name]);
         }
       }
