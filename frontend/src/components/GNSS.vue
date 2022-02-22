@@ -307,7 +307,7 @@ export default {
         const baseURI = '/geogateway_django_app/gps_service'
         //request JSON dict of GPS_service details with query params from form
         var gpsfunction = this.kmltype_sel;
-        if (this.gs_interpolation == true) {gpsfunction = "getInterpolation";}
+        if ((gpsfunction == "getdisplacement") && (this.gs_interpolation == true)) {gpsfunction = "getInterpolation";}
         axios.get(baseURI, {
           params: {
             //
