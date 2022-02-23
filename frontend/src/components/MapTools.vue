@@ -35,14 +35,20 @@
           v-model="boundaries"
           @change="updateLayer('boundaries')"
           id="boundaries"
-      ><label for="boundaries">Show State Boundaries</label>
+      ><label for="boundaries">Show State Boundaries</label>&ensp;
+      <a href="" v-on:click.stop.prevent="openWindow('https://www.census.gov/geographies/mapping-files/2010/geo/carto-boundary-file.html')">
+      <i class="fas fa-info-circle"></i>
+      </a>
       <br/>
       <input
           type="checkbox"
           v-model="coasts"
           @change="updateLayer('coasts')"
           id="coasts"
-      ><label for="coasts">Show Coastlines</label>
+      ><label for="coasts">Show Coastlines</label>&ensp;
+      <a href="" v-on:click.stop.prevent="openWindow('https://www.naturalearthdata.com/downloads/50m-physical-vectors/')">
+      <i class="fas fa-info-circle"></i>
+      </a>
       <br/>
       <input
           type="checkbox"
