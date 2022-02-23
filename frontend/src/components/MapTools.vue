@@ -18,7 +18,10 @@
           v-model="qfaults"
           @change="updateLayer('qfaults')"
           id="qfaults"
-      ><label for="boundaries">Quaternary Faults</label>
+      ><label for="boundaries">Quaternary Faults</label>&ensp;
+      <a href="" v-on:click.stop.prevent="openWindow('https://doi.org/10.5066/F7S75FJM')">
+      <i class="fas fa-info-circle"></i>
+      </a>
       <br/>
       <input
           type="checkbox"
