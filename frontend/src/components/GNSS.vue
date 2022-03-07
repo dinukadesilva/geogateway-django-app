@@ -1,12 +1,10 @@
 <template>
   <div id="tab-window">
     <div>
-
-      <!--<h3 style="text-align: center">GNSS Data Analysis</h3>-->
       <b-card>
       <span class="icon is-right" syle="pointer-events: all;" @click="gnssInfo=true">
       <i class="fas fa-info-circle"></i> 
-    </span> &ensp; About GNSS data Analysis <!--TODO: make popup work-->
+    </span> &ensp; About GNSS data Analysis
       </b-card>
       <label class="control-label requiredField">
         Select GNSS data models
@@ -154,15 +152,6 @@
         </b-col>
 
         <b-col >
-<!--
-          <div class="outputLayers" v-if="gnssLayers.length!==0 && !activeGnssQuery">
-            <strong>Output</strong>
-            <div  v-for="layer in gnssLayers" :key="layer.name">
-              <div v-if="layer.type !== 'table.txt'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
-              <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
-            </div>
-          </div>
--->
         </b-col>
 
 
