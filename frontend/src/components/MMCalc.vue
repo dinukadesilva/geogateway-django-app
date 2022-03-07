@@ -1,6 +1,12 @@
 <template>
     <div class="tab-window">
-        <h3>Moment Magnitude Calculator</h3>
+
+        <b-card>
+            <span class="icon is-right" syle="pointer-events: all;" @click="mmInfo=true">
+            <i class="fas fa-info-circle"></i> 
+            </span>&ensp; About Moment Magnitude Calculator
+        </b-card>
+
         <hr />
         <b-input-group prepend="Length" append="km">
             <b-form-input v-model="mm_length" placeholder="12.5"></b-form-input>
@@ -25,6 +31,17 @@
             <h6><strong> Seismic Moment: </strong> {{this.SM}}</h6>
             <h6><strong> Moment Magnitude: </strong> {{this.MM}}</h6>
         </div>
+
+        <b-modal hide-backdrop
+            v-model="mmInfo"
+            title="Moment Magnitude Calculator">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
     </div>
 </template>
 
@@ -35,7 +52,7 @@ import { mapFields } from 'vuex-map-fields';
         name: "MMCalc",
         data(){
             return {
-
+                mmInfo: false,
             };
         },
       computed: {

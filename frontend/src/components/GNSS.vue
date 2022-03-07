@@ -2,14 +2,35 @@
   <div id="tab-window">
     <div>
 
-      <h3 style="text-align: center">GNSS Data Analysis</h3>
+      <!--<h3 style="text-align: center">GNSS Data Analysis</h3>-->
+      <b-card>
+      <span class="icon is-right" syle="pointer-events: all;" @click="gnssInfo=true">
+      <i class="fas fa-info-circle"></i> 
+    </span> &ensp; About GNSS data Analysis <!--TODO: make popup work-->
+      </b-card>
       <label class="control-label requiredField">
         Select GNSS data models
       </label>
+
+      <span>output<hr></span>
+      <b-card>
+        <div v-if="gnssLayers.length!==0 && !activeGnssQuery">
+            <strong>Output</strong>
+            <div  v-for="layer in gnssLayers" :key="layer.name">
+              <b-card v-if="layer.type !== 'table.txt'" >
+                <input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> 
+                  <span class="checkbox-label"> <a :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> 
+                </b-card>
+              <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
+            </div>
+          </div>
+          <div v-else><span> No Models Selected</span></div>
+        </b-card>
   
 
         <!-- <label for="sel1">Select list:</label> -->
         <select class="form-control" v-model="kmltype_sel" id="kmltype_sel" >
+        <option disabled value='null'></option>
           <option value='getvelocities'>Velocities</option>
           <option value='getcoseismic'>Coseismic</option>
           <option value='getpostseismic'>Postseismic</option>
@@ -17,6 +38,7 @@
           <option value='getmodel'>Model</option>
         </select>
 
+        <div v-if="kmltype_sel!=null">
         <b-button variant="dark" id="sp_windowpicker" class="btn btn-light" @click="gnssDrawRect()">
           <b-icon-pencil></b-icon-pencil> Draw an area on map</b-button>
         <b-button variant="warning" id="clearGnss" @click="clearGnss()"><b-icon-trash></b-icon-trash> Clear GNSS Layers</b-button>
@@ -132,7 +154,7 @@
         </b-col>
 
         <b-col >
-
+<!--
           <div class="outputLayers" v-if="gnssLayers.length!==0 && !activeGnssQuery">
             <strong>Output</strong>
             <div  v-for="layer in gnssLayers" :key="layer.name">
@@ -140,7 +162,7 @@
               <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
             </div>
           </div>
-
+-->
         </b-col>
 
 
@@ -151,10 +173,23 @@
         <b-spinner variant="success" label="Spinning"></b-spinner>
       </div>
       <br/>
-
+      </div>
 
 
     </div>
+
+    <!-- info  popup -->
+    <b-modal hide-backdrop
+    v-model="gnssInfo"
+            title="GNSS">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
 
   </div>
 
@@ -173,6 +208,7 @@ export default {
   name: "GNSS-tools",
   data() {
     return {
+      gnssInfo: false,
       areaLayer: null,
     }
   },
@@ -215,6 +251,7 @@ export default {
   mounted() {
     bus.$on('gnssDrawQuery', (maxLat, minLon, minLat, maxLon, centerLat, centerLng) =>
         this.setRect(maxLat, minLon, minLat, maxLon, centerLat, centerLng));
+    this.kmltype_sel=null;
   },
 
   methods: {

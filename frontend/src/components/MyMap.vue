@@ -1,20 +1,33 @@
 <template>
   <div id="map-window">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
           crossorigin=""/>
 
     <TopNav/>
-    <ToolTabs/>
+    <ToolTabs class="tools"/>
     
-    <ToolBar/>
+    <!--
+    <div class="overlay">
+    <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
+    </div>
+    -->
+    <ToolBar class="tools"/>
+    <!--
+    <div class="overlay">
     <b-button @click=toggleBar() class="toggle"><i class="fas fa-bars"></i></b-button>
-    
-    
+    </div>
+    -->
     <DraggableDiv v-resize @resize="resizeLOS" class="col-11" v-if="plotActive" id="plot-window">
+        
+    
       <vue-resize ></vue-resize>
       <template slot="header">
         <p style="color: #000000">Line of Sight Displacement</p>
+      </template>
+      <template>
+      <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
       </template>
       <div id="losLegend">
       </div>
@@ -30,6 +43,7 @@
 
     <div id="map">
    </div>
+   
 
 
 
@@ -111,7 +125,8 @@ export default {
     // load basemap
     //this.tileLayer();
     this.basemapLayers();
-
+    
+    //logo at bottom of map
     var legend2 = L.control({position: 'bottomleft'});
     legend2.onAdd = function () {
       var div = L.DomUtil.create('div', 'info legend2');
@@ -120,7 +135,7 @@ export default {
       return div;
     };
 
-    legend2.addTo(this.globalMap);
+    //legend2.addTo(this.globalMap);
 
     var drawnItems = new L.FeatureGroup();
     this.globalMap.addLayer(drawnItems);
@@ -587,5 +602,12 @@ export default {
   float: right !important;
 }
 
+.tools{
+background: #F5F9FB;
+
+}
+.overlay{
+  background-color: transparent;
+}
 </style>
 

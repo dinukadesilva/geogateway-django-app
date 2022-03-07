@@ -1,29 +1,35 @@
 <template>
-<div id="sidebar" bg-variant="dark">
+<div id="sidebar">
     
-        <b-collapse visible id="collapse-1" class="mt-2">
-            <div id="tabs">
-        
-        <b-tabs vertical v-model="tabIndex" small pills card>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Map Tools</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>UAVSAR</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>GNSS</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Seismicity</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Nowcast</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Magnitude</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Disloc</strong></span></template></b-tab>
-<!--            <b-tab title="Saves" disabled><b-card-text><router-view></router-view></b-card-text></b-tab>-->
-            <b-tab><template #title> <span style="font-size:14px"><strong>Studies</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>3D Imaging</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Feedback</strong></span></template></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Help</strong></span></template></b-tab>
+        <b-collapse v-model="navbar" visible>
+        <div class="row">
+        <div class="col">
+        <b-tabs id="tabs" vertical v-model="tabIndex" small pills card>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Map Tools</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>UAVSAR</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>GNSS</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Seismicity</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Nowcast</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Magnitude</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Disloc</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Studies</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>3D Imaging</strong></span></template></b-tab>
+            <!--
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Feedback</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Help</strong></span></template></b-tab>
+            -->
         </b-tabs>
+        </div>
+        <div class= "col-sm" syle=" width: fit-content;">
+        <span class="icon is-right" syle="pointer-events: all;" @click="addToggle()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+        </div>
         
-        
-            </div>
+           </div>
         </b-collapse>
         
-    <b-button v-b-toggle.collapse-1 class="toggle"><i class="fas fa-bars"></i></b-button>
+
 </div>
 </template>
 
@@ -40,6 +46,7 @@
         data (){
             return {
                 tabIndex: 0,
+                navbar: true,
             }
         },
         
@@ -47,6 +54,8 @@
             this.directUrl(this.tabUrl);
         },
         mounted(){
+            bus.$on('ToggleNav', () =>
+            this.navbar = true);
             
         },
         watch: {
@@ -66,6 +75,11 @@
           //...mapFields(['uavsar.overview', 'map.globalMap', 'map.layers', 'uavsar.overviewLegend'])
         },
         methods: {
+
+            addToggle(){
+                this.navbar= false;
+                bus.$emit("navClosed");
+            },
             /*
             toPage(page){
                 var route ='';
@@ -180,18 +194,18 @@
 <style >
 
 #sidebar {
-        height: 100%;
-        
         overflow-y: scroll;
         float: left;
-        background-color: #e6e6ff;
+        background-color: #FFFFFF;
         -webkit-transition: none;
         transition: none;
     }
-
+.nav{
+    background-color: #FFFFFF;
+}
     #tabs {
-        width: auto;
-        background-color: #e6e6ff;
+        min-height: 100vh;
+        background-color: #FFFFFF;
 
     }
  
@@ -201,6 +215,7 @@
         align-content: center;
         height: 100% ;
         overflow: auto;
+       
     }
     
  

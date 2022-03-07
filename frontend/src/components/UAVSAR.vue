@@ -1,8 +1,16 @@
 <template>
   <div class="tab-window">
-    <h3>UAVSAR</h3>
+    <!--<h3>UAVSAR</h3>-->
+
+    <b-card>
+      <span class="icon is-right" syle="pointer-events: all;" @click="uavsarInfo=true">
+      <i class="fas fa-info-circle"></i> 
+    </span>&ensp; About UAVSAR
+    </b-card>
     <div class="topbuttonGroup">
       <div class="overviewButtonGroup">
+      <span>Functions<hr></span>
+      <!--
         <b-button
             class="btn-sm"
             type="checkbox"
@@ -12,15 +20,19 @@
         ><span v-if="!overview">Show Overview</span>
           <span v-else>Hide Overview</span>
         </b-button>
-
+-->
 
         <!--      <div >-->
         <!--      <div class="toolInfo">-->
         <!--        <i>Fill one of the following fields or use map drawing tools to search catalog:</i>-->
         <!--      </div>-->
         <!--      <br />-->
-        <b-button class="btn-sm" v-if="overview" variant="dark" @click="uavsarDrawRect()"><b-icon-pencil></b-icon-pencil> Draw Area</b-button>
-        <b-button class="btn-sm" v-if="overview" variant="dark" @click="uavsarPinDrop()"><b-icon-hand-index></b-icon-hand-index> Drop Pin </b-button>
+        <b-button class="btn-sm uavsarbtn" v-if="overview"  @click="uavsarDrawRect()">
+        <!--<b-icon-pencil></b-icon-pencil> -->
+        Draw Area</b-button>
+        <b-button class="btn-sm uavsarbtn" v-if="overview" @click="uavsarPinDrop()">
+        <!--<b-icon-hand-index></b-icon-hand-index>-->
+         Drop Pin </b-button>
       </div>
       <!--      </div>-->
     </div>
@@ -39,6 +51,7 @@
         <br/>
       </div>
       <br/>
+      <!--TODO fix this-->
       <b-input-group class="input-group-sm" prepend="Flight name/path">
         <b-form-input v-model="flight_path" name="flight_path" placeholder=""></b-form-input>
       </b-input-group>
@@ -47,10 +60,14 @@
         <b-form-input v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
       </b-input-group><br/>
       <b-button class="btn-sm" variant="success" @click="uavsarQuery()">Search</b-button>
+      <b-button v-if="uavsarLayers.length !== 0 && !activeQuery" class="btn-sm" @click="clearQuery" variant="warning">
+              Clear Query
+            </b-button>
     </div>
 
 
     <div v-if="uavsarLayers.length !== 0 && !activeQuery">
+    <span>Output Filters<hr></span>
       <br/>
       <b-container >
         <div class="layer-options">
@@ -58,9 +75,11 @@
             <b-button class="btn-sm" @click="selDeselAll">
               Display/Hide All
             </b-button>
+            <!--
             <b-button class="btn-sm" @click="clearQuery" variant="warning">
               Clear Query
             </b-button>
+            -->
           </b-row>
           <b-row style="margin-top: 5px">
             <div>
@@ -75,6 +94,7 @@
 
 
       <div id="queryWindow">
+      <span> Output <hr></span>
 
         <div class="collapsed"  v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']" v-bind:style="{backgroundColor: entry.activeBackground}">
           <b-col>
@@ -179,6 +199,21 @@
       <br/>
       <b-spinner variant="success" label="Spinning"></b-spinner>
     </div>
+
+
+    <!-- info  popup -->
+    <b-modal hide-backdrop
+    v-model="uavsarInfo"
+            title="UAVSAR">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
   </div>
 </template>
 
@@ -196,6 +231,7 @@ export default {
   name: "UAVSAR",
   data(){
     return {
+      uavsarInfo: false,
       endIcon: new L.Icon({
         iconUrl: 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_redA.png',
         iconSize: [25, 41],
@@ -1202,12 +1238,7 @@ export default {
 
 
 html, body {margin:0;padding:0;height:100%;}
-.tab-window {
-  background-color: #e6e6ff;
-  height:100%;
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
+
 h3, h4, h5 {
   color: #343a40;
 }
@@ -1215,6 +1246,19 @@ h3, h4, h5 {
 .center {
   width: 50%;
   margin: 0 auto;
+}
+.uavsarbtn{
+  background: #FFFFFF;
+border: 1px solid #A2B8BF;
+box-sizing: border-box;
+border-radius: 5px;
+font-family: Inter;
+font-style: normal;
+font-weight: 600;
+font-size: 16px;
+line-height: 19px;
+
+color: #2F7CF6;
 }
 
 </style>
