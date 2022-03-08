@@ -141,22 +141,68 @@
               Include error ellipses
             </label>
           </b-row>
+          <b-row class="checkbox" style="text-align: left" v-if="this.kmltype_sel === 'getdisplacement'">
+            <label class="checkbox" >
+              <input v-model="gs_interpolation" name="gsinterpolation" type="checkbox" id="gs_interpolation"/>
+              Interpolation
+            </label>
+          </b-row>
+        <b-container v-if="gs_interpolation && this.kmltype_sel === 'getdisplacement'" fluid="lg">
+        <b-row>
+        <b-input-group prepend="Mehtods">
+          <b-form-select  v-model="gs_interpolationtype" name="gs_interpolationtype">
+            <b-form-select-option value="linear">linear</b-form-select-option>
+            <b-form-select-option value="gaussian">gaussian</b-form-select-option>
+            <b-form-select-option value="power">power</b-form-select-option>
+            <b-form-select-option value="exponential">exponential</b-form-select-option>
+            <b-form-select-option value="spherical">spherical</b-form-select-option>
+          </b-form-select>
+        </b-input-group>
+        </b-row>
+        <b-row>
+        <b-input-group prepend="Grid spacing">
+          <b-form-input v-model="gs_gridspacing" name="gs_gridspacing" placeholder="0.018 degree"></b-form-input>
+        </b-input-group>
+        </b-row>
+        <b-row>
+        <b-input-group prepend="Azimuth">
+          <b-form-input v-model="gs_azimuth" name="gs_azimuth" placeholder="-5 degree"></b-form-input>
+        </b-input-group>
+        </b-row>
+        <b-row>
+        <b-input-group prepend="Elevation Angle">
+          <b-form-input v-model="gs_elevationangle" name="gs_elevationangle" placeholder="60 degree"></b-form-input>
+        </b-input-group>
+        </b-row>
+        </b-container>
+
           <b-row>
             <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runButtonClick()">        Run
             </button>
           </b-row>
           <br />
           <b-row>
-            <div style="float: left; text-align: left"><strong>Data source: <br/><a href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a></strong></div>
+            <div style="float: left; text-align: left">Data source: <br/><a href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a>
+            <br><a v-if="this.kmltype_sel === 'getdisplacement'" href="http://geodesy.unr.edu/NGLStationPages/gpsnetmap/GPSNetMap.html" target="_blank">NGL GPS Networks</a>
+          </div>
           </b-row>
         </b-col>
 
         <b-col >
+
+
+          <br><br>
+          <div class="outputLayers" v-if="gnssLayers.length!==0 && !activeGnssQuery">
+            <strong>Output</strong>
+            <div  v-for="layer in gnssLayers" :key="layer.name">
+              <div v-if="layer.type !== 'table.txt' && layer.type !=='output.zip'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a target="_blank" :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
+              <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
+            </div>
+          </div>
+
+
         </b-col>
 
-
-
- 
       <div v-if="activeGnssQuery" style="overflow: hidden">
         <br/>
         <b-spinner variant="success" label="Spinning"></b-spinner>
@@ -199,6 +245,7 @@ export default {
     return {
       gnssInfo: false,
       areaLayer: null,
+      gs_interpolationtype:'linear',
     }
   },
   computed: {
@@ -223,14 +270,20 @@ export default {
       'gnss.gs_eon',
       'gnss.gs_vabs',
       'gnss.gs_analysisCenter',
+      'gnss.gs_interpolation',
+      'gnss.gs_gridspacing',
+      'gnss.gs_interpolationtype',
+      'gnss.gs_azimuth',
+      'gnss.gs_elevationangle',
+
       'gnss.ranLayers',
       'gnss.activeLayers',
       'gnss.markerSize',
       'gnss.layersActive',
       'gnss.activeGnssQuery',
       'gnss.geometryActive',
-        'gnss.gnssLayers',
-
+      'gnss.gnssLayers',
+      'gnss.interpolationLegend',
         'map.drawControl',
         'map.globalMap',
         'map.layers',
@@ -251,7 +304,13 @@ export default {
         }else {
           this.globalMap.removeLayer(this.layers[name]);
         }
-
+        if ((active) && (layer.type.includes(".png"))) {
+          // add legend
+          this.interpolationLegend.update(layer.url);
+        } else {
+          // remove legend
+          this.interpolationLegend.remove();
+        }
       },
     runButtonClick(){
       let vm = this;
@@ -264,9 +323,9 @@ export default {
     rungpsservice(){
       this.activeGnssQuery = true;
       var vm = this;
-      var fileNameH, fileNameV, fileNameT, folder, props;
+      var fileNameH, fileNameV, fileNameT, folder, props,fileNameZ;
       //var markerSize = this.markerSize;
-      var verticalUrl, horizontalUrl, tableUrl;
+      var verticalUrl, horizontalUrl, tableUrl, zipUrl;
       var prefix = this.gs_outputprefix;
       if(this.kmltype_sel === ''){
         alert("Please select as least one plot!");
@@ -285,10 +344,12 @@ export default {
         if (this.gs_analysisCenter == true) {this.gs_analysisCenter = "NGL";} else { this.gs_analysisCenter = "";}
         const baseURI = '/geogateway_django_app/gps_service'
         //request JSON dict of GPS_service details with query params from form
+        var gpsfunction = this.kmltype_sel;
+        if ((gpsfunction == "getdisplacement") && (this.gs_interpolation == true)) {gpsfunction = "getInterpolation";}
         axios.get(baseURI, {
           params: {
             //
-            "function": this.kmltype_sel,
+            "function": gpsfunction,
             "lat": this.gs_latitude,
             "lon": this.gs_longitude,
             //"width":$('#gs_width').val(),
@@ -310,6 +371,10 @@ export default {
             "eon": this.gs_eon,
             "vabs": this.gs_vabs,
             "analysisCenter": this.gs_analysisCenter,
+            "gridspacing": this.gs_gridspacing,
+            "interpolationtype": this.gs_interpolationtype,
+            "azimuth": this.gs_azimuth,
+            "elevation": this.gs_elevationangle,
             //
           }
         })
@@ -326,7 +391,9 @@ export default {
                 var parts = f.split('_');
                 return parts[parts.length - 1];
               }
-              for(var i = 0;i < 3;i++){
+              var imagelist = [];
+              var hasZip = false;
+              for(var i = 0;i < props.urls.length;i++){
                 var ext = getExtension(props.urls[i]);
                 if(ext == 'vertical.kml'){
                   verticalUrl = props.urls[i];
@@ -337,8 +404,17 @@ export default {
                 }else if(ext == 'table.txt'){
                   tableUrl = props.urls[i];
                   fileNameT = props.results[i];
+                }else if(!ext.includes('colorbar') && ext.includes('.png')) {
+                  imagelist.push([props.urls[i],props.results[i]]);
+                }else if (ext.includes(".zip")) {
+                  hasZip = true;
+                  zipUrl = props.urls[i];
+                  fileNameZ = props.results[i];
                 }
               }
+              //console.log(imagelist);
+              //console.log(props.imagebounds);
+
 
               folder = props.folder;
               prefix = (1 + Math.floor(vm.gnssLayers.length/3)).toString() + prefix;
@@ -366,7 +442,34 @@ export default {
                 url: verticalUrl,
                 type: 'vertical.kml',
               })
-              const kmlURI = '/geogateway_django_app/get_kml'
+            if (hasZip) {
+              vm.gnssLayers.push({
+                pre: prefix,
+                name: fileNameZ,
+                folder: folder,
+                active: true,
+                url: zipUrl,
+                type: 'output.zip',
+              });              
+            }
+            if (imagelist.length>0){
+              for (var j = 0;j < imagelist.length;j++) {
+                var iname = imagelist[j][1].replace("contour_of_","");
+                var activestatus = false;
+                if (j==0) {activestatus=true;}
+              vm.gnssLayers.push({
+                pre: prefix,
+                name: iname,
+                folder: folder,
+                active: activestatus,
+                url: imagelist[j][0],
+                type: iname,
+              });
+              vm.addImageLayer(imagelist[j][0],props.imagebounds,prefix+iname,activestatus);
+              }
+            }
+            imagelist=[];
+              const kmlURI = '/geogateway_django_app/get_kml';
               axios.get(kmlURI, {
                 params: {
                   "file": fileNameH,
@@ -410,6 +513,37 @@ export default {
       this.layers[layerName] = new L.KML(kml);
       this.globalMap.addLayer(this.layers[layerName]);
 
+    },
+    addImageLayer(imageUrl,imageBounds,layerName,displayflag){
+      this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds,{opacity:0.85});
+      if (displayflag) {
+      this.globalMap.addLayer(this.layers[layerName]);
+      this.globalMap.flyToBounds(this.layers[layerName].getBounds());
+      this.addImageLegend(imageUrl); }
+    },
+    addImageLegend(aimageUrl){
+      var legendUrl = aimageUrl.replace(".png","_colorbar.png");
+      if (this.interpolationLegend == null) {
+        this.interpolationLegend = L.control({position: 'bottomright'});
+        this.interpolationLegend.onAdd = function () {
+          var div = L.DomUtil.create('div', 'leafletinfo');
+          div.id = "interpolationLegend";
+          div.innerHTML = '<img src=' + legendUrl + '>' ;
+          return div;
+        };
+        this.interpolationLegend.update = function (aimageUrl) {
+          var aurl = aimageUrl.replace(".png","_colorbar.png");
+          var div = document.getElementById('interpolationLegend');
+          div.innerHTML = '<img src=' + aurl + '>' ;
+        }
+        this.interpolationLegend.remove = function () {
+          var div = document.getElementById('interpolationLegend');
+          if (div != null) {
+          div.innerHTML = '';}
+        }
+        this.interpolationLegend.addTo(this.globalMap);
+      } else {this.interpolationLegend.update(aimageUrl);}
+        
     },
     drawToolbar() {
       this.geometryActive = true;
@@ -458,12 +592,18 @@ export default {
       this.layersActive = false;
       for(var i = 0; i < this.gnssLayers.length; i++){
         let curr = this.gnssLayers[i];
-        if(curr.type !== 'table.txt') {
+        if ((curr.type !== 'table.txt') && (curr.type !=='output.zip')) {
           let name = curr.pre + curr.type;
+          //console.log("remove layer " + name);
           this.globalMap.removeLayer(this.layers[name]);
         }
       }
-      
+      // remove gnss legend layer
+      if (this.interpolationLegend !== null) {
+          this.interpolationLegend.remove();
+        }
+      this.interpolationLegend == null;
+
       this.gs_latitude =null;
       this.gs_longitude = null;
       this.gs_width = null;
@@ -515,4 +655,16 @@ a:link {
   background-color: transparent;
   text-decoration: underline;
 }
+
+</style>
+<style>
+.leafletinfo{
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
 </style>
