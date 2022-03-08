@@ -1,5 +1,12 @@
 <template>
   <div class="tab-window">
+
+    <b-card>
+    <span class="icon is-right" syle="pointer-events: all;" @click="seismInfo=true">
+      <i class="fas fa-info-circle"></i> 
+    </span>&ensp; About Seismicity
+    </b-card>
+
     <div id="panel_forecast" style="margin-top: 10px; margin-bottom:10px;">
 
       <h3>Recent Earthquakes from USGS</h3>
@@ -105,6 +112,19 @@
       <a target="_blank" :href="geoUri">Download USGS GeoJSON</a>
       </div>
     </div>
+
+    <!-- info  popup -->
+    <b-modal hide-backdrop
+    v-model="seismInfo"
+            title="Seismicity">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
   </div>
 </template>
 
@@ -118,6 +138,7 @@ export default {
   name: "seismicity",
   data() {
     return {
+      seismInfo: false,
       rectDraw: null,
       areaLayer: null,
     }

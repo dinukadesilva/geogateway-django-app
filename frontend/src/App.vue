@@ -50,5 +50,11 @@
       border-color: #3388ff !important;
 
     }
+    .tab-window {
+    background: #F5F9FB;
+    height:100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    }
 
 </style>

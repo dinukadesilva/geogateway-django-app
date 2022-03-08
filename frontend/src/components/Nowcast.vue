@@ -1,5 +1,12 @@
 <template>
     <div class="tab-window">
+
+    <b-card>
+    <span class="icon is-right" syle="pointer-events: all;" @click="nowcastInfo=true">
+      <i class="fas fa-info-circle"></i> 
+    </span>&ensp; About Nowcast
+    </b-card>
+
         <div class="tool-title"><h3> Global Natural Hazard Viewer</h3><hr/> </div>
         <div class="tool-content">
             <div id="panel_forecast" style="margin-top: 10px; margin-bottom:10px;">
@@ -67,6 +74,17 @@
                 -->
             </div>
         </div>
+
+        <b-modal hide-backdrop
+    v-model="nowcastInfo"
+            title="Nowcast">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
     </div>
 
 </template>
@@ -82,6 +100,7 @@
         name: "nowcast",
         data() {
             return {
+                nowcastInfo: false,
               geometryActive: false,
             }
 
