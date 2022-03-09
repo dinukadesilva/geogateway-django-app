@@ -3,7 +3,7 @@
 
         <b-card>
             <span class="icon is-right" syle="pointer-events: all;" @click="mmInfo=true">
-            <i class="fas fa-info-circle"></i> 
+            <i class="aboutIcon fas fa-info-circle"></i> 
             </span>&ensp; About Moment Magnitude Calculator
         </b-card>
 

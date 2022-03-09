@@ -77,9 +77,11 @@
                 vm.toggleButton = L.control({position: 'topleft'});
                 
                 vm.toggleButton.onAdd = function () {
-                    var btn =  L.DomUtil.create('b-button', 'toggle');
+
+                    var btn =  L.DomUtil.create('button', 'toggle');
                     btn.id = "toggleButton";
-                    btn.innerHTML = '<i class="fas fa-bars"></i>';
+                    btn.setAttribute("style","text-align: center;  border-radius: 5px; background: #FFFFFF;");
+                    btn.innerHTML = '<i class="fa-lg fas fa-bars" style="color: #2F7CF6;"></i>';
                     btn.addEventListener ("click", 
                     function () {
                         vm.globalMap.removeControl(vm.toggleButton);
@@ -89,6 +91,7 @@
                     }, 
                     false);
                     return btn;
+
         }
             this.toggleButton.addTo(this.globalMap);
             }
@@ -192,6 +195,15 @@
     #toolbarContent{
                 margin-top:3%;
     }
+
+    .togbutton {
+  background-color: #862e9c;
+  color: #efefef;
+  border: none;
+  text-align: center;
+  padding: 10px 20px;
+   border-radius: 5px;
+}
 
 
 </style>

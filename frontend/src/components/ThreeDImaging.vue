@@ -4,6 +4,13 @@
         <h3>3D Imaging</h3>
         <hr>
         -->
+
+        <b-card>
+            <span class="icon is-right" syle="pointer-events: all;" @click="threedInfo=true">
+                <i class="aboutIcon fas fa-info-circle"></i> 
+            </span>&ensp; About 3D Imaging
+        </b-card>
+
         <div align="left">
             <input
             type="checkbox"
@@ -133,6 +140,21 @@
             </div>
 
         </div>
+
+        <!-- info  popup -->
+    <b-modal hide-backdrop
+    v-model="threedInfo"
+            title="3D Imaging">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
+
     </div>
 </template>
 
@@ -146,6 +168,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
         name: "ThreeDImaging",
         data: function() {
             return {
+                threedInfo: false,
                 ridgecrest:false,
                 ridgecrest_checkbox:[],
                 ridgecresturls: ["https://raw.githubusercontent.com/GeoGateway/GeoGatewayStaticResources/master/kmz/Ridgecrest_2019_M6.4.kml",

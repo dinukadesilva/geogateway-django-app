@@ -3,14 +3,11 @@
     <div>
       <b-card>
       <span class="icon is-right" syle="pointer-events: all;" @click="gnssInfo=true">
-      <i class="fas fa-info-circle"></i> 
+      <i class="aboutIcon fas fa-info-circle"></i> 
     </span> &ensp; About GNSS data Analysis
       </b-card>
-      <label class="control-label requiredField">
-        Select GNSS data models
-      </label>
 
-      <span>output<hr></span>
+      <span class="inputLabel">Outputs<hr></span>
       <b-card>
         <div v-if="gnssLayers.length!==0 && !activeGnssQuery">
             <strong>Output</strong>
@@ -37,9 +34,9 @@
         </select>
 
         <div v-if="kmltype_sel!=null">
-        <b-button variant="dark" id="sp_windowpicker" class="btn btn-light" @click="gnssDrawRect()">
-          <b-icon-pencil></b-icon-pencil> Draw an area on map</b-button>
-        <b-button variant="warning" id="clearGnss" @click="clearGnss()"><b-icon-trash></b-icon-trash> Clear GNSS Layers</b-button>
+        <b-button id="sp_windowpicker" class="btn btn_blue" @click="gnssDrawRect()">
+         Draw an area on the map</b-button>
+        <b-button class="btn_white" id="clearGnss" @click="clearGnss()"> Clear Layers</b-button>
         <br/>
 
         <div v-if="geometryActive" >
@@ -49,71 +46,78 @@
           <br/>
         </div>
         <br>
-        <b-input-group prepend="Center Latitude">
-          <template #prepend><b-input-group-text ><strong>Center Latitude</strong></b-input-group-text></template>
+        <span class="inputLabel">Center Latitude</span>
+        <b-input-group>
           <b-form-input v-model="gs_latitude"  name="gs_latitude"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Center Longitude">
-          <template #prepend><b-input-group-text ><strong>Center Longitude</strong></b-input-group-text></template>
+        <span class="inputLabel">Center Longitude</span>
+        <b-input-group>
           <b-form-input v-model="gs_longitude" placeholder="" name="gs_longitude"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Longitude Span">
-          <template #prepend><b-input-group-text ><strong>Longitude Span</strong></b-input-group-text></template>
+        <span class="inputLabel">Longitude Span</span>
+        <b-input-group>
           <b-form-input v-model="gs_width"  name="gs_width" placeholder="1 degree"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Latitude Span">
-          <template #prepend><b-input-group-text ><strong>Latitude Span</strong></b-input-group-text></template>
+        <span class="inputLabel">Latitude Span</span>
+        <b-input-group >
           <b-form-input v-model="gs_height" placeholder="1 degree" name="gs_height"></b-form-input>
         </b-input-group>
 
+        <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Epoch</span>
         <div class="input-group" id="epoch_show" v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
-          <b-input-group prepend="Epoch">
-            <template #prepend><b-input-group-text ><strong>Epoch</strong></b-input-group-text></template>
+          <b-input-group>
             <b-form-input v-model="gs_epoch" placeholder="YYYY-MM-DD" name="gs_epoch"></b-form-input>
           </b-input-group>
         </div>
 
-        <b-input-group prepend="Epoch 1" v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
-            <template #prepend><b-input-group-text ><strong>Epoch 1</strong></b-input-group-text></template>
+        <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'" class="inputLabel">Epoch 1</span>
+        <b-input-group v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
           <b-form-input v-model="gs_epoch1" placeholder="YYYY-MM-DD" name="gs_epoch1"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Epoch 2" v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
-            <template #prepend><b-input-group-text ><strong>Epoch 2</strong></b-input-group-text></template>
+        <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'" class="inputLabel">Epoch 2 </span>
+        <b-input-group  v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
           <b-form-input v-model="gs_epoch2" placeholder="YYYY-MM-DD" name="gs_epoch2"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Ref. Site">
+        <span class="inputLabel">Ref. Site</span>
+        <b-input-group>
           <b-form-input v-model="gs_refsite" placeholder="4-letter code" name="gs_refsite"></b-form-input>
           <b-input-group-append>
             <b-button variant="outline-primary" href="https://sideshow.jpl.nasa.gov/post/tables/table2.html" target="_blank">Stations</b-button>
           </b-input-group-append>
         </b-input-group>
 
-        <b-input-group prepend="Scale">
+        <span class="inputLabel">Scale</span>
+        <b-input-group>
           <b-form-input v-model="gs_scale" placeholder="320 mm/yr/deg" name="gs_scale"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Coseismic Win." v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
+        <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Coseismic Win.</span>
+        <b-input-group v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
           <b-form-input v-model="gs_ctwin" name="gs_ctwin" placeholder="0.1 years"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Postseismic Win." v-if="this.kmltype_sel === 'getpostseismic' ">
+        <span v-if="this.kmltype_sel === 'getpostseismic' " class="inputLabel">Postseismic Win.</span>
+        <b-input-group v-if="this.kmltype_sel === 'getpostseismic' ">
           <b-form-input v-model="gs_ptwin" name="gs_ptwin" placeholder="2 years"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Av. Win. 1" v-if="this.kmltype_sel === 'getdisplacement'">
+        <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 1</span>
+        <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
           <b-form-input v-model="gs_dwin1" name="gs_dwin1" placeholder="10 days"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Av. Win. 2" v-if="this.kmltype_sel === 'getdisplacement'">
+        <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 2</span>
+        <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
           <b-form-input v-model="gs_dwin2" name="gs_dwin2" placeholder="10 days"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Output Prefix">
+        <span class="inputLabel">Output Prefix</span>
+        <b-input-group>
           <b-form-input v-model="gs_outputprefix" name="gs_outputprefix"></b-form-input>
         </b-input-group>
         <b-col class="miscOptions">

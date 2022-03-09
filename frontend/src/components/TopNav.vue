@@ -5,28 +5,60 @@
                 <img id="logo" src="../assets/LogoDark.png" alt="GeoGateway Logo" v-on:click="move_logo_right">
          
 
-           <b-button class="miscButton" size="sm">
+           <b-button class="miscButton" size="sm" @click="feedbackPopup=true">
             Feedback
           </b-button>
 
-           <b-button class="miscButton" size="sm" >
+           <b-button class="miscButton" size="sm" @click="helpPopup=true">
             Help
           </b-button>
            <b-button size="sm" id="login" href="/auth/login">
             <b-icon-person></b-icon-person>Login
           </b-button>
         </b-navbar>
+
+         <!-- feedback  popup -->
+            <b-modal hide-backdrop
+                v-model="feedbackPopup"
+                title="Feed Back">
+                    <report/>
+                    <div slot="modal-footer" class="w-100">
+                    </div>
+            
+          </b-modal>
+
+           <!-- help  popup -->
+            <b-modal hide-backdrop
+                v-model="helpPopup"
+                title="Help">
+                    <help/>
+                    <div slot="modal-footer" class="w-100">
+                    </div>
+          </b-modal>
+
+
+
     </div>
 
 </template>
 
 <script>
     // import ToolBar from "./ToolBar";
+    import report from "./report"
+    import help from "./help"
     export default {
         name: "TopNav",
         components: {
             // ToolBar
+            report,
+            help,
         },
+    data(){
+        return {
+            feedbackPopup: false,
+            helpPopup: false,
+        };
+    },
       methods: {
           loginRoute(){
 
@@ -91,7 +123,7 @@ bottom: 21.43%;
 }
 .miscButton{
     background: none;
-
+    border: none;
     font-family: Inter;
 font-style: normal;
 font-weight: 600;
@@ -99,7 +131,9 @@ font-size: 16px;
 line-height: 19px;
 display: flex;
 align-items: center;
-
+margin-left: 20px;
+margin-right: 20px;
+float: right;
 /* Primary text colour */
 
 color: #283237;

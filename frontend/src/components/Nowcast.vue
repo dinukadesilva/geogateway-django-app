@@ -3,7 +3,7 @@
 
     <b-card>
     <span class="icon is-right" syle="pointer-events: all;" @click="nowcastInfo=true">
-      <i class="fas fa-info-circle"></i> 
+      <i class="aboutIcon fas fa-info-circle"></i> 
     </span>&ensp; About Nowcast
     </b-card>
 

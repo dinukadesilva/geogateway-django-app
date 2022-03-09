@@ -4,7 +4,7 @@
     <div>
     <b-card>
     <span class="icon is-right" syle="pointer-events: all;" @click="mapToolsInfo=true">
-      <i class="fas fa-info-circle"></i> 
+      <i class="aboutIcon fas fa-info-circle"></i> 
     </span>&ensp; About Maptools 
     </b-card>
     <span> Functions <hr></span>

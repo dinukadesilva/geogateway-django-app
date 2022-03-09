@@ -3,14 +3,15 @@
 
     <b-card>
     <span class="icon is-right" syle="pointer-events: all;" @click="seismInfo=true">
-      <i class="fas fa-info-circle"></i> 
+      <i class="aboutIcon fas fa-info-circle"></i> 
     </span>&ensp; About Seismicity
     </b-card>
 
+    Recent Earthquakes from USGS
+
     <div id="panel_forecast" style="margin-top: 10px; margin-bottom:10px;">
 
-      <h3>Recent Earthquakes from USGS</h3>
-      <hr />
+     <span class="inputLabel">Recent Earthquakes from USGS</span><hr>
       <b-form-radio-group>
         <b-form-radio
             type="radio"
@@ -60,49 +61,77 @@
         <option value='30'>Depth &#8804; 30km </option>
       </select>
       <hr/> -->
-      <h4>Search Earthquake Catalog</h4>
-      <b-button variant="dark" id="sp_windowpicker" class="btn btn-light" @click="seisDrawRect()">
-        <b-icon-pencil></b-icon-pencil> Draw an area on map</b-button>
-      <b-button variant="warning" id="clearUsgs" @click="clearUsgs()">
-        <b-icon-trash></b-icon-trash> Clear USGS Layers</b-button>
-      <br/><br/>
 
-      <b-input-group prepend="Min Lat">
+
+      <span class="inputLabel">Search Earthquake Catalog</span><hr>
+      <b-button id="sp_windowpicker" class="btn btn_blue" @click="seisDrawRect()">
+      Draw an area on the map</b-button>
+      <b-button 
+          v-if="areaLayer!=null || 
+                selected!=null || 
+                geoUri !== '' || 
+                kmlUri !== ''" 
+          class="btn_white" id="clearUsgs" @click="clearUsgs()">
+        Clear USGS Layers</b-button>
+      <br/><br/>
+      
+      <span class="inputLabel">Min Lat</span>
+      <b-input-group>
         <b-form-input v-model="minLat" placeholder="1 degree" name="minLat" value="32.0"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Min Lon">
+      
+      <span class="inputLabel">Min Lon</span>
+      <b-input-group>
         <b-form-input v-model="minLon" placeholder="1 degree" name="minLon" value="-130.0"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Max Lat">
+
+      <span class="inputLabel">Max Lat</span>
+      <b-input-group>
         <b-form-input v-model="maxLat" placeholder="1 degree" name="maxLat" ></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Max Lon">
+
+      <span class="inputLabel">Max Lon</span>
+      <b-input-group>
         <b-form-input v-model="maxLon" placeholder="1 degree" name="maxLon"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Start Date">
+
+      <span class="inputLabel">Start Date</span>
+      <b-input-group>
         <input v-model="startDate" type="date" id="start"
                value="2020-06-22"></b-input-group>
-      <b-input-group prepend="Starting Time">
+
+      <span class="inputLabel">Starting Time</span>
+      <b-input-group>
         <b-form-input v-model="startTime" placeholder="1 degree" name="startT"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Ending Date">
+
+      <span class="inputLabel">Ending Date</span>
+      <b-input-group>
         <input v-model="endDate" type="date" id="end"
                value="2020-06-26">
       </b-input-group>
-      <b-input-group prepend="Ending Time">
+
+      <span class="inputLabel">Ending Time</span>
+      <b-input-group>
         <b-form-input v-model="endTime" placeholder="1 degree" name="endTime"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Minimum Magnitude">
+
+      <span class="inputLabel">Minimum Magnitude</span>
+      <b-input-group>
         <b-form-input v-model="minMag" placeholder="1 degree" name="minMag"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Maximum Magnitude">
+
+      <span class="inputLabel">Maximum Magnitude</span>
+      <b-input-group>
         <b-form-input v-model="maxMag" placeholder="1 degree" name="maxMag"></b-form-input>
       </b-input-group>
-      <b-input-group prepend="Icon Display Scale">
+
+      <span class="inputLabel">Icon Display Scale</span>
+      <b-input-group>
         <b-form-input v-model="iconScale" placeholder="1 degree" name="iconScale"></b-form-input>
       </b-input-group>
       <br/>
-      <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runSeismicity()">Search Catalog
+      <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runSeismicity()">Search
       </button>
       <br />
       <br />
