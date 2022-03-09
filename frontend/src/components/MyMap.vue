@@ -8,17 +8,8 @@
     <TopNav/>
     <ToolTabs class="tools"/>
     
-    <!--
-    <div class="overlay">
-    <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
-    </div>
-    -->
+    
     <ToolBar class="tools"/>
-    <!--
-    <div class="overlay">
-    <b-button @click=toggleBar() class="toggle"><i class="fas fa-bars"></i></b-button>
-    </div>
-    -->
     <DraggableDiv v-resize @resize="resizeLOS" class="col-11" v-if="plotActive" id="plot-window">
         
     
@@ -126,6 +117,9 @@ export default {
     //this.tileLayer();
     this.basemapLayers();
     
+    //set zoom control position
+    this.globalMap.zoomControl.setPosition('bottomleft');
+
     //logo at bottom of map
     var legend2 = L.control({position: 'bottomleft'});
     legend2.onAdd = function () {
@@ -609,5 +603,6 @@ background: #F5F9FB;
 .overlay{
   background-color: transparent;
 }
+
 </style>
 

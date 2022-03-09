@@ -55,6 +55,48 @@
     height:100%;
     overflow-x: hidden;
     overflow-y: hidden;
+    padding-left: 10px;
     }
+    .aboutIcon{
+        color: #2F7CF6;
+    }
+    .inputLabel{
+        left: 0%;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+        display: flex;
+        align-items: center;
+        color: #95ABB1;
+        margin-top: 10px;
+    }
+
+    .btn_blue{
+        background: #2F7CF6;
+        box-shadow: 0px 4px 5px rgba(217, 229, 235, 0.5);
+        border-radius: 5px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 19px;
+        color: #FFFFFF;
+    }
+
+
+.btn_white{
+  background: #FFFFFF;
+  border: 1px solid #A2B8BF;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #2F7CF6;
+}
 
 </style>

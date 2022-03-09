@@ -1,15 +1,20 @@
 <template>
   <div class="tab-window">
-    <!--<h3>UAVSAR</h3>-->
 
     <b-card>
       <span class="icon is-right" syle="pointer-events: all;" @click="uavsarInfo=true">
-      <i class="fas fa-info-circle"></i> 
+      <i class="aboutIcon fas fa-info-circle"></i> 
     </span>&ensp; About UAVSAR
     </b-card>
     <div class="topbuttonGroup">
       <div class="overviewButtonGroup">
-      <span>Functions<hr></span>
+      <div class="row">
+        <div class= "col">
+          <span class="inputLabel">Functions</span>
+          </div>
+          <div class = "col">
+          <hr>
+          </div></div>
       <!--
         <b-button
             class="btn-sm"
@@ -22,28 +27,19 @@
         </b-button>
 -->
 
-        <!--      <div >-->
-        <!--      <div class="toolInfo">-->
-        <!--        <i>Fill one of the following fields or use map drawing tools to search catalog:</i>-->
-        <!--      </div>-->
-        <!--      <br />-->
-        <b-button class="btn-sm uavsarbtn" v-if="overview"  @click="uavsarDrawRect()">
-        <!--<b-icon-pencil></b-icon-pencil> -->
+       
+        <b-button class="btn-sm btn_white" v-if="overview"  @click="uavsarDrawRect()">
         Draw Area</b-button>
-        <b-button class="btn-sm uavsarbtn" v-if="overview" @click="uavsarPinDrop()">
-        <!--<b-icon-hand-index></b-icon-hand-index>-->
+        <b-button class="btn-sm btn_white" v-if="overview" @click="uavsarPinDrop()">
          Drop Pin </b-button>
       </div>
-      <!--      </div>-->
     </div>
 
 
 
 
     <div v-if="overview">
-      <!--      <div class="toolInfo">-->
-      <!--        <i>Fill one of the following fields or use map drawing tools to search catalog:</i>-->
-      <!--      </div>-->
+    
       <div v-if="geometryActive" >
         <br/>
         <b-button class="btn-sm" variant="warning" @click="drawListenerOff">
@@ -52,11 +48,13 @@
       </div>
       <br/>
       <!--TODO fix this-->
-      <b-input-group class="input-group-sm" prepend="Flight name/path">
+      <span class="inputLabel">Flight name/path</span>
+      <b-input-group class="input-group-sm" >
         <b-form-input v-model="flight_path" name="flight_path" placeholder=""></b-form-input>
       </b-input-group>
 
-      <b-input-group class="input-group-sm" prepend="Latitude, Longitude">
+      <span class="inputLabel">Latitude, Longitude</span>
+      <b-input-group class="input-group-sm" >
         <b-form-input v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
       </b-input-group><br/>
       <b-button class="btn-sm" variant="success" @click="uavsarQuery()">Search</b-button>
@@ -67,7 +65,7 @@
 
 
     <div v-if="uavsarLayers.length !== 0 && !activeQuery">
-    <span>Output Filters<hr></span>
+    <span class="inputLabel">Output Filters<hr></span>
       <br/>
       <b-container >
         <div class="layer-options">
@@ -1280,19 +1278,6 @@ h3, h4, h5 {
 .center {
   width: 50%;
   margin: 0 auto;
-}
-.uavsarbtn{
-  background: #FFFFFF;
-border: 1px solid #A2B8BF;
-box-sizing: border-box;
-border-radius: 5px;
-font-family: Inter;
-font-style: normal;
-font-weight: 600;
-font-size: 16px;
-line-height: 19px;
-
-color: #2F7CF6;
 }
 
 </style>

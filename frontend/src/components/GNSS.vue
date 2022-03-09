@@ -3,14 +3,11 @@
     <div>
       <b-card>
       <span class="icon is-right" syle="pointer-events: all;" @click="gnssInfo=true">
-      <i class="fas fa-info-circle"></i> 
+      <i class="aboutIcon fas fa-info-circle"></i> 
     </span> &ensp; About GNSS data Analysis
       </b-card>
-      <label class="control-label requiredField">
-        Select GNSS data models
-      </label>
 
-      <span>output<hr></span>
+      <span class="inputLabel">Outputs<hr></span>
       <b-card>
         <div v-if="gnssLayers.length!==0 && !activeGnssQuery">
             <strong>Output</strong>
@@ -37,9 +34,9 @@
         </select>
 
         <div v-if="kmltype_sel!=null">
-        <b-button variant="dark" id="sp_windowpicker" class="btn btn-light" @click="gnssDrawRect()">
-          <b-icon-pencil></b-icon-pencil> Draw an area on map</b-button>
-        <b-button variant="warning" id="clearGnss" @click="clearGnss()"><b-icon-trash></b-icon-trash> Clear GNSS Layers</b-button>
+        <b-button id="sp_windowpicker" class="btn btn_blue" @click="gnssDrawRect()">
+         Draw an area on the map</b-button>
+        <b-button class="btn_white" id="clearGnss" @click="clearGnss()"> Clear Layers</b-button>
         <br/>
 
         <div v-if="geometryActive" >
@@ -49,71 +46,78 @@
           <br/>
         </div>
         <br>
-        <b-input-group prepend="Center Latitude">
-          <template #prepend><b-input-group-text ><strong>Center Latitude</strong></b-input-group-text></template>
+        <span class="inputLabel">Center Latitude</span>
+        <b-input-group>
           <b-form-input v-model="gs_latitude"  name="gs_latitude"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Center Longitude">
-          <template #prepend><b-input-group-text ><strong>Center Longitude</strong></b-input-group-text></template>
+        <span class="inputLabel">Center Longitude</span>
+        <b-input-group>
           <b-form-input v-model="gs_longitude" placeholder="" name="gs_longitude"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Longitude Span">
-          <template #prepend><b-input-group-text ><strong>Longitude Span</strong></b-input-group-text></template>
+        <span class="inputLabel">Longitude Span</span>
+        <b-input-group>
           <b-form-input v-model="gs_width"  name="gs_width" placeholder="1 degree"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Latitude Span">
-          <template #prepend><b-input-group-text ><strong>Latitude Span</strong></b-input-group-text></template>
+        <span class="inputLabel">Latitude Span</span>
+        <b-input-group >
           <b-form-input v-model="gs_height" placeholder="1 degree" name="gs_height"></b-form-input>
         </b-input-group>
 
+        <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Epoch</span>
         <div class="input-group" id="epoch_show" v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
-          <b-input-group prepend="Epoch">
-            <template #prepend><b-input-group-text ><strong>Epoch</strong></b-input-group-text></template>
+          <b-input-group>
             <b-form-input v-model="gs_epoch" placeholder="YYYY-MM-DD" name="gs_epoch"></b-form-input>
           </b-input-group>
         </div>
 
-        <b-input-group prepend="Epoch 1" v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
-            <template #prepend><b-input-group-text ><strong>Epoch 1</strong></b-input-group-text></template>
+        <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'" class="inputLabel">Epoch 1</span>
+        <b-input-group v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
           <b-form-input v-model="gs_epoch1" placeholder="YYYY-MM-DD" name="gs_epoch1"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Epoch 2" v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
-            <template #prepend><b-input-group-text ><strong>Epoch 2</strong></b-input-group-text></template>
+        <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'" class="inputLabel">Epoch 2 </span>
+        <b-input-group  v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
           <b-form-input v-model="gs_epoch2" placeholder="YYYY-MM-DD" name="gs_epoch2"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Ref. Site">
+        <span class="inputLabel">Ref. Site</span>
+        <b-input-group>
           <b-form-input v-model="gs_refsite" placeholder="4-letter code" name="gs_refsite"></b-form-input>
           <b-input-group-append>
             <b-button variant="outline-primary" href="https://sideshow.jpl.nasa.gov/post/tables/table2.html" target="_blank">Stations</b-button>
           </b-input-group-append>
         </b-input-group>
 
-        <b-input-group prepend="Scale">
+        <span class="inputLabel">Scale</span>
+        <b-input-group>
           <b-form-input v-model="gs_scale" placeholder="320 mm/yr/deg" name="gs_scale"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Coseismic Win." v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
+        <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Coseismic Win.</span>
+        <b-input-group v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
           <b-form-input v-model="gs_ctwin" name="gs_ctwin" placeholder="0.1 years"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Postseismic Win." v-if="this.kmltype_sel === 'getpostseismic' ">
+        <span v-if="this.kmltype_sel === 'getpostseismic' " class="inputLabel">Postseismic Win.</span>
+        <b-input-group v-if="this.kmltype_sel === 'getpostseismic' ">
           <b-form-input v-model="gs_ptwin" name="gs_ptwin" placeholder="2 years"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Av. Win. 1" v-if="this.kmltype_sel === 'getdisplacement'">
+        <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 1</span>
+        <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
           <b-form-input v-model="gs_dwin1" name="gs_dwin1" placeholder="10 days"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Av. Win. 2" v-if="this.kmltype_sel === 'getdisplacement'">
+        <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 2</span>
+        <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
           <b-form-input v-model="gs_dwin2" name="gs_dwin2" placeholder="10 days"></b-form-input>
         </b-input-group>
 
-        <b-input-group prepend="Output Prefix">
+        <span class="inputLabel">Output Prefix</span>
+        <b-input-group>
           <b-form-input v-model="gs_outputprefix" name="gs_outputprefix"></b-form-input>
         </b-input-group>
         <b-col class="miscOptions">
@@ -141,68 +145,22 @@
               Include error ellipses
             </label>
           </b-row>
-          <b-row class="checkbox" style="text-align: left" v-if="this.kmltype_sel === 'getdisplacement'">
-            <label class="checkbox" >
-              <input v-model="gs_interpolation" name="gsinterpolation" type="checkbox" id="gs_interpolation"/>
-              Interpolation
-            </label>
-          </b-row>
-        <b-container v-if="gs_interpolation && this.kmltype_sel === 'getdisplacement'" fluid="lg">
-        <b-row>
-        <b-input-group prepend="Mehtods">
-          <b-form-select  v-model="gs_interpolationtype" name="gs_interpolationtype">
-            <b-form-select-option value="linear">linear</b-form-select-option>
-            <b-form-select-option value="gaussian">gaussian</b-form-select-option>
-            <b-form-select-option value="power">power</b-form-select-option>
-            <b-form-select-option value="exponential">exponential</b-form-select-option>
-            <b-form-select-option value="spherical">spherical</b-form-select-option>
-          </b-form-select>
-        </b-input-group>
-        </b-row>
-        <b-row>
-        <b-input-group prepend="Grid spacing">
-          <b-form-input v-model="gs_gridspacing" name="gs_gridspacing" placeholder="0.018 degree"></b-form-input>
-        </b-input-group>
-        </b-row>
-        <b-row>
-        <b-input-group prepend="Azimuth">
-          <b-form-input v-model="gs_azimuth" name="gs_azimuth" placeholder="-5 degree"></b-form-input>
-        </b-input-group>
-        </b-row>
-        <b-row>
-        <b-input-group prepend="Elevation Angle">
-          <b-form-input v-model="gs_elevationangle" name="gs_elevationangle" placeholder="60 degree"></b-form-input>
-        </b-input-group>
-        </b-row>
-        </b-container>
-
           <b-row>
             <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runButtonClick()">        Run
             </button>
           </b-row>
           <br />
           <b-row>
-            <div style="float: left; text-align: left">Data source: <br/><a href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a>
-            <br><a v-if="this.kmltype_sel === 'getdisplacement'" href="http://geodesy.unr.edu/NGLStationPages/gpsnetmap/GPSNetMap.html" target="_blank">NGL GPS Networks</a>
-          </div>
+            <div style="float: left; text-align: left"><strong>Data source: <br/><a href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a></strong></div>
           </b-row>
         </b-col>
 
         <b-col >
-
-
-          <br><br>
-          <div class="outputLayers" v-if="gnssLayers.length!==0 && !activeGnssQuery">
-            <strong>Output</strong>
-            <div  v-for="layer in gnssLayers" :key="layer.name">
-              <div v-if="layer.type !== 'table.txt' && layer.type !=='output.zip'" ><input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> <span class="checkbox-label"> <a target="_blank" :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> </div>
-              <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
-            </div>
-          </div>
-
-
         </b-col>
 
+
+
+ 
       <div v-if="activeGnssQuery" style="overflow: hidden">
         <br/>
         <b-spinner variant="success" label="Spinning"></b-spinner>
@@ -245,7 +203,6 @@ export default {
     return {
       gnssInfo: false,
       areaLayer: null,
-      gs_interpolationtype:'linear',
     }
   },
   computed: {
@@ -270,20 +227,14 @@ export default {
       'gnss.gs_eon',
       'gnss.gs_vabs',
       'gnss.gs_analysisCenter',
-      'gnss.gs_interpolation',
-      'gnss.gs_gridspacing',
-      'gnss.gs_interpolationtype',
-      'gnss.gs_azimuth',
-      'gnss.gs_elevationangle',
-
       'gnss.ranLayers',
       'gnss.activeLayers',
       'gnss.markerSize',
       'gnss.layersActive',
       'gnss.activeGnssQuery',
       'gnss.geometryActive',
-      'gnss.gnssLayers',
-      'gnss.interpolationLegend',
+        'gnss.gnssLayers',
+
         'map.drawControl',
         'map.globalMap',
         'map.layers',
@@ -304,13 +255,7 @@ export default {
         }else {
           this.globalMap.removeLayer(this.layers[name]);
         }
-        if ((active) && (layer.type.includes(".png"))) {
-          // add legend
-          this.interpolationLegend.update(layer.url);
-        } else {
-          // remove legend
-          this.interpolationLegend.remove();
-        }
+
       },
     runButtonClick(){
       let vm = this;
@@ -323,9 +268,9 @@ export default {
     rungpsservice(){
       this.activeGnssQuery = true;
       var vm = this;
-      var fileNameH, fileNameV, fileNameT, folder, props,fileNameZ;
+      var fileNameH, fileNameV, fileNameT, folder, props;
       //var markerSize = this.markerSize;
-      var verticalUrl, horizontalUrl, tableUrl, zipUrl;
+      var verticalUrl, horizontalUrl, tableUrl;
       var prefix = this.gs_outputprefix;
       if(this.kmltype_sel === ''){
         alert("Please select as least one plot!");
@@ -344,12 +289,10 @@ export default {
         if (this.gs_analysisCenter == true) {this.gs_analysisCenter = "NGL";} else { this.gs_analysisCenter = "";}
         const baseURI = '/geogateway_django_app/gps_service'
         //request JSON dict of GPS_service details with query params from form
-        var gpsfunction = this.kmltype_sel;
-        if ((gpsfunction == "getdisplacement") && (this.gs_interpolation == true)) {gpsfunction = "getInterpolation";}
         axios.get(baseURI, {
           params: {
             //
-            "function": gpsfunction,
+            "function": this.kmltype_sel,
             "lat": this.gs_latitude,
             "lon": this.gs_longitude,
             //"width":$('#gs_width').val(),
@@ -371,10 +314,6 @@ export default {
             "eon": this.gs_eon,
             "vabs": this.gs_vabs,
             "analysisCenter": this.gs_analysisCenter,
-            "gridspacing": this.gs_gridspacing,
-            "interpolationtype": this.gs_interpolationtype,
-            "azimuth": this.gs_azimuth,
-            "elevation": this.gs_elevationangle,
             //
           }
         })
@@ -391,9 +330,7 @@ export default {
                 var parts = f.split('_');
                 return parts[parts.length - 1];
               }
-              var imagelist = [];
-              var hasZip = false;
-              for(var i = 0;i < props.urls.length;i++){
+              for(var i = 0;i < 3;i++){
                 var ext = getExtension(props.urls[i]);
                 if(ext == 'vertical.kml'){
                   verticalUrl = props.urls[i];
@@ -404,17 +341,8 @@ export default {
                 }else if(ext == 'table.txt'){
                   tableUrl = props.urls[i];
                   fileNameT = props.results[i];
-                }else if(!ext.includes('colorbar') && ext.includes('.png')) {
-                  imagelist.push([props.urls[i],props.results[i]]);
-                }else if (ext.includes(".zip")) {
-                  hasZip = true;
-                  zipUrl = props.urls[i];
-                  fileNameZ = props.results[i];
                 }
               }
-              //console.log(imagelist);
-              //console.log(props.imagebounds);
-
 
               folder = props.folder;
               prefix = (1 + Math.floor(vm.gnssLayers.length/3)).toString() + prefix;
@@ -442,34 +370,7 @@ export default {
                 url: verticalUrl,
                 type: 'vertical.kml',
               })
-            if (hasZip) {
-              vm.gnssLayers.push({
-                pre: prefix,
-                name: fileNameZ,
-                folder: folder,
-                active: true,
-                url: zipUrl,
-                type: 'output.zip',
-              });              
-            }
-            if (imagelist.length>0){
-              for (var j = 0;j < imagelist.length;j++) {
-                var iname = imagelist[j][1].replace("contour_of_","");
-                var activestatus = false;
-                if (j==0) {activestatus=true;}
-              vm.gnssLayers.push({
-                pre: prefix,
-                name: iname,
-                folder: folder,
-                active: activestatus,
-                url: imagelist[j][0],
-                type: iname,
-              });
-              vm.addImageLayer(imagelist[j][0],props.imagebounds,prefix+iname,activestatus);
-              }
-            }
-            imagelist=[];
-              const kmlURI = '/geogateway_django_app/get_kml';
+              const kmlURI = '/geogateway_django_app/get_kml'
               axios.get(kmlURI, {
                 params: {
                   "file": fileNameH,
@@ -513,37 +414,6 @@ export default {
       this.layers[layerName] = new L.KML(kml);
       this.globalMap.addLayer(this.layers[layerName]);
 
-    },
-    addImageLayer(imageUrl,imageBounds,layerName,displayflag){
-      this.layers[layerName]=new L.imageOverlay(imageUrl, imageBounds,{opacity:0.85});
-      if (displayflag) {
-      this.globalMap.addLayer(this.layers[layerName]);
-      this.globalMap.flyToBounds(this.layers[layerName].getBounds());
-      this.addImageLegend(imageUrl); }
-    },
-    addImageLegend(aimageUrl){
-      var legendUrl = aimageUrl.replace(".png","_colorbar.png");
-      if (this.interpolationLegend == null) {
-        this.interpolationLegend = L.control({position: 'bottomright'});
-        this.interpolationLegend.onAdd = function () {
-          var div = L.DomUtil.create('div', 'leafletinfo');
-          div.id = "interpolationLegend";
-          div.innerHTML = '<img src=' + legendUrl + '>' ;
-          return div;
-        };
-        this.interpolationLegend.update = function (aimageUrl) {
-          var aurl = aimageUrl.replace(".png","_colorbar.png");
-          var div = document.getElementById('interpolationLegend');
-          div.innerHTML = '<img src=' + aurl + '>' ;
-        }
-        this.interpolationLegend.remove = function () {
-          var div = document.getElementById('interpolationLegend');
-          if (div != null) {
-          div.innerHTML = '';}
-        }
-        this.interpolationLegend.addTo(this.globalMap);
-      } else {this.interpolationLegend.update(aimageUrl);}
-        
     },
     drawToolbar() {
       this.geometryActive = true;
@@ -592,18 +462,12 @@ export default {
       this.layersActive = false;
       for(var i = 0; i < this.gnssLayers.length; i++){
         let curr = this.gnssLayers[i];
-        if ((curr.type !== 'table.txt') && (curr.type !=='output.zip')) {
+        if(curr.type !== 'table.txt') {
           let name = curr.pre + curr.type;
-          //console.log("remove layer " + name);
           this.globalMap.removeLayer(this.layers[name]);
         }
       }
-      // remove gnss legend layer
-      if (this.interpolationLegend !== null) {
-          this.interpolationLegend.remove();
-        }
-      this.interpolationLegend == null;
-
+      
       this.gs_latitude =null;
       this.gs_longitude = null;
       this.gs_width = null;
@@ -655,16 +519,4 @@ a:link {
   background-color: transparent;
   text-decoration: underline;
 }
-
-</style>
-<style>
-.leafletinfo{
-    padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    background: white;
-    background: rgba(255,255,255,0.6);
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-}
-
 </style>

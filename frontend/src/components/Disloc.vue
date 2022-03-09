@@ -2,7 +2,11 @@
 
 <template>
   <div class="tab-window">
-    <h3>Disloc</h3>
+   <b-card>
+    <span class="icon is-right" syle="pointer-events: all;" @click="disclocInfo=true">
+      <i class="aboutIcon fas fa-info-circle"></i> 
+    </span>&ensp; About Discloc 
+    </b-card>
     <hr/>
 
     <div id="upload-container">
@@ -81,6 +85,19 @@
         <!--&lt;!&ndash;          {{entry.exp}}&ndash;&gt;-->
       </div> <br>
     </div>
+
+     <!-- info  popup -->
+    <b-modal hide-backdrop
+    v-model="disclocInfo"
+            title="Map Tools">
+            <p class="my-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
   </div>
 </template>
 
@@ -101,7 +118,7 @@ export default {
   name: "Disloc",
   data(){
     return {
-
+        disclocInfo: false,
 
     }
   },
