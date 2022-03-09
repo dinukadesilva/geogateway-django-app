@@ -38,7 +38,6 @@
           @change="updateLayer('qfaults')"
           id="qfaults"
       ><label for="boundaries">Quaternary Faults</label>&ensp;
-
       <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')"><!--TODO: fix link-->
       <i class="fas fa-info-circle"></i>
       </a>
@@ -66,13 +65,6 @@
       <b-card>
       <h5 class="red">Geology</h5>
       <b-form-checkbox
-
-      <a href="" v-on:click.stop.prevent="openWindow('https://doi.org/10.5066/F7S75FJM')">
-      <i class="fas fa-info-circle"></i>
-      </a>
-      <br/>
-      <input
-
           type="checkbox"
           v-model="kml"
           @change="updateLayer('kml')"
@@ -113,7 +105,6 @@
           @change="updateLayer('boundaries')"
           id="boundaries"
       ><label for="boundaries">Show State Boundaries</label>&ensp;
-
       <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
       <i class="fas fa-info-circle"></i>
       </a>
@@ -122,19 +113,11 @@
       <b-card>
       <h5 class="green">Topology</h5>
       <b-form-checkbox
-
-      <a href="" v-on:click.stop.prevent="openWindow('https://www.census.gov/geographies/mapping-files/2010/geo/carto-boundary-file.html')">
-      <i class="fas fa-info-circle"></i>
-      </a>
-      <br/>
-      <input
-
           type="checkbox"
           v-model="coasts"
           @change="updateLayer('coasts')"
           id="coasts"
       ><label for="coasts">Show Coastlines</label>&ensp;
-
       <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
       <i class="fas fa-info-circle"></i><!--TODO: fix link-->
       </a>
@@ -143,13 +126,6 @@
       <b-card>
        <h5 class="green">Topology</h5>
       <b-form-checkbox
-
-      <a href="" v-on:click.stop.prevent="openWindow('https://www.naturalearthdata.com/downloads/50m-physical-vectors/')">
-      <i class="fas fa-info-circle"></i>
-      </a>
-      <br/>
-      <input
-
           type="checkbox"
           v-model="currLoc"
           @change="getLocation()"
