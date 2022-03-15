@@ -1,23 +1,9 @@
 <template>
-<div id="sidebar-1">
-    <!--<b-button v-if="!toolbar" @click="removeToggle()" class="toggle"><i class="fas fa-bars"></i></b-button>-->
-    <b-collapse id="toolbar" v-model="toolbar" visible>
-    
-    <div class = "row">
-    <div class="col-sm-2" v-if="!nav">
-    <b-button v-if="!nav" @click="removeToggle()" class="toggle"><i class="fas fa-bars"></i></b-button>
-    </div>
-        <div class="col">
+    <div id="sidebar-1">
+        <b-collapse id="toolbar" v-model="toolbar" visible>
             <b-card-text id="toolbarContent"><router-view></router-view></b-card-text>
-        </div>
-        <div class= "col-sm-2" syle=" width: fit-content;">
-        <span class="icon is-right" syle="pointer-events: all;" @click=closeBar()>
-            <i class="fa fa-times" aria-hidden="true"></i>
-        </span>
-        </div>
+        </b-collapse>
     </div>
-    </b-collapse>
-</div>
 </template>
 
 <script>
@@ -36,29 +22,19 @@
     mounted() {
       bus.$on('ToPage', (page) =>
         this.toPage(page));
-        bus.$on('ToggleBar', () =>{
-        if(!this.toolbar){
-            
-            //let vm = this;
-            //vm.globalMap.removeControl(vm.toggleButton);
-            this.toolbar = true;
-            //vm.toggleButton = null;
+        bus.$on('CloseBar', () =>{
+        if(this.toolbar){ 
+            this.closeBar();
         }
         });
-
         bus.$on('OpenBar', () =>{
             if(!this.toolbar){
-                //let vm = this;
-                //vm.globalMap.removeControl(vm.toggleButton);
                 this.toolbar = true;
-                //vm.toggleButton = null;
         }
         });
         bus.$on('navClosed', () =>{
             this.nav = false;
-            this.addToggle();
-        });
-            
+        });       
     },
   computed: {
           ...mapFields(['uavsar.overview', 'map.globalMap', 'map.layers', 'uavsar.overviewLegend'])
@@ -66,40 +42,6 @@
     methods: {
         closeBar(){
             this.toolbar = false;
-            this.addToggle();
-        },
-        addToggle(){
-            let vm = this;
-            if (!vm.toolbar && !vm.nav){
-            console.log(this.toolbar);
-            if (vm.toggleButton==null){
-                
-                vm.toggleButton = L.control({position: 'topleft'});
-                
-                vm.toggleButton.onAdd = function () {
-
-                    var btn =  L.DomUtil.create('button', 'toggle');
-                    btn.id = "toggleButton";
-                    btn.setAttribute("style","text-align: center;  border-radius: 5px; background: #FFFFFF;");
-                    btn.innerHTML = '<i class="fa-lg fas fa-bars" style="color: #2F7CF6;"></i>';
-                    btn.addEventListener ("click", 
-                    function () {
-                        vm.globalMap.removeControl(vm.toggleButton);
-                        bus.$emit("ToggleNav");
-                        vm.toggleButton = null;
-                        vm.nav=true;
-                    }, 
-                    false);
-                    return btn;
-
-        }
-            this.toggleButton.addTo(this.globalMap);
-            }
-            }
-        },
-        removeToggle(){
-            this.nav = true;
-            bus.$emit("ToggleNav");
         },
         toPage(page){
                 var route ='';
@@ -182,15 +124,13 @@
     }
 
     #toolbar{
+        padding: 10px;
     }
 
-    .toggle{
+    .nav-toggle{
         pointer-events: auto;
         color: #2F7CF6;
         background: #FFFFFF;
-    }
-    #close{
-        width: fit-content;
     }
     #toolbarContent{
                 margin-top:3%;

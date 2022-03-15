@@ -119,6 +119,7 @@ export default {
     
     //set zoom control position
     this.globalMap.zoomControl.setPosition('bottomleft');
+    this.globalMap.options.minZoom = 3;
 
     //logo at bottom of map
     var legend2 = L.control({position: 'bottomleft'});

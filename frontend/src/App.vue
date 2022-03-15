@@ -55,7 +55,9 @@
     height:100%;
     overflow-x: hidden;
     overflow-y: hidden;
-    padding-left: 10px;
+    padding-left: 20px;
+    width: max-content;
+    
     }
     .aboutIcon{
         color: #2F7CF6;
@@ -97,6 +99,47 @@
   font-size: 16px;
   line-height: 19px;
   color: #2F7CF6;
+}
+.center{
+    text-align: center;
+}
+.orange{
+width: 46px;
+height: 15px;
+left: 30px;
+top: 253px;
+font-family: Inter;
+font-style: normal;
+font-weight: bold;
+font-size: 12px;
+line-height: 15px;
+display: flex;
+align-items: center;
+text-transform: uppercase;
+color: #EB9040;
+}
+.green{
+  font-family: Inter;
+font-style: normal;
+font-weight: bold;
+font-size: 12px;
+line-height: 15px;
+display: flex;
+align-items: center;
+text-transform: uppercase;
+color: #60B56C;
+}
+.red{
+font-family: Inter;
+font-style: normal;
+font-weight: bold;
+font-size: 12px;
+line-height: 15px;
+display: flex;
+align-items: center;
+text-transform: uppercase;
+color: #E9637D;
+
 }
 
 </style>
