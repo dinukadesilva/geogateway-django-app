@@ -1,21 +1,22 @@
 <template>
   <div class="tab-window">
-
-    <b-card>
+     <b-card>
       <span class="icon is-right" syle="pointer-events: all;" @click="uavsarInfo=true">
       <i class="aboutIcon fas fa-info-circle"></i> 
     </span>&ensp; About UAVSAR
     </b-card>
+
+    
     <div class="topbuttonGroup">
       <div class="overviewButtonGroup">
-      <div class="row">
-        <div class= "col">
-          <span class="inputLabel">Functions</span>
-          </div>
-          <div class = "col">
-          <hr>
-          </div></div>
-      <!--
+        
+        <b-form-checkbox      
+          v-model="overview"
+          @change="showOverview"
+          id="overview"
+      ><label for="ucerf"> Overview</label>&ensp;
+      </b-form-checkbox>
+<!--
         <b-button
             class="btn-sm"
             type="checkbox"
@@ -26,12 +27,17 @@
           <span v-else>Hide Overview</span>
         </b-button>
 -->
+<span v-if="overview" class="inputLabel">Functions</span>
 
-       
+        <b-row>
         <b-button class="btn-sm btn_white" v-if="overview"  @click="uavsarDrawRect()">
         Draw Area</b-button>
         <b-button class="btn-sm btn_white" v-if="overview" @click="uavsarPinDrop()">
          Drop Pin </b-button>
+         </b-row>
+
+
+       
       </div>
     </div>
 
@@ -39,15 +45,16 @@
 
 
     <div v-if="overview">
-    
+      <!--      <div class="toolInfo">-->
+      <!--        <i>Fill one of the following fields or use map drawing tools to search catalog:</i>-->
+      <!--      </div>-->
       <div v-if="geometryActive" >
         <br/>
-        <b-button class="btn-sm" variant="warning" @click="drawListenerOff">
-          <b-icon-x-circle></b-icon-x-circle>Cancel Selection</b-button>
+        <b-button class="btn-sm" btn_white @click="drawListenerOff">
+          Cancel Selection</b-button>
         <br/>
       </div>
       <br/>
-      <!--TODO fix this-->
       <span class="inputLabel">Flight name/path</span>
       <b-input-group class="input-group-sm" >
         <b-form-input v-model="flight_path" name="flight_path" placeholder=""></b-form-input>
@@ -58,14 +65,10 @@
         <b-form-input v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
       </b-input-group><br/>
       <b-button class="btn-sm" variant="success" @click="uavsarQuery()">Search</b-button>
-      <b-button v-if="uavsarLayers.length !== 0 && !activeQuery" class="btn-sm" @click="clearQuery" variant="warning">
-              Clear Query
-            </b-button>
     </div>
 
 
     <div v-if="uavsarLayers.length !== 0 && !activeQuery">
-    <span class="inputLabel">Output Filters<hr></span>
       <br/>
       <b-container >
         <div class="layer-options">
@@ -73,11 +76,9 @@
             <b-button class="btn-sm" @click="selDeselAll">
               Display/Hide All
             </b-button>
-            <!--
             <b-button class="btn-sm" @click="clearQuery" variant="warning">
               Clear Query
             </b-button>
-            -->
           </b-row>
           <b-row style="margin-top: 5px">
             <div>
@@ -92,7 +93,6 @@
 
 
       <div id="queryWindow">
-      <span> Output <hr></span>
 
         <div class="collapsed"  v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']" v-bind:style="{backgroundColor: entry.activeBackground}">
           <b-col>
@@ -106,6 +106,7 @@
               <b style="font-size: 12px">{{entry.info['time1'].split(' ')[0]}} | {{entry.info['time2'].split(' ')[0]}}</b>
               </b-col>
               <b-col>
+              
               <div id="rating">
                 <div v-if="entry.info['rating'] === '0'">
                   <b-icon-star/>
@@ -197,9 +198,7 @@
       <br/>
       <b-spinner variant="success" label="Spinning"></b-spinner>
     </div>
-
-
-    <!-- info  popup -->
+<!-- info  popup -->
     <b-modal hide-backdrop
     v-model="uavsarInfo"
             title="UAVSAR">
@@ -222,9 +221,6 @@ import 'leaflet-kmz';
 import L from 'leaflet';
 import 'leaflet-kml'
 import { mapFields } from 'vuex-map-fields';
-
-
-
 export default {
   name: "UAVSAR",
   data(){
@@ -264,13 +260,9 @@ export default {
       twoPiLegend: 'https://archive.geo-gateway.org/kmz/highreslegend/2pi_t.png',
     }
   },
-
   directives: {
-
   },
   components: {
-
-
   },
   computed: {
     ...mapFields([
@@ -330,7 +322,6 @@ export default {
       'map.uavsarLegend',
       'map.plotActive',
       'map.headingLegend',
-
     ])
   },
   mounted() {
@@ -346,7 +337,6 @@ export default {
         this.showOverview());
     bus.$on('getCSV', (entry, latlons)=>
         this.getCSV(entry, latlons));
-
     bus.$on('chartData', (csv)=>
         this.chartData(csv));
     // bus.$on('polyDrawn', (latlngs)=>
@@ -360,7 +350,6 @@ export default {
         this.resetPlot());
   },
   methods: {
-
     uavsarDrawRect(){
       this.geometryActive = true;
       let vm = this;
@@ -387,12 +376,9 @@ export default {
           vm.rectQuery(vm.maxLat, vm.minLon, vm.minLat, vm.maxLon, vm.centerLat, vm.centerLng);
           vm.geometryActive = false;
         }});
-
     },
-
     clearFilters(){
       Array.prototype.push.apply(this.uavsarLayersFiltered, this.uavsarLayers);
-
       this.bracketDate = ''
     },
     uavsarPinDrop(){
@@ -430,7 +416,6 @@ export default {
       }
       this.uavsarLayersFiltered = this.uavsarLayers.filter(checkPath);
     },
-
     filterDate(){
       let vm = this;
       function checkDate(entry) {
@@ -445,15 +430,12 @@ export default {
         this.uavsarLayersFiltered = this.uavsarLayers.filter(checkDate);
       }
     },
-
-
     sortEntries(){
       if(this.sortBy === 'rating') {
         this.uavsarLayersFiltered = this.uavsarLayers.sort((a, b) =>
             (a.info['rating'] > b.info['rating']) ? -1 : 1);
       }
     },
-
     uavsarQuery(){
       this.activeQuery = true;
       if(this.lat_lon === '') {
@@ -465,14 +447,10 @@ export default {
       }else {
         this.pointQuery(this.lat_lon.split(',')[0], this.lat_lon.split(',')[1]);
       }
-
     },
-
-
     openDataSource(uid){
       window.open('http://gf2.ucs.indiana.edu/quaketables/uavsar?uid='+uid, '_blank');
     },
-
     updateOpacity(value){
       this.uavsarHighResLayer.setOpacity((value/100));
     },
@@ -497,7 +475,6 @@ export default {
       bus.$emit('activatePlot', csv_final);
       // });
     },
-
     getCSV(entry, latlon){
       let vm = this;
       var losLength = this.setLosLength(latlon);
@@ -508,7 +485,6 @@ export default {
       this.lon1 = latlon[1].toFixed(5);
       this.lat2 = latlon[2].toFixed(5);
       this.lon2 = latlon[3].toFixed(5);
-
       axios.get('/geogateway_django_app/UAVSAR_csv/', {
         params: {
           //'entry':JSON.stringify(entry),
@@ -523,14 +499,11 @@ export default {
         }
       }).then(function (response){
         vm.chartData(response.data);
-
       })
     },
-
     downloadCSV(entry){
       
       var latlon = [this.plottingMarkerEnd.getLatLng().lat, this.plottingMarkerEnd.getLatLng().lng, this.plottingMarkerStart.getLatLng().lat, this.plottingMarkerStart.getLatLng().lng];
-
       var losLength = this.setLosLength(latlon);
       var azimuth = this.setAzimuth(latlon);
       this.losLength = losLength;
@@ -597,16 +570,11 @@ export default {
         entry.activeBackground = '#8494a3';
         entry.extended = true;
         var testURI = '/geogateway_django_app/UAVSAR_test/';
-
         //var layername = entry.info['uid'] + '_unw';
         //var dataname = entry.info['dataname'];
-
         //set current extended entry for keyup keydown change
-
         this.currentExtendedEntry = this.findWithAttr(this.uavsarLayersFiltered, 'extended', true);
-
         //get wms description and check for exception
-
         axios.get(testURI, {
           params: {
             'uid': entry.info['uid'],
@@ -620,28 +588,24 @@ export default {
             vm.hasHighresOverlay = true; }
           if (Object.prototype.hasOwnProperty.call(datajson, 'lowreskml')) {
             vm.lowResKML = datajson['lowreskml'];}
-
           if (vm.alternateColoringChecked) {
             vm.layerFound = true;
             vm.extendedColor = '#CCFFCC'
             vm.extendedBorder = '1px solid #ADD673'
             //vm.hasAlternateColoring = true;
             vm.uavsarHighRes(entry, vm.hasAlternateColoring, vm.hasHighresOverlay);
-
           } else {
             vm.layerFound = true;
             vm.extendedColor = '#CCFFCC'
             vm.extendedBorder = '1px solid #ADD673'
             //vm.hasAlternateColoring = false;
             vm.uavsarHighRes(entry, vm.hasAlternateColoring, vm.hasHighresOverlay);
-
           }
         });
       }
       entry.displayed=true;      
       vm.extendingActive = false;
     },
-
     //High Res KML's and CSV LOS plotting methods //////////////////////////////////
     uavsarHighRes(entry, hasAlternateColoring, hasHighresOverlay) {
       var latlon = entry.info.geometry.coordinates[0];
@@ -668,9 +632,7 @@ export default {
           legendFinal = this.twoPiLegend;
         }
       }
-
       var layername = overlayType + 'uid' + entry.info['uid'] + '_unw'
-
       this.uavsarLatlon = latlon;
       this.uavsarEntry = entry;
       console.log(hasHighresOverlay);
@@ -687,7 +649,6 @@ export default {
         const track = new L.KML(kml,{'ignorePlacemark':true});
         this.uavsarHighResLayer = track;
       }
-
       this.globalMap.addLayer(this.uavsarHighResLayer);
       //this.uavsarHighResLayer.setOpacity(.75)
       // zoom to image center
@@ -700,7 +661,6 @@ export default {
       lon_sum = lon_sum / pos_list[0].length;
       lat_sum = lat_sum / pos_list[0].length;
       this.globalMap.setView([lat_sum,lon_sum],9);
-
       var headingLegendFinal;
       //var headingLegendBase = 'http://gf2.ucs.indiana.edu/direction_kml/'
       var headingLegendBase = 'https://archive.geo-gateway.org/kmz/direction_kml/'
@@ -721,25 +681,17 @@ export default {
       };
       this.uavsarLegend.addTo(this.globalMap);
       this.globalMap.on('click', this.markerClick);
-
     },
     markerClick(e) {
       var clickloc = e.latlng;
-
       var latlon = this.uavsarLatlon;
       var entry = this.uavsarEntry;
-
       var southwest = L.latLng(latlon[0][1], latlon[0][0]);
       var northeast = L.latLng(latlon[3][1], latlon[3][0]);
-
       //var rect = L.latLngBounds(southwest, northeast);
-
       //console.log(southwest, northeast, rect.contains(clickloc));
-
       this.placePlotMarkers(southwest, northeast, clickloc, latlon, entry);
     },
-
-
     updatePlotLineForm(entry, lat1, lon1, lat2, lon2) {
       this.plotActive = true;
       this.plottingMarkerStart.setLatLng([lat2, lon2]);
@@ -748,7 +700,6 @@ export default {
       var latlon = [this.plottingMarkerEnd.getLatLng().lat, this.plottingMarkerEnd.getLatLng().lng, this.plottingMarkerStart.getLatLng().lat, this.plottingMarkerStart.getLatLng().lng]
       this.getCSV(entry, latlon);
     },
-
     updatePlotLine(entry) {
       this.updatePlotLineForm(entry, this.plottingMarkerEnd.getLatLng().lat, this.plottingMarkerEnd.getLatLng().lng, this.plottingMarkerStart.getLatLng().lat, this.plottingMarkerStart.getLatLng().lng)
     },
@@ -757,54 +708,40 @@ export default {
         this.plotActive = true;
         this.plotLat2 = clickloc.lat;
         this.plotLon2 = clickloc.lng;
-
         this.plotLat1 = latlon[2][1];
         this.plotLon1 = latlon[2][0];
-
         var factor = (this.plotLon1 - this.plotLon2) / 7;
         this.plotLon1 = this.plotLon2 + factor;
         this.plotLat1 = ((this.plotLat1 - this.plotLat2) / 5) + this.plotLat2
-
-
         this.plottingMarkerStart = L.marker([this.plotLat2, this.plotLon2],
             {draggable: true, icon: this.startIcon});
         // console.log(this.plottingMarker1)
         this.plottingMarkerEnd = L.marker([this.plotLat1, this.plotLon1],
             {draggable: true, icon: this.endIcon});
-
         this.plotLine = L.polyline([this.plottingMarkerEnd.getLatLng(), this.plottingMarkerStart.getLatLng()],
             {color: 'red'});
-
         this.plottingMarkerEnd.addTo(this.globalMap)
         this.plottingMarkerStart.addTo(this.globalMap)
         this.plotLine.addTo(this.globalMap)
-
         //for use inside event listener
         let vm = this;
-
         vm.plottingMarkerEnd.on('drag', function () {
           vm.plotLine.setLatLngs([vm.plottingMarkerEnd.getLatLng(), vm.plottingMarkerStart.getLatLng()]);
         })
         vm.plottingMarkerStart.on('drag', function () {
           vm.plotLine.setLatLngs([vm.plottingMarkerEnd.getLatLng(), vm.plottingMarkerStart.getLatLng()]);
         })
-
         this.plottingMarkerEnd.on('dragend', function () {
           vm.updatePlotLine(entry);
         })
         this.plottingMarkerStart.on('dragend', function () {
           vm.updatePlotLine(entry);
         })
-
-
         this.globalMap.off('click', this.markerClick);
-
         // this.globalMap.fitBounds([this.plotLat2, this.plotLon2], [this.plotLat1, this.plotLon1])
-
         this.getCSV(entry, [this.plotLat2, this.plotLon2, this.plotLat1, this.plotLon1]);
       }
     },
-
     resetPlot() {
       if(this.plottingMarkerEnd != null || this.plottingMarkerStart != null) {
         this.plottingMarkerEnd.remove();
@@ -815,10 +752,8 @@ export default {
         this.plotLine = null;
         this.plotActive = false;
       }
-
       this.LosPlotAvailable = false;
     },
-
     removeAreaLayer(){
       let vm = this;
       if (vm.areaLayer!=null){
@@ -833,7 +768,6 @@ export default {
       }
       vm.pinLayer=null;
     },
-
     showPinLayer(){
       let vm = this;
         if (vm.pinLayer!=null){
@@ -847,10 +781,7 @@ export default {
         vm.globalMap.removeLayer(vm.pinLayer);
       }
     },
-
 /////////////////////////////////////////////////////////////////////
-
-
     /////// Global UAVSAR query methods
     selDeselAll(){
       for(var i = this.uavsarLayersFiltered.length-1; i >= 0; i--){
@@ -876,7 +807,6 @@ export default {
         if(this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
           this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
         }
-
       }
       this.resetPlot();
       if(this.uavsarHighResLayer !== null){
@@ -900,9 +830,7 @@ export default {
       this.extendedColor = null;
       this.extendedBorder = null;
       this.removePinLayer();
-
       
-
     },
     showOverview() {
       const _ = require('lodash');
@@ -924,7 +852,6 @@ export default {
             this.globalMap.addLayer(this.layers['uavsarWMS']);
             this.layers['uavsarWMS'].setOpacity(.7)
         }
-
         if (this.tempFilter!=[]){
           this.uavsarLayersFiltered = this.tempFilter;
         }
@@ -933,9 +860,7 @@ export default {
         let uid = this.uavsarLayersFiltered[i].info['uid'];
         this.globalMap.addLayer(this.uavsarDisplayedLayers[uid]);
         }
-
       } else {
-
         for (i = 0; i < this.uavsarLayersFiltered.length; i++) {
         let uid = this.uavsarLayersFiltered[i].info['uid'];
         if(this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
@@ -946,7 +871,6 @@ export default {
         //save user progress
         this.tempLayers= _.clone(this.uavsarLayers);
         this.tempFilter = _.cloneDeep(this.uavsarLayersFiltered);
-
         this.uavsarLayers = [];
         this.uavsarLayersFiltered = [];
         this.layers['uavsarWMS'].remove();
@@ -1003,7 +927,6 @@ export default {
               vm.uavsarLayers[k] = entry;
               vm.uavsarLayersFiltered[k] = entry;
               let uid = vm.uavsarLayers[k].info['uid'];
-
               const parser = new DOMParser();
               const kml = parser.parseFromString(vm.uavsarLayers[k].kml, 'text/xml');
               const track = new L.KML(kml,{'ignorePlacemark':true});
@@ -1011,18 +934,15 @@ export default {
               vm.globalMap.addLayer(vm.uavsarDisplayedLayers[uid]);
             }
             vm.activeQuery = false;
-
           })
         })
       }
     },
     pointQuery(lat, lon){
       function isNumber(n) { return !isNaN(parseFloat(n)) && !isNaN(n - 0) }
-
       this.globalMap.off('draw:created');
       this.activeQuery = true;
       var vm = this;
-
       //checking if input comes from marker placement or manual entry (numeric string)
       if(lat.substring && lon.substring){
         if(isNumber(lat) && isNumber(lon)){
@@ -1062,7 +982,6 @@ export default {
           Promise.all(promises).then((responses) =>{
             if (vm.layers['uavsarWMS']) {
               vm.globalMap.removeLayer(vm.layers['uavsarWMS']);
-
             }
             for(let k = 0;k < responses.length;k++){
               let entry = responses[k].data;
@@ -1073,7 +992,6 @@ export default {
 //              vm.uavsarLayersFiltered[k] = entry;
               vm.$set(vm.uavsarLayersFiltered,k,entry);
               let uid = vm.uavsarLayers[k].info['uid'];
-
               const parser = new DOMParser();
               const kml = parser.parseFromString(vm.uavsarLayers[k].kml, 'text/xml');
               const track = new L.KML(kml,{'ignorePlacemark':true});
@@ -1085,7 +1003,6 @@ export default {
         })
       }
     },
-
     // polyQuery(latlngs){
     //     this.activeQuery = true;
     //     var queryResponse;
@@ -1113,7 +1030,6 @@ export default {
       this.activeQuery = true;
       var vm = this;
       this.globalMap.off('draw:created');
-
       if(this.overview) {
         console.log(centerLng, centerLat);
         var queryStr = '';
@@ -1148,7 +1064,6 @@ export default {
               vm.uavsarLayers[k] = entry;
               vm.uavsarLayersFiltered[k] = entry;
               let uid = vm.uavsarLayers[k].info['uid'];
-
               const parser = new DOMParser();
               const kml = parser.parseFromString(vm.uavsarLayers[k].kml, 'text/xml');
               const track = new L.KML(kml,{'ignorePlacemark':true});
@@ -1169,21 +1084,17 @@ export default {
         this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
       }
     },
-
     setLosLength(latlon){
       var latStart = latlon[0];
       var lonStart = latlon[1];
       var latEnd = latlon[2];
       var lonEnd = latlon[3];
-
       var d2r = Math.PI / 180.0;
       var flatten = 1.0 / 298.247;
       var theFactor = d2r * Math.cos(d2r * latStart) * 6378.139 * (
           1.0 - Math.sin(d2r * latStart) * Math.sin(d2r * latStart) * flatten);
-
       var xdiff = (lonEnd - lonStart) * theFactor;
       var ydiff = (latEnd - latStart) * 111.32;
-
       var losLength = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
       losLength = losLength.toFixed(3);
       return losLength;
@@ -1196,16 +1107,13 @@ export default {
       //Using http://www.movable-type.co.uk/scripts/latlong.html
       var d2r=Math.PI/180.0;
       var flatten=1.0/298.247;
-
       var theFactor=d2r* Math.cos(d2r * swLat) * 6378.139 * (1.0 - Math.sin(d2r * swLat) * Math.sin(d2r * swLat) * flatten);
       var x=(neLon-swLon)*theFactor;
       var y=(neLat-swLat)*111.32;
-
       var azimuth=Math.atan2(x,y)/d2r;
       azimuth=azimuth.toFixed(1);
       if(azimuth>180) azimuth=azimuth-360;
       if(azimuth<-180) azimuth=azimuth+360;
-
       return azimuth;
     }
   }

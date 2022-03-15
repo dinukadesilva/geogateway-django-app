@@ -13,8 +13,9 @@
             <strong>Output</strong>
             <div  v-for="layer in gnssLayers" :key="layer.name">
               <b-card v-if="layer.type !== 'table.txt'" >
-                <input type="checkbox" :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> 
+                <b-form-checkbox :value="layer.active" v-model="layer.active" @change="showHideLayers(layer.active, layer)"> 
                   <span class="checkbox-label"> <a :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> 
+                </b-form-checkbox>
                 </b-card>
               <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
             </div>
@@ -34,15 +35,16 @@
         </select>
 
         <div v-if="kmltype_sel!=null">
-        <b-button id="sp_windowpicker" class="btn btn_blue" @click="gnssDrawRect()">
+        <b-button style="margin-top: 10px; margin-bottom: 10px;" v-if="!geometryActive" id="sp_windowpicker" class="btn_blue" @click="gnssDrawRect()">
          Draw an area on the map</b-button>
-        <b-button class="btn_white" id="clearGnss" @click="clearGnss()"> Clear Layers</b-button>
+        <b-button v-if="gnssLayers.length>0 || areaLayer!=null" class="btn_white" id="clearGnss" @click="clearGnss()"> 
+          Clear Layers</b-button>
         <br/>
 
         <div v-if="geometryActive" >
           <br/>
-          <b-button variant="warning" @click="drawListenerOff">
-            <b-icon-x-circle></b-icon-x-circle>Cancel Selection</b-button>
+          <b-button class="btn_white" @click="drawListenerOff">
+            Unselect 'Draw an Area'</b-button>
           <br/>
         </div>
         <br>
@@ -127,9 +129,11 @@
               Use NGL data
             </label>
           </b-row>
+          
+          
           <b-row class="checkbox" style="text-align: left">
             <label class="checkbox" >
-              <input v-model="markerSize" name="vabs" type="checkbox" id="markerSize"/>
+              <b-form-checkbox v-model="markerSize" name="vabs" type="checkbox" id="markerSize"/>
               Minimize Marker Size
             </label>
           </b-row>
@@ -145,6 +149,8 @@
               Include error ellipses
             </label>
           </b-row>
+
+
           <b-row>
             <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runButtonClick()">        Run
             </button>
