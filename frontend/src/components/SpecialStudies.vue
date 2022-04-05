@@ -55,8 +55,10 @@
     v-model="specstudInfo"
             title="Special Studies">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+             GeoGateway’s Special Studies tab lists products for demonstration purposes. 
+             The study includes wildfire burn areas and debris flows imaged with UAVSAR 
+             following the Southern California 2018 Woolsey Fire and the 2017 Montecito, 
+             California fire.
             </p>
 
             <div slot="modal-footer" class="w-100">

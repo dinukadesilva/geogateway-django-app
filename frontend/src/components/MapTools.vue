@@ -61,7 +61,7 @@
           id="qfaults"
       ><label for="boundaries">Quaternary Faults</label>&ensp;
       </b-form-checkbox>
-       <a href="" v-on:click.stop.prevent="openWindow('https://www.usgs.gov/natural-hazards/earthquake-hazards/faults')">
+       <a href="" v-on:click.stop.prevent="openWindow('https://doi.org/10.5066/F7S75FJM')">
       <i class="fas fa-info-circle"></i>
       </a>
       </b-row>
@@ -98,9 +98,9 @@
           id="kml"
       ><label for="kml">KML/KMZ Uploader</label>&ensp;
       </b-form-checkbox>
-      <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
-      <i class="fas fa-info-circle"></i><!--TODO: fix link-->
-      </a>
+        <span class="icon is-right" syle="pointer-events: all;" @click="kmlInfo=true">
+          <i class="fas fa-info-circle"></i> 
+        </span>
       </b-row>
       </b-col>
 
@@ -137,9 +137,9 @@
           id="boundaries"
       ><label for="boundaries">Show State Boundaries</label>&ensp;
       </b-form-checkbox>
-      <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
-      <i class="fas fa-info-circle"></i>
-      </a>
+      <span class="icon is-right" syle="pointer-events: all;" @click="boundariesInfo=true">
+          <i class="fas fa-info-circle"></i> 
+        </span>
       </b-row>
       </b-col>
       </b-card>
@@ -155,9 +155,9 @@
             id="coasts"
         ><label for="coasts">Show Coastlines</label>&ensp;
         </b-form-checkbox>
-        <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
-        <i class="fas fa-info-circle"></i><!--TODO: fix link-->
-        </a>
+        <span class="icon is-right" syle="pointer-events: all;" @click="coastlinesInfo=true">
+          <i class="fas fa-info-circle"></i> 
+        </span>
         </b-row>
         </b-col>
       </b-card>
@@ -173,9 +173,9 @@
           id="loc"
       ><label for="loc">Show Current Location</label>&ensp;
       </b-form-checkbox>
-      <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
-      <i class="fas fa-info-circle"></i><!--TODO: fix link-->
-      </a>
+      <span class="icon is-right" syle="pointer-events: all;" @click="currentLocationInfo=true">
+          <i class="fas fa-info-circle"></i> 
+        </span>
       </b-row>
       </b-col>
       </b-card>
@@ -183,9 +183,9 @@
     </div>
 
 
-    <!-- info  popup -->
+    <!-- info  popups -->
     <b-modal hide-backdrop
-    v-model="mapToolsInfo"
+            v-model="mapToolsInfo"
             title="Map Tools">
             <p class="my-4">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
@@ -194,6 +194,43 @@
             <div slot="modal-footer" class="w-100">
             </div>
           </b-modal>
+
+          <b-modal hide-backdrop
+            v-model="kmlInfo">
+            <p class="my-4">
+              KML (Keyhole Markup Language) is a file format used to display geographic data.
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
+          <b-modal hide-backdrop
+            v-model="boundariesInfo">
+            <p class="my-4">
+              Display USA state boundaries on the map.
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
+          <b-modal hide-backdrop
+            v-model="coastlinesInfo">
+            <p class="my-4">
+              Display coastlines on the map.
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
+          <b-modal hide-backdrop
+            v-model="currentLocationInfo">
+            <p class="my-4">
+              Mark your current location on the map.
+            </p>
+            <div slot="modal-footer" class="w-100">
+            </div>
+          </b-modal>
+
 
 
 
@@ -212,6 +249,10 @@ export default {
   data() {
     return {
       mapToolsInfo: false,
+      kmlInfo: false,
+      boundariesInfo: false,
+      coastlinesInfo: false,
+      currentLocationInfo: false,
       ucerfUrlGrey: "https://raw.githubusercontent.com/GeoGateway/GeoGatewayStaticResources/master/kmz/ucerf3_grey.kml",
       ucerfUrlBlack: "https://raw.githubusercontent.com/GeoGateway/GeoGatewayStaticResources/master/kmz/ucerf3_black.kml",
       ucerfUrlRed: "https://raw.githubusercontent.com/GeoGateway/GeoGatewayStaticResources/master/kmz/ucerf3_red.kml",

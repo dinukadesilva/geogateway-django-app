@@ -147,8 +147,18 @@
     v-model="seismInfo"
             title="Seismicity">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              The seismicity tab allows users to display earthquakes in a region over a specified 
+              period. The tab is split into two sections, “Recent Earthquakes from USGS” and 
+              “Search Earthquake Catalog.” 
+            </p>
+            <p>
+              The tab allows users to view recent earthquakes from USGS data. The USGS data
+              can also be found on the USGS website 
+              <strong><a href="https://earthquake.usgs.gov/earthquakes/map/" 
+              target="_blank">earthquake.usgs.gov/earthquakes/map/</a></strong>
+              . The displayed earthquake events are color coded with the hotter
+              colors representing recent events and the cooler colors representing less recent
+              events.
             </p>
             <div slot="modal-footer" class="w-100">
             </div>

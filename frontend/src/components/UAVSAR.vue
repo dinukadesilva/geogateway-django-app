@@ -65,6 +65,9 @@
         <b-form-input v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
       </b-input-group><br/>
       <b-button class="btn-sm" variant="success" @click="uavsarQuery()">Search</b-button>
+      <b-button v-if="uavsarLayers.length !== 0 && !activeQuery" class="btn-sm btn-clear" @click="clearQuery">
+              Clear and refresh
+            </b-button>
     </div>
 
 
@@ -72,21 +75,30 @@
       <br/>
       <b-container >
         <div class="layer-options">
-          <b-row>
+          
+          
+          <!-- hide and clear buttions
+          <b-row>  
             <b-button class="btn-sm" @click="selDeselAll">
               Display/Hide All
             </b-button>
-            <b-button class="btn-sm" @click="clearQuery" variant="warning">
-              Clear Query
+            <b-button class="btn-sm btn-clear" @click="clearQuery">
+              Clear and refresh
             </b-button>
           </b-row>
+          --> 
+
+
           <b-row style="margin-top: 5px">
             <div>
               <input type="date" id="start" name="trip-start" v-model="bracketDate">
             </div>
-            <b-button @click="filterDate" variant="success" size="sm">Filter by Date</b-button>
-            <b-button @click="clearFilters" variant="warning" size="sm">Clear Filter</b-button>
+
+
+            <b-button v-if="!isFiltered" @click="filterDate" class="btn-clear" size="sm">Filter</b-button>
+            <b-button v-if="isFiltered" @click="clearFilters" class="btn-clear" size="sm">Clear Filter</b-button>
           </b-row>
+          
           <b-checkbox style="text-align: left" v-model="alternateColoringChecked">Show alternate coloring if available</b-checkbox>
         </div>
       </b-container>
@@ -94,19 +106,22 @@
 
       <div id="queryWindow">
 
-        <div class="collapsed"  v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']" v-bind:style="{backgroundColor: entry.activeBackground}">
-          <b-col>
-           <input type="checkbox" v-model="entry.displayed" @change="kmlLayerChange(entry)"> Display/Hide <br> 
-          </b-col>
+        <div class="collapsed"  v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']" style="background: #FFFFFF; padding: 5px;margin: 10px;">
           <b-col >
-            <div id="selectableHeader"  @click="extendEntry(entry)" style="cursor:pointer;">
+            <div id="selectableHeader" align="left">
+            <b-row>
+             <input type="checkbox" v-model="entry.displayed" @change="kmlLayerChange(entry)"> 
+             <div class="flight">Flight Name</div>
+             </b-row>
               <div><b style="font-size: 12px" id="dataname">{{entry.info['dataname']}}</b></div>
-              <b-row class="justify-content-md-center">
+              
               <b-col>
+              <div class="range">Date Range</div>
               <b style="font-size: 12px">{{entry.info['time1'].split(' ')[0]}} | {{entry.info['time2'].split(' ')[0]}}</b>
               </b-col>
               <b-col>
               
+              <div class="rating">Rating</div>
               <div id="rating">
                 <div v-if="entry.info['rating'] === '0'">
                   <b-icon-star/>
@@ -131,9 +146,10 @@
                 </div>
               </div>              
               </b-col>
-              </b-row>
- 
             </div>
+
+            <b-button v-if="!entry.extended" class="btn-clear" @click="extendEntry(entry)">More Options +</b-button>
+
             <div v-if="extendingActive && entry.extended">
               <b-spinner type="grow" variant="warning">
               </b-spinner>
@@ -203,8 +219,16 @@
     v-model="uavsarInfo"
             title="UAVSAR">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              UAVSAR (Uninhabited Aerial Vehicle Synthetic Aperture Radar), is an airborne, 
+              L-band, fully polarimetric radar, housed in a pod that is mounted to the belly of a 
+              piloted Gulfstream III aircraft. Interferometric radar images, or interferograms, are 
+              generated from repeat passes flown over a site of interest. Interferometric radar 
+              observations are made from the swaths received, which are approximately 22 km 
+              wide and typically between 100 and 300 km long (Donnellan et al., 2014). 
+              The wide swath of the UAVSAR instrument results in a large incidence angle 
+              variation across the swath. Near range incidence angles are approximately 25° 
+              whereas far range incidence angles are approximately 65° resulting in a 40° 
+              incidence angle variation across the swath.
             </p>
 
             <div slot="modal-footer" class="w-100">
@@ -225,6 +249,7 @@ export default {
   name: "UAVSAR",
   data(){
     return {
+      isFiltered: false,
       uavsarInfo: false,
       endIcon: new L.Icon({
         iconUrl: 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_redA.png',
@@ -378,6 +403,7 @@ export default {
         }});
     },
     clearFilters(){
+      this.isFiltered=false;
       Array.prototype.push.apply(this.uavsarLayersFiltered, this.uavsarLayers);
       this.bracketDate = ''
     },
@@ -417,6 +443,7 @@ export default {
       this.uavsarLayersFiltered = this.uavsarLayers.filter(checkPath);
     },
     filterDate(){
+      this.isFiltered=true;
       let vm = this;
       function checkDate(entry) {
         let d = entry.info['time1'].replaceAll('-', '/')
@@ -1188,4 +1215,37 @@ h3, h4, h5 {
   margin: 0 auto;
 }
 
+.flight{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  color: #EB9040;
+}
+.range{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px; 
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  color: #60B56C;
+}
+.rating{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  color: #E9637D;
+}
 </style>

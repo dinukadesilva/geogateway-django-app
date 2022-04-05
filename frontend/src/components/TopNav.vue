@@ -77,22 +77,20 @@
 .navbar-custom {
   height: 40px;
   background: #FFFFFF;
+  justify-content: right;
 }
 .window{
     background: #FFFFFF;
 }
 
 #logo {
-    //position: absolute;
-    //left: 75%;
-
-    
+    position: absolute;
     left: 0%;
     right: 0%;
     top: 0%;
     bottom: 0%;
 
-    float: top;
+    float: left;
     height: 30px;
     width: 100px;
 }
@@ -113,12 +111,6 @@ font-size: 16px;
 line-height: 19px;
 display: flex;
 align-items: center;
-
-position: absolute;
-left: 89.61%;
-right: 2.32%;
-top: 21.43%;
-bottom: 21.43%;
 
 }
 .miscButton{

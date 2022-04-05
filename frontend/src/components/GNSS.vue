@@ -17,7 +17,7 @@
                   <span class="checkbox-label"> <a :href="layer.url">{{layer.pre}} {{layer.type}}</a> </span> 
                 </b-form-checkbox>
                 </b-card>
-              <div v-else><a target="_blank" :href="layer.url">{{layer.name}}</a></div>
+              <div v-else ><a style="color:#EB9040;" target="_blank" :href="layer.url">{{layer.name}}</a></div>
             </div>
           </div>
           <div v-else><span> No Models Selected</span></div>
@@ -182,8 +182,12 @@
     v-model="gnssInfo"
             title="GNSS">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              Global Navigation Satellite System (GNSS) is any satellite 
+              constellation which provides positioning, navigation, and 
+              timing (PNT) services on a global or regional basis (Other 
+              Global Navigation Satellite Systems (GNSS), 2020). One of the 
+              systems GNSS includes is the United States-owned Global Positioning 
+              System (GPS). 
             </p>
 
             <div slot="modal-footer" class="w-100">

@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
       <router-view name="mainPage"/>
     </div>
 </template>
@@ -87,6 +88,16 @@
         color: #FFFFFF;
     }
 
+.btn-clear{
+    border: none;
+    color: #2F7CF6;
+    background: transparent;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+}
 
 .btn_white{
   background: #FFFFFF;
