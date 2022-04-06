@@ -54,6 +54,16 @@
             </div>
 
             <div class="col">
+                <img :src="getImgUrl(4)"><br>
+                <span class="name">
+                    {{getName(4)}}
+                </span><br>
+                <span class="title">
+                    {{getTitle(4)}}
+                </span>
+            </div>
+
+            <div class="col">
                 <b-button class="btn btn-circle" @click="scroll(-1)">
                         <i class="fas fa-angle-right"></i>
                     </b-button>
@@ -70,9 +80,9 @@ export default {
     data() {
       return {
           imageIndex: 0,
-          images: ["Ellipse1", "Ellipse2", "Ellipse3", "Ellipse4"],
-          names: ["Andrea Donnellan", "Robert Granat", "Jay Parker", "Marlon Pierce"],
-          titles: ["Principal Investigator", "Co-Investigator", "Co-Investigator", "Co-Investigator"],
+          images: ["Ellipse1", "Ellipse2", "Ellipse3", "Ellipse4", "Ellipse5"],
+          names: ["Andrea Donnellan", "Robert Granat", "Jay Parker", "Marlon Pierce", "Lisa Grant Ludwig"],
+          titles: ["Principal Investigator", "Co-Investigator", "Co-Investigator", "Co-Investigator", "Co-Investigator"],
       }
     },
     methods:{

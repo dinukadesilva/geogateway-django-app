@@ -36,8 +36,9 @@
             v-model="mmInfo"
             title="Moment Magnitude Calculator">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              Magnitude is the physical size of an earthquake.
+              Both seismic moment and moment magnitude <strong>(MW)</strong> 
+              can be calculated using GeoGateway’s moment magnitude calculator. 
             </p>
             <div slot="modal-footer" class="w-100">
             </div>

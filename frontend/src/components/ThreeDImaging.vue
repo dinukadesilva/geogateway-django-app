@@ -146,8 +146,11 @@
     v-model="threedInfo"
             title="3D Imaging">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              Users can locate postseismic products of the Ridgecrest Earthquake 
+              (M6.4 (July 4, 2019) and M7.1 (July 5, 2019)) by navigating to the “3D 
+              Imaging” tab and clicking on the box labeled “Postseismic Products of 
+              Ridgecrest Earthquake.” The data was collected by Andrea Donnellan and 
+              Gregory Lyzenga.
             </p>
 
             <div slot="modal-footer" class="w-100">
