@@ -142,7 +142,7 @@
         </div>
 
         <!-- info  popup -->
-    <b-modal hide-backdrop
+    <b-modal 
     v-model="threedInfo"
             title="3D Imaging">
             <p class="my-4">

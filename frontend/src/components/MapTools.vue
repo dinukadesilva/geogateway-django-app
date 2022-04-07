@@ -7,7 +7,8 @@
       <i class="aboutIcon fas fa-info-circle"></i> 
     </span>&ensp; About Maptools 
     </b-card>
-    <span> Functions <hr></span>
+   <span class="inputLabel">Functions <hr class="sectionLine" /></span>
+   <br>
    
     <b-card >
     <b-col>
@@ -99,7 +100,7 @@
       ><label for="kml">KML/KMZ Uploader</label>&ensp;
       </b-form-checkbox>
         <span class="icon is-right" syle="pointer-events: all;" @click="kmlInfo=true">
-          <i class="fas fa-info-circle"></i> 
+          <i class="clickable fas fa-info-circle"></i> 
         </span>
       </b-row>
       </b-col>
@@ -108,10 +109,19 @@
         <br />
         <h4>KML/KMZ File Upload</h4>
         <p>Upload a KML or KMZ from your local file system</p>
-        <label>File
-          <input  type="file" id="file" ref="file" @change="handleFileUpload"/>
-        </label>
-        <button @click="submitFile()">Submit</button>
+        <b-form-file
+          no-drop
+          id="file" 
+          ref="file" 
+        @change="handleFileUpload"
+        placeholder="Choose a file..."
+    ></b-form-file>
+
+
+
+
+        
+        <b-button @click="submitFile()">Submit</b-button>
         <div v-for="entry in kmlLayers" :key="entry" >
           <div class="fileEntry" >
             <input type="checkbox" v-model="entry.active" @change="kmlLayerChange(entry)" > <span style="font-size: 15px; color: #222222">{{entry.name}}</span><br>
@@ -138,7 +148,7 @@
       ><label for="boundaries">Show State Boundaries</label>&ensp;
       </b-form-checkbox>
       <span class="icon is-right" syle="pointer-events: all;" @click="boundariesInfo=true">
-          <i class="fas fa-info-circle"></i> 
+          <i class="clickable fas fa-info-circle"></i> 
         </span>
       </b-row>
       </b-col>
@@ -156,7 +166,7 @@
         ><label for="coasts">Show Coastlines</label>&ensp;
         </b-form-checkbox>
         <span class="icon is-right" syle="pointer-events: all;" @click="coastlinesInfo=true">
-          <i class="fas fa-info-circle"></i> 
+          <i class="clickable fas fa-info-circle"></i> 
         </span>
         </b-row>
         </b-col>
@@ -174,7 +184,7 @@
       ><label for="loc">Show Current Location</label>&ensp;
       </b-form-checkbox>
       <span class="icon is-right" syle="pointer-events: all;" @click="currentLocationInfo=true">
-          <i class="fas fa-info-circle"></i> 
+          <i class="clickable fas fa-info-circle"></i> 
         </span>
       </b-row>
       </b-col>
@@ -184,18 +194,18 @@
 
 
     <!-- info  popups -->
-    <b-modal hide-backdrop
+    <b-modal 
             v-model="mapToolsInfo"
             title="Map Tools">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              Map tools contains multiple funtions allowing users to display different faults and topographical 
+              features, as well as upload KML and KMZ files.
             </p>
             <div slot="modal-footer" class="w-100">
             </div>
           </b-modal>
 
-          <b-modal hide-backdrop
+          <b-modal 
             v-model="kmlInfo">
             <p class="my-4">
               KML (Keyhole Markup Language) is a file format used to display geographic data.
@@ -204,7 +214,7 @@
             </div>
           </b-modal>
 
-          <b-modal hide-backdrop
+          <b-modal 
             v-model="boundariesInfo">
             <p class="my-4">
               Display USA state boundaries on the map.
@@ -213,7 +223,7 @@
             </div>
           </b-modal>
 
-          <b-modal hide-backdrop
+          <b-modal 
             v-model="coastlinesInfo">
             <p class="my-4">
               Display coastlines on the map.
@@ -222,7 +232,7 @@
             </div>
           </b-modal>
 
-          <b-modal hide-backdrop
+          <b-modal 
             v-model="currentLocationInfo">
             <p class="my-4">
               Mark your current location on the map.
@@ -297,6 +307,9 @@ export default {
     
   },
   methods: {
+    dragFile(e) {
+        this.File = e.dataTransfer.files;
+      },
     // updateOpacity(value){
     //   bus.$emit('stateBoundaryOpacity', (value/100))
     // },
@@ -416,6 +429,7 @@ export default {
     submitFile(){
       var fileName = this.kmlFile['name'];
       function getExtension(filename) {
+        console.log(filename);
         var parts = filename.split('.');
         return parts[parts.length - 1];
       }
@@ -426,6 +440,7 @@ export default {
       }else {
         uploadUrl = '/geogateway_django_app/kml_upload/'
       }
+      console.log(uploadUrl);
       let formData = new FormData();
       formData.append('file', this.kmlFile);
       this.kmlLayers.push({name: fileName, active: true})
@@ -473,6 +488,9 @@ a:link, a:visited {
   display: flex;
   align-items: center;
   color: #95ABB1;
+}
+.clickable{
+  cursor: pointer;
 }
 
 </style>

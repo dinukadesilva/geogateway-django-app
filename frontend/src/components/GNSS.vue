@@ -6,8 +6,8 @@
       <i class="aboutIcon fas fa-info-circle"></i> 
     </span> &ensp; About GNSS data Analysis
       </b-card>
-
-      <span class="inputLabel">Outputs<hr></span>
+      <span class="inputLabel">Outputs <hr class="sectionLine" /></span>
+   <br>
       <b-card>
         <div v-if="gnssLayers.length!==0 && !activeGnssQuery">
             <strong>Output</strong>
@@ -20,13 +20,19 @@
               <div v-else ><a style="color:#EB9040;" target="_blank" :href="layer.url">{{layer.name}}</a></div>
             </div>
           </div>
-          <div v-else><span> No Models Selected</span></div>
+          <div v-else><span style="color:#95ABB1;">No models applied!</span></div>
         </b-card>
   
 
+      <span class="inputLabel">Functions <hr class="sectionLine" /></span>
+      <br>
+
+      <span class="inputLabel">GNSS data models</span>
+      <br>
+
         <!-- <label for="sel1">Select list:</label> -->
-        <select class="form-control" v-model="kmltype_sel" id="kmltype_sel" >
-        <option disabled value='null'></option>
+        <select  class="form-control" v-model="kmltype_sel" id="kmltype_sel" >
+        <option disabled value='null' >Select a GNSS data model</option>
           <option value='getvelocities'>Velocities</option>
           <option value='getcoseismic'>Coseismic</option>
           <option value='getpostseismic'>Postseismic</option>
@@ -178,7 +184,7 @@
     </div>
 
     <!-- info  popup -->
-    <b-modal hide-backdrop
+    <b-modal 
     v-model="gnssInfo"
             title="GNSS">
             <p class="my-4">

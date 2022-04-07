@@ -143,7 +143,7 @@
     </div>
 
     <!-- info  popup -->
-    <b-modal hide-backdrop
+    <b-modal 
     v-model="seismInfo"
             title="Seismicity">
             <p class="my-4">

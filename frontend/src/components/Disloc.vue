@@ -87,12 +87,19 @@
     </div>
 
      <!-- info  popup -->
-    <b-modal hide-backdrop
+    <b-modal
     v-model="disclocInfo"
-            title="Map Tools">
+            title="Discloc">
             <p class="my-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+              Elastic dislocation models are commonly used to analyze inversion on faults 
+              following the event of an earthquake (Chen et al., 2020). In 1985, Yoshimitsu 
+              Okada (Ph.D.) proposed a formula which calculated displacement in an isotropic, 
+              uniform elastic half space. The formula can calculate coseismic deformation 
+              caused by any fault within the elastic half space (Okada, 1985). Okada’s dislocation 
+              theory, which is the most commonly used dislocation theory, is often used with 
+              InSAR. InSAR monitors the surface coseismic deformation field, and subsequently, Okada’s theory is used to conduct 
+              fault slip inversion, calculating the coseismic strain stress field (Chen et al., 2020). 
+              deformation of an elastic medium due to slip from active faults (Avouac, n.d.).
             </p>
             <div slot="modal-footer" class="w-100">
             </div>

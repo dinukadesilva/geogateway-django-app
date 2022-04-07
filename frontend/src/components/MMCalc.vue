@@ -32,7 +32,7 @@
             <h6><strong> Moment Magnitude: </strong> {{this.MM}}</h6>
         </div>
 
-        <b-modal hide-backdrop
+        <b-modal 
             v-model="mmInfo"
             title="Moment Magnitude Calculator">
             <p class="my-4">
