@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        <b-modal hide-backdrop
+        <b-modal 
     v-model="nowcastInfo"
             title="Nowcast">
             <p class="my-4">

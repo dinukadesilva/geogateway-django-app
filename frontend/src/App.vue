@@ -62,6 +62,7 @@
     }
     .aboutIcon{
         color: #2F7CF6;
+        cursor: pointer;
     }
     .inputLabel{
         left: 0%;
@@ -74,6 +75,9 @@
         align-items: center;
         color: #95ABB1;
         margin-top: 10px;
+        overflow:hidden; 
+        white-space:nowrap;
+        color: #95ABB1;
     }
 
     .btn_blue{
@@ -150,7 +154,21 @@ display: flex;
 align-items: center;
 text-transform: uppercase;
 color: #E9637D;
+}
 
+.sectionLine{
+    display:inline-block; 
+    width:100%; 
+    margin: auto;
+}
+.functionSection{
+    overflow:hidden; 
+    white-space:nowrap;
+    color: #95ABB1;
+}
+.modal-backdrop
+{
+    opacity:0.5 !important;
 }
 
 </style>

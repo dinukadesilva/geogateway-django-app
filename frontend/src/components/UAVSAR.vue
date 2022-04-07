@@ -16,19 +16,9 @@
           id="overview"
       ><label for="ucerf"> Overview</label>&ensp;
       </b-form-checkbox>
-<!--
-        <b-button
-            class="btn-sm"
-            type="checkbox"
-            id="overview"
-            :pressed.sync="overview"
-            @click="showOverview"
-        ><span v-if="!overview">Show Overview</span>
-          <span v-else>Hide Overview</span>
-        </b-button>
--->
-<span v-if="overview" class="inputLabel">Functions</span>
 
+<span v-if="overview" class="inputLabel">Functions <hr class="sectionLine" /></span>
+   <br>
         <b-row>
         <b-button class="btn-sm btn_white" v-if="overview"  @click="uavsarDrawRect()">
         Draw Area</b-button>
@@ -215,7 +205,7 @@
       <b-spinner variant="success" label="Spinning"></b-spinner>
     </div>
 <!-- info  popup -->
-    <b-modal hide-backdrop
+    <b-modal 
     v-model="uavsarInfo"
             title="UAVSAR">
             <p class="my-4">

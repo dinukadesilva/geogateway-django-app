@@ -51,7 +51,7 @@
         </div>
 
         <!-- info  popup -->
-    <b-modal hide-backdrop
+    <b-modal 
     v-model="specstudInfo"
             title="Special Studies">
             <p class="my-4">

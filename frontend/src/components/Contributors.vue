@@ -54,16 +54,6 @@
             </div>
 
             <div class="col">
-                <img :src="getImgUrl(4)"><br>
-                <span class="name">
-                    {{getName(4)}}
-                </span><br>
-                <span class="title">
-                    {{getTitle(4)}}
-                </span>
-            </div>
-
-            <div class="col">
                 <b-button class="btn btn-circle" @click="scroll(-1)">
                         <i class="fas fa-angle-right"></i>
                     </b-button>
