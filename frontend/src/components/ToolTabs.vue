@@ -5,7 +5,7 @@
             <b-tab><template #title> <span style="font-size:14px"><strong>UAVSAR</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab>
             <b-tab><template #title> <span style="font-size:14px"><strong>GNSS</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab>
             <b-tab><template #title> <span style="font-size:14px"><strong>Seismicity</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab>
-            <b-tab><template #title> <span style="font-size:14px"><strong>Nowcast</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab>
+            <!-- <b-tab><template #title> <span style="font-size:14px"><strong>Nowcast</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab> -->
             <b-tab><template #title> <span style="font-size:14px"><strong>Magnitude</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab>
             <b-tab><template #title> <span style="font-size:14px"><strong>Disloc</strong></span></template><b-card-text><router-view></router-view></b-card-text></b-tab>
 <!--            <b-tab title="Saves" disabled><b-card-text><router-view></router-view></b-card-text></b-tab>-->
@@ -69,25 +69,25 @@
                     case 3:
                         route = '/seismicity';
                         break;
+                    // case 4:
+                    //     route ='/nowcast';
+                    //     break;
                     case 4:
-                        route ='/nowcast';
-                        break;
-                    case 5:
                         route =  '/momentmagnitude';
                         break;
-                    case 6:
+                    case 5:
                         route = '/disloc';
                         break;
-                    case 7:
+                    case 6:
                         route= '/specialstudies';
                         break;
-                    case 8:
+                    case 7:
                         route= '/3dimaging';
                         break;
-                    case 9:
+                    case 8:
                         route = '/report';
                         break;
-                    case 10:
+                    case 9:
                         route = '/help';
                         break;
                 }
@@ -129,26 +129,26 @@
                     case "/seismicity":
                         index = 3;
                         break;
-                    case "/nowcast":
+                    // case "/nowcast":
+                    //     index = 4;
+                    //     break;
+                    case "/momentmagnitude":
                         index = 4;
                         break;
-                    case "/momentmagnitude":
+                    case "/disloc":
                         index = 5;
                         break;
-                    case "/disloc":
+                    case "/specialstudies":
                         index = 6;
                         break;
-                    case "/specialstudies":
+                    case "/3dimaging":
                         index = 7;
                         break;
-                    case "/3dimaging":
+                    case "/report":
                         index = 8;
                         break;
-                    case "/report":
-                        index = 9;
-                        break;
                     case "/help":
-                        index = 10;
+                        index = 9;
                         break;
                 }
                 if (this.tabIndex!=index){
