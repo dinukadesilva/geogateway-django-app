@@ -59,6 +59,7 @@
                     <span class="feature-title">Seismicity</span><br>
                     <span class="feature-desc">The seismicity tab allows users to display earthquakes in a region over a specified period.</span>
                 </div>
+                <!--
                 <div class="col inner-section">
                 <b-button class="btn btn-circle" @click="goToMap('/nowcast')">
                         <i class="fas fa-map"></i>
@@ -66,6 +67,7 @@
                     <span class="feature-title">Nowcast</span><br>
                     <span class="feature-desc">GeoGateway’s Nowcast tab consists of useful tools to evaluate earthquake hazard</span>
                 </div>
+                -->
                 <div class="col inner-section">
                 <b-button class="btn btn-circle" @click="goToMap('/momentmagnitude')">
                         <i class="fas fa-map"></i>
