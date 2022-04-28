@@ -573,10 +573,10 @@ export default {
       this.gnssLayers = [];
     },
     setRect(maxLat, minLon, minLat, maxLon, centerLat, centerLng){
-      this.gs_latitude = centerLat;
-      this.gs_longitude = centerLng;
-      this.gs_height = Math.abs(maxLat - minLat);
-      this.gs_width = Math.abs(maxLon - minLon);
+      this.gs_latitude = centerLat.toFixed(5);
+      this.gs_longitude = centerLng.toFixed(5);
+      this.gs_height = Math.abs(maxLat - minLat).toFixed(5);
+      this.gs_width = Math.abs(maxLon - minLon).toFixed(5);
     }
 
   },

@@ -236,10 +236,10 @@ export default {
           vm.globalMap.addLayer(layer);
           vm.centerLat = layer.getCenter().lat;
           vm.centerLng = layer.getCenter().lng;
-          vm.maxLat = layer.getLatLngs()[0][1].lat;
-          vm.maxLon = layer.getLatLngs()[0][2].lng;
-          vm.minLat = layer.getLatLngs()[0][3].lat;
-          vm.minLon = layer.getLatLngs()[0][0].lng;
+          vm.maxLat = layer.getLatLngs()[0][1].lat.toFixed(5);
+          vm.maxLon = layer.getLatLngs()[0][2].lng.toFixed(5);
+          vm.minLat = layer.getLatLngs()[0][3].lat.toFixed(5);
+          vm.minLon = layer.getLatLngs()[0][0].lng.toFixed(5);
           vm.areaLayer=layer;
           vm.rectDraw = null;
           // vm.geometryActive = false;
