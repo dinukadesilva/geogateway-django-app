@@ -357,8 +357,17 @@ export default {
           attribution:
             'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
           token:'',
-          zIndex: 1 
+          //zIndex: 1 
         },
+        {
+          name: 'ArcGIS World Imagery',
+          visible: false,
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          attribution:
+            'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+          token:'',
+          //zIndex: 1 
+        },        
         {
           name: 'ArcGIS Light Map',
           visible: false,
@@ -366,7 +375,7 @@ export default {
             'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
           token:'',
-          zIndex: 2
+          //zIndex: 2
          },
         {
           name: 'ArcGIS Dark Map',
@@ -375,7 +384,7 @@ export default {
             'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
           token:'',
-          zIndex:3
+          //zIndex:3
         }
       ];
 
