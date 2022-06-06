@@ -62,25 +62,25 @@
                     case 3:
                         route = '/seismicity';
                         break;
+                    //case 4:
+                    //    route ='/nowcast';
+                    //    break;
                     case 4:
-                        route ='/nowcast';
-                        break;
-                    case 5:
                         route =  '/momentmagnitude';
                         break;
-                    case 6:
+                    case 5:
                         route = '/disloc';
                         break;
-                    case 7:
+                    case 6:
                         route= '/specialstudies';
                         break;
-                    case 8:
+                    case 7:
                         route= '/3dimaging';
                         break;
-                    case 9:
+                    case 8:
                         route = '/report';
                         break;
-                    case 10:
+                    case 9:
                         route = '/help';
                         break;
                 }

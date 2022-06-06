@@ -4,7 +4,7 @@ import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import MapTools from "./components/MapTools";
 import GNSS from './components/GNSS'
 import MMCalc from "./components/MMCalc";
-import Nowcast from "./components/Nowcast";
+//import Nowcast from "./components/Nowcast";
 import Seismicity from "./components/Seismicity";
 import Saves  from "./components/Saves";
 import UAVSAR from "./components/UAVSAR";
@@ -44,7 +44,7 @@ const routes = [
   {name: 'maptools', path: '/maptools', component: MapTools },
   {name: 'gnss', path: '/gnss', component: GNSS },
   {name: 'momentmagnitude', path: '/momentmagnitude', component: MMCalc },
-  {name: 'nowcast', path: '/nowcast', component: Nowcast },
+  //{name: 'nowcast', path: '/nowcast', component: Nowcast },
   {name: 'seismicity', path: '/seismicity', component: Seismicity },
   {name: 'disloc', path: '/disloc', component: Disloc },
   {name: 'mapsaves', path: '/mapsaves', component: Saves },
