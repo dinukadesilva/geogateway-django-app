@@ -77,10 +77,10 @@
                     case 7:
                         route= '/3dimaging';
                         break;
-                    case 8:
+                    case 9:
                         route = '/report';
                         break;
-                    case 9:
+                    case 8:
                         route = '/help';
                         break;
                 }

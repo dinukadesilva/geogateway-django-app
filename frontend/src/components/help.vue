@@ -12,7 +12,7 @@
        <a target="_blank" href="https://github.com/GeoGateway/GeoGatewayStaticResources/raw/master/documents/GeoGateway_Exercises.pdf"><strong>Exercises (pdf)</strong></a>
        <br/><br/>
        <strong>Recent Publications</strong>
-       <div align="left">
+       <div align="left" style="width:300px;">
        <b-list-group>
            <!-- <b-list-group-item>
        <a target="_blank" href="https://doi.org/10.1007/s12145-020-00561-7">Donnellan, A., Parker, J., Heflin, M. et al. Improving access to geodetic imaging crustal deformation data using GeoGateway. Earth Science Informatics, (2021).</a> 

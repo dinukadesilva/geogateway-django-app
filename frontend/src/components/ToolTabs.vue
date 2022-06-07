@@ -13,6 +13,8 @@
             <b-tab no-body><template #title> <span style="font-size:14px"><strong>Disloc</strong></span></template></b-tab>
             <b-tab no-body><template #title> <span style="font-size:14px"><strong>Studies</strong></span></template></b-tab>
             <b-tab no-body><template #title> <span style="font-size:14px"><strong>3D Imaging</strong></span></template></b-tab>
+            <b-tab no-body><template #title> <span style="font-size:14px"><strong>Help</strong></span></template></b-tab>
+            
         </b-tabs>
         </b-collapse>
         </b-col>
@@ -156,10 +158,10 @@
                         index = 7;
                         break;
                     case "/report":
-                        index = 8;
+                        index = 9;
                         break;
                     case "/help":
-                        index = 9;
+                        index = 8;
                         break;
                 }
                 if (this.tabIndex!=index){
