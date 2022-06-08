@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 p-2 bg-light">
+  <div class="w-100 p-2 bg-light text-left">
     <b-alert :show="true">
       <b-link v-b-modal="`about-uavsar-modal`">
         <b-icon icon="info-circle-fill"/>
