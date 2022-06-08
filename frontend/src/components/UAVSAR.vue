@@ -1,229 +1,148 @@
 <template>
-  <div class="tab-window">
-     <b-card>
-      <span class="icon is-right" syle="pointer-events: all;" @click="uavsarInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span>&ensp; About UAVSAR
-    </b-card>
+  <div class="w-100 p-2 bg-light">
+    <b-alert :show="true">
+      <b-link v-b-modal="`about-uavsar-modal`">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About UAVSAR
+    </b-alert>
 
-    
-    <div class="topbuttonGroup">
-      <div class="overviewButtonGroup">
-        
-        <b-form-checkbox      
-          v-model="overview"
-          @change="showOverview"
-          id="overview"
-      ><label for="ucerf"> Overview</label>&ensp;
-      </b-form-checkbox>
+    <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
+      <div>Functions</div>
+      <hr class="flex-fill"/>
+    </div>
 
-<span v-if="overview" class="inputLabel">Functions <hr class="sectionLine" /></span>
-   <br>
-        <b-row>
-        <b-button class="btn-sm btn_white" v-if="overview"  @click="uavsarDrawRect()">
-        Draw Area</b-button>
-        <b-button class="btn-sm btn_white" v-if="overview" @click="uavsarPinDrop()">
-         Drop Pin </b-button>
-         </b-row>
-
-
-       
+    <div class="w-100 pt-2 pb-2">
+      <div>
+        <b-button size="sm" :variant="!!rectDraw ? 'primary': 'outline-secondary'"
+                  v-on:click="uavsarDrawRect()">
+          Draw Area
+        </b-button>
+        <b-button size="sm" :variant="!!pinDrop ? 'primary': 'outline-secondary'"
+                  v-on:click="uavsarPinDrop()">
+          Drop Pin
+        </b-button>
       </div>
     </div>
 
+    <div class="w-100 pt-2 pb-2">
+      <label for="flightPath" class="text-secondary">Flight name/path</label>
+      <b-form-input id="flightPath" v-model="flight_path" name="flight_path" placeholder=""></b-form-input>
+    </div>
 
+    <div class="w-100 pt-2 pb-2">
+      <label class="latLon text-secondary">Latitude, Longitude</label>
+      <b-form-input id="latLon" v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
+    </div>
 
-
-    <div v-if="overview">
-      <!--      <div class="toolInfo">-->
-      <!--        <i>Fill one of the following fields or use map drawing tools to search catalog:</i>-->
-      <!--      </div>-->
-      <div v-if="geometryActive" >
-        <br/>
-        <b-button class="btn-sm" btn_white @click="drawListenerOff">
-          Cancel Selection</b-button>
-        <br/>
-      </div>
-      <br/>
-      <span class="inputLabel">Flight name/path</span>
-      <b-input-group class="input-group-sm" >
-        <b-form-input v-model="flight_path" name="flight_path" placeholder=""></b-form-input>
-      </b-input-group>
-
-      <span class="inputLabel">Latitude, Longitude</span>
-      <b-input-group class="input-group-sm" >
-        <b-form-input v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
-      </b-input-group><br/>
-      <b-button class="btn-sm" variant="success" @click="uavsarQuery()">Search</b-button>
-      <b-button v-if="uavsarLayers.length !== 0 && !activeQuery" class="btn-sm btn-clear" @click="clearQuery">
-              Clear and refresh
-            </b-button>
+    <div class="w-100 pt-2 pb-2">
+      <b-button size="sm" variant="success" v-on:click="uavsarQuery()">Search</b-button>
+      <b-button v-if="uavsarLayers.length !== 0 && !activeQuery" variant="link" v-on:click="clearQuery">
+        Clear and refresh
+      </b-button>
     </div>
 
 
-    <div v-if="uavsarLayers.length !== 0 && !activeQuery">
-      <br/>
-      <b-container >
-        <div class="layer-options">
-          
-          
-          <!-- hide and clear buttions
-          <b-row>  
-            <b-button class="btn-sm" @click="selDeselAll">
-              Display/Hide All
-            </b-button>
-            <b-button class="btn-sm btn-clear" @click="clearQuery">
-              Clear and refresh
-            </b-button>
-          </b-row>
-          --> 
+    <template v-if="uavsarLayers.length !== 0 && !activeQuery">
+      <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
+        <div>Output filters</div>
+        <hr class="flex-fill"/>
+      </div>
 
-
-          <b-row style="margin-top: 5px">
-            <div>
-              <input type="date" id="start" name="trip-start" v-model="bracketDate">
-            </div>
-
-
-            <b-button v-if="!isFiltered" @click="filterDate" class="btn-clear" size="sm">Filter</b-button>
-            <b-button v-if="isFiltered" @click="clearFilters" class="btn-clear" size="sm">Clear Filter</b-button>
-          </b-row>
-          
-          <b-checkbox style="text-align: left" v-model="alternateColoringChecked">Show alternate coloring if available</b-checkbox>
+      <div class="w-100 pt-2 pb-2 d-flex flex-row">
+        <b-form-datepicker class="flex-fill" type="date" id="start" name="trip-start" v-model="bracketDate"/>
+        <div style="min-width: 90px;">
+          <b-button v-if="!isFiltered" v-on:click="filterDate" size="sm" variant="link">Filter</b-button>
+          <b-button v-if="isFiltered" v-on:click="clearFilters" size="sm" variant="link">Clear Filter</b-button>
         </div>
-      </b-container>
+      </div>
+
+      <div class="w-100 pt-2 pb-2">
+        <b-checkbox v-model="alternateColoringChecked">Show alternate coloring if available
+        </b-checkbox>
+      </div>
 
 
       <div id="queryWindow">
+        <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
+          <div>Output</div>
+          <hr class="flex-fill"/>
+        </div>
 
-        <div class="collapsed"  v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']" style="background: #FFFFFF; padding: 5px;margin: 10px;">
-          <b-col >
-            <div id="selectableHeader" align="left">
-            <b-row>
-             <input type="checkbox" v-model="entry.displayed" @change="kmlLayerChange(entry)"> 
-             <div class="flight">Flight Name</div>
-             </b-row>
-              <div><b style="font-size: 12px" id="dataname">{{entry.info['dataname']}}</b></div>
-              
-              <b-col>
-              <div class="range">Date Range</div>
-              <b style="font-size: 12px">{{entry.info['time1'].split(' ')[0]}} | {{entry.info['time2'].split(' ')[0]}}</b>
-              </b-col>
-              <b-col>
-              
-              <div class="rating">Rating</div>
-              <div id="rating">
-                <div v-if="entry.info['rating'] === '0'">
-                  <b-icon-star/>
-                  <b-icon-star/>
-                  <b-icon-star/>
-
-                </div>
-                <div v-else-if="entry.info['rating'] === '1'">
-                  <b-icon-star-fill/>
-                  <b-icon-star/>
-                  <b-icon-star/>
-                </div>
-                <div v-else-if="entry.info['rating'] === '2'">
-                  <b-icon-star-fill/>
-                  <b-icon-star-fill/>
-                  <b-icon-star/>
-                </div>
-                <div v-else-if="entry.info['rating'] === '3'">
-                  <b-icon-star-fill/>
-                  <b-icon-star-fill/>
-                  <b-icon-star-fill/>
-                </div>
-              </div>              
-              </b-col>
+        <div class="p-2 mb-2 collapsed" v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']"
+             style="background: #FFFFFF; border-radius: 5px">
+          <div class="d-flex flex-row">
+            <div class="pl-2 pr-2">
+              <b-checkbox v-model="entry.displayed" @change="kmlLayerChange(entry)"/>
             </div>
-
-            <b-button v-if="!entry.extended" class="btn-clear" @click="extendEntry(entry)">More Options +</b-button>
-
-            <div v-if="extendingActive && entry.extended">
-              <b-spinner type="grow" variant="warning">
-              </b-spinner>
-            </div>
-            <div v-else-if="entry.extended && !extendingActive" class="extended" v-bind:style="{backgroundColor: extendedColor, border: extendedBorder }">
-
-              <div class="extended">
-                <b>Heading: </b> {{entry.info['heading']}}  <b>Radar Dir: </b> {{entry.info['radardirection']}} <br/>
-                <!--                <i v->{{hasAlternateColoring ? 'Displaying alternate coloring' : 'Alternate coloring not found'}}</i>-->
+            <div>
+              <div class="mb-2">
+                <div class="flight">Flight Name</div>
+                <small class="text-dark" id="dataname">{{ entry.info['dataname'] }}</small>
               </div>
-              <div v-if="layerFound">
-                <b-input-group class="input-group-sm mb-2">
-                  <i style="font-size: small;">Set Layer Opacity: <b>{{ opVal }}%</b></i>
-                <b-form-input id="opacity" @change="updateOpacity(opVal)" v-model="opVal" type="range" min="0" max="100"></b-form-input>
-                </b-input-group>
-                <div v-if="LosPlotAvailable && layerFound" class="extended" id="active-plot" v-bind:style="{backgroundColor: extendedColor, border: extendedBorder }">
-                  <b-input-group>
-                    <b-input-group prepend="Start Lat/Lon" class="input-group-sm mb-2">
-                      <b-form-input v-model="lat1" name="lat1" placeholder=""></b-form-input>
-                      <b-form-input v-model="lon1" name="lon1" placeholder=""></b-form-input>
-                    </b-input-group>
-                  </b-input-group>
-                  <b-input-group>
-                    <b-input-group prepend="End Lat/Lon" class="input-group-sm mb-2">
-                      <b-form-input v-model="lat2" name="lat2" placeholder=""></b-form-input>
-                      <b-form-input v-model="lon2" name="lon2" placeholder=""></b-form-input>
-                    </b-input-group>
-                  </b-input-group>
-                  <!--
-                  <b-input-group prepend="LOS Length" class="input-group-sm">
-                    <b-form-input v-model="losLength" name="length" placeholder=""></b-form-input>
-                  </b-input-group>
-                  <b-input-group prepend="Azimuth" class="input-group-sm">
-                    <b-form-input v-model="azimuth" name="azimuth" placeholder=""></b-form-input>
-                  </b-input-group> -->
-                  <i style="font-size: small;">Profile Length: <b>{{ losLength }} km</b></i>  <span class="tab" />
-                   <i style="font-size: small;">Azimuth: <b>{{ azimuth }}</b></i>
-                  <b-row>
-                    <b-col sm="auto">
-                      <b-button class="btn-sm" variant="success" @click="updatePlotLineForm(activeEntry, lat1, lon1, lat2, lon2)">
-                        <span >Update Plot</span>
-                      </b-button>
-                    </b-col>
-                    <b-col  sm="auto">
-                      <b-button class="btn-sm" variant="success" @click="downloadCSV(activeEntry)">
-                        <span >Download Data</span>
-                      </b-button>
-                    </b-col>
-                    <b-col  sm="auto">
-                      <span  @click="openDataSource(entry.info['uid'])" style="cursor: pointer; color: #2e6da4; font-size: small;"><b><u>Data Source</u></b></span>
-                    </b-col>
-                  </b-row>
-                </div>
+              <div class="mb-2">
+                <div class="range">Capture Range</div>
+                <small class="text-secondary">
+                  {{ entry.info['time1'].split(' ')[0] }} | {{ entry.info['time2'].split(' ')[0] }}
+                </small>
               </div>
 
+              <div>
+                <div class="rating">Rating</div>
+                <div id="rating">
+                  <div v-if="entry.info['rating'] === '0'">
+                    <b-icon-star/>
+                    <b-icon-star/>
+                    <b-icon-star/>
+
+                  </div>
+                  <div v-else-if="entry.info['rating'] === '1'">
+                    <b-icon-star-fill/>
+                    <b-icon-star/>
+                    <b-icon-star/>
+                  </div>
+                  <div v-else-if="entry.info['rating'] === '2'">
+                    <b-icon-star-fill/>
+                    <b-icon-star-fill/>
+                    <b-icon-star/>
+                  </div>
+                  <div v-else-if="entry.info['rating'] === '3'">
+                    <b-icon-star-fill/>
+                    <b-icon-star-fill/>
+                    <b-icon-star-fill/>
+                  </div>
+                </div>
+              </div>
             </div>
-          </b-col>
+          </div>
         </div>
       </div>
-    </div>
-    <div v-else-if="activeQuery" style="overflow: hidden">
-      <br/>
-      <b-spinner variant="success" label="Spinning"></b-spinner>
-    </div>
-<!-- info  popup -->
-    <b-modal 
-    v-model="uavsarInfo"
-            title="UAVSAR">
-            <p class="my-4">
-              UAVSAR (Uninhabited Aerial Vehicle Synthetic Aperture Radar), is an airborne, 
-              L-band, fully polarimetric radar, housed in a pod that is mounted to the belly of a 
-              piloted Gulfstream III aircraft. Interferometric radar images, or interferograms, are 
-              generated from repeat passes flown over a site of interest. Interferometric radar 
-              observations are made from the swaths received, which are approximately 22 km 
-              wide and typically between 100 and 300 km long (Donnellan et al., 2014). 
-              The wide swath of the UAVSAR instrument results in a large incidence angle 
-              variation across the swath. Near range incidence angles are approximately 25° 
-              whereas far range incidence angles are approximately 65° resulting in a 40° 
-              incidence angle variation across the swath.
-            </p>
+    </template>
+    <template v-else-if="activeQuery">
+      <div class="w-100 pt-2 pb-2">
+        <b-spinner variant="success" label="Spinning" size="sm"></b-spinner>
+        Loading
+      </div>
+    </template>
 
-            <div slot="modal-footer" class="w-100">
-            </div>
-          </b-modal>
+    <!-- info  popup -->
+    <b-modal id="about-uavsar-modal" title="UAVSAR">
+      <p class="my-4">
+        UAVSAR (Uninhabited Aerial Vehicle Synthetic Aperture Radar), is an airborne,
+        L-band, fully polarimetric radar, housed in a pod that is mounted to the belly of a
+        piloted Gulfstream III aircraft. Interferometric radar images, or interferograms, are
+        generated from repeat passes flown over a site of interest. Interferometric radar
+        observations are made from the swaths received, which are approximately 22 km
+        wide and typically between 100 and 300 km long (Donnellan et al., 2014).
+        The wide swath of the UAVSAR instrument results in a large incidence angle
+        variation across the swath. Near range incidence angles are approximately 25°
+        whereas far range incidence angles are approximately 65° resulting in a 40°
+        incidence angle variation across the swath.
+      </p>
+
+      <div slot="modal-footer" class="w-100">
+      </div>
+    </b-modal>
 
   </div>
 </template>
@@ -1140,7 +1059,6 @@ export default {
 <style scoped>
 
 
-
 .extended {
   width: auto;
   height: auto;
@@ -1150,15 +1068,18 @@ export default {
   padding-top: 2px;
   padding-bottom: 2px;
 }
+
 #active-plot {
   border-radius: 4px;
 }
-#dataname {
-  width:100%;
-  font-size:14px;
-  word-break:break-all;
 
+#dataname {
+  /*width: 100%;*/
+  /*font-size: 14px;*/
+  word-break: break-all;
+  font-weight: 600;
 }
+
 .entryWindow {
   width: 200px;
   height: 400px;
@@ -1170,22 +1091,25 @@ export default {
   width: 100%;
   overflow-y: auto;
 }
+
 .overviewButtonGroup .active {
   color: #fff !important;
   background-color: #3388ff !important;
   border-color: #3388ff !important;
 
 }
+
 .headingLegend {
   width: 70px;
   height: 70px;
 }
+
 .collapsed {
   width: auto;
   height: auto;
-  border: 2px solid #e6e6ff;
+  /*border: 2px solid #e6e6ff;*/
   box-sizing: border-box;
-  border-radius: 4px;
+  /*border-radius: 4px;*/
   overflow-y: auto;
   /*A5B9CC*/
 }
@@ -1194,48 +1118,43 @@ export default {
 <style>
 
 
-html, body {margin:0;padding:0;height:100%;}
+/*html, body {*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*  height: 100%;*/
+/*}*/
 
-h3, h4, h5 {
-  color: #343a40;
-}
+/*h3, h4, h5 {*/
+/*  color: #343a40;*/
+/*}*/
 
 .center {
   width: 50%;
   margin: 0 auto;
 }
 
-.flight{
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
+.flight {
   font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
+  font-weight: 700;
   text-transform: uppercase;
   color: #EB9040;
 }
-.range{
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 12px; 
-  line-height: 15px;
-  display: flex;
-  align-items: center;
+
+.range {
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   color: #60B56C;
 }
-.rating{
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
+
+.rating {
   font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
+  font-weight: 700;
   text-transform: uppercase;
   color: #E9637D;
+}
+
+hr {
+  margin: 12px 0px 0px 5px;
 }
 </style>
