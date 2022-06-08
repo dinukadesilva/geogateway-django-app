@@ -118,7 +118,7 @@ export default {
     this.basemapLayers();
     
     //set zoom control position
-    this.globalMap.zoomControl.setPosition('bottomleft');
+    //this.globalMap.zoomControl.setPosition('bottomleft');
     this.globalMap.options.minZoom = 3;
 
     //logo at bottom of map
