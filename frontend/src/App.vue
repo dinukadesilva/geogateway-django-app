@@ -11,8 +11,10 @@
     import 'vue-router';
     import {bus} from './main';
     export default {
-        name: 'app',
-        
+        name: 'app',        
+        created () {
+            document.title = "GeoGateway";
+        },
         mounted(){
             bus.$on('switchPage',  (feature)=>{
                 try{
