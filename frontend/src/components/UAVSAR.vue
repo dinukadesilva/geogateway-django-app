@@ -7,7 +7,7 @@
       About UAVSAR
     </b-alert>
 
-    <div class="w-100 pt-2 pb-2 d-flex flex-row">
+    <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
       <div>Functions</div>
       <hr class="flex-fill"/>
     </div>
@@ -26,12 +26,12 @@
     </div>
 
     <div class="w-100 pt-2 pb-2">
-      <label for="flightPath">Flight name/path</label>
+      <label for="flightPath" class="text-secondary">Flight name/path</label>
       <b-form-input id="flightPath" v-model="flight_path" name="flight_path" placeholder=""></b-form-input>
     </div>
 
     <div class="w-100 pt-2 pb-2">
-      <label class="latLon">Latitude, Longitude</label>
+      <label class="latLon text-secondary">Latitude, Longitude</label>
       <b-form-input id="latLon" v-model="lat_lon" name="lat_lon" placeholder=""></b-form-input>
     </div>
 
@@ -44,7 +44,7 @@
 
 
     <template v-if="uavsarLayers.length !== 0 && !activeQuery">
-      <div class="w-100 pt-2 pb-2 d-flex flex-row">
+      <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
         <div>Output filters</div>
         <hr class="flex-fill"/>
       </div>
@@ -64,28 +64,30 @@
 
 
       <div id="queryWindow">
-        <div class="w-100 pt-2 pb-2 d-flex flex-row">
+        <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
           <div>Output</div>
           <hr class="flex-fill"/>
         </div>
 
         <div class="p-2 mb-2 collapsed" v-for="entry in uavsarLayersFiltered" :key="entry.info['uid']"
              style="background: #FFFFFF; border-radius: 5px">
-          <b-col>
-            <div id="selectableHeader" align="left">
-              <b-row>
-                <input type="checkbox" v-model="entry.displayed" @change="kmlLayerChange(entry)">
+          <div class="d-flex flex-row">
+            <div class="pl-2 pr-2">
+              <b-checkbox v-model="entry.displayed" @change="kmlLayerChange(entry)"/>
+            </div>
+            <div>
+              <div class="mb-2">
                 <div class="flight">Flight Name</div>
-              </b-row>
-              <div><b style="font-size: 12px" id="dataname">{{ entry.info['dataname'] }}</b></div>
+                <small class="text-dark" id="dataname">{{ entry.info['dataname'] }}</small>
+              </div>
+              <div class="mb-2">
+                <div class="range">Capture Range</div>
+                <small class="text-secondary">
+                  {{ entry.info['time1'].split(' ')[0] }} | {{ entry.info['time2'].split(' ')[0] }}
+                </small>
+              </div>
 
-              <b-col>
-                <div class="range">Date Range</div>
-                <b style="font-size: 12px">{{ entry.info['time1'].split(' ')[0] }} |
-                  {{ entry.info['time2'].split(' ')[0] }}</b>
-              </b-col>
-              <b-col>
-
+              <div>
                 <div class="rating">Rating</div>
                 <div id="rating">
                   <div v-if="entry.info['rating'] === '0'">
@@ -110,73 +112,9 @@
                     <b-icon-star-fill/>
                   </div>
                 </div>
-              </b-col>
-            </div>
-
-            <b-button v-if="!entry.extended" class="btn-clear" @click="extendEntry(entry)">More Options +</b-button>
-
-            <div v-if="extendingActive && entry.extended">
-              <b-spinner type="grow" variant="warning">
-              </b-spinner>
-            </div>
-            <div v-else-if="entry.extended && !extendingActive" class="extended"
-                 v-bind:style="{backgroundColor: extendedColor, border: extendedBorder }">
-
-              <div class="extended">
-                <b>Heading: </b> {{ entry.info['heading'] }} <b>Radar Dir: </b> {{ entry.info['radardirection'] }} <br/>
-                <!--                <i v->{{hasAlternateColoring ? 'Displaying alternate coloring' : 'Alternate coloring not found'}}</i>-->
               </div>
-              <div v-if="layerFound">
-                <b-input-group class="input-group-sm mb-2">
-                  <i style="font-size: small;">Set Layer Opacity: <b>{{ opVal }}%</b></i>
-                  <b-form-input id="opacity" @change="updateOpacity(opVal)" v-model="opVal" type="range" min="0"
-                                max="100"></b-form-input>
-                </b-input-group>
-                <div v-if="LosPlotAvailable && layerFound" class="extended" id="active-plot"
-                     v-bind:style="{backgroundColor: extendedColor, border: extendedBorder }">
-                  <b-input-group>
-                    <b-input-group prepend="Start Lat/Lon" class="input-group-sm mb-2">
-                      <b-form-input v-model="lat1" name="lat1" placeholder=""></b-form-input>
-                      <b-form-input v-model="lon1" name="lon1" placeholder=""></b-form-input>
-                    </b-input-group>
-                  </b-input-group>
-                  <b-input-group>
-                    <b-input-group prepend="End Lat/Lon" class="input-group-sm mb-2">
-                      <b-form-input v-model="lat2" name="lat2" placeholder=""></b-form-input>
-                      <b-form-input v-model="lon2" name="lon2" placeholder=""></b-form-input>
-                    </b-input-group>
-                  </b-input-group>
-                  <!--
-                  <b-input-group prepend="LOS Length" class="input-group-sm">
-                    <b-form-input v-model="losLength" name="length" placeholder=""></b-form-input>
-                  </b-input-group>
-                  <b-input-group prepend="Azimuth" class="input-group-sm">
-                    <b-form-input v-model="azimuth" name="azimuth" placeholder=""></b-form-input>
-                  </b-input-group> -->
-                  <i style="font-size: small;">Profile Length: <b>{{ losLength }} km</b></i> <span class="tab"/>
-                  <i style="font-size: small;">Azimuth: <b>{{ azimuth }}</b></i>
-                  <b-row>
-                    <b-col sm="auto">
-                      <b-button class="btn-sm" variant="success"
-                                @click="updatePlotLineForm(activeEntry, lat1, lon1, lat2, lon2)">
-                        <span>Update Plot</span>
-                      </b-button>
-                    </b-col>
-                    <b-col sm="auto">
-                      <b-button class="btn-sm" variant="success" @click="downloadCSV(activeEntry)">
-                        <span>Download Data</span>
-                      </b-button>
-                    </b-col>
-                    <b-col sm="auto">
-                      <span @click="openDataSource(entry.info['uid'])"
-                            style="cursor: pointer; color: #2e6da4; font-size: small;"><b><u>Data Source</u></b></span>
-                    </b-col>
-                  </b-row>
-                </div>
-              </div>
-
             </div>
-          </b-col>
+          </div>
         </div>
       </div>
     </template>
@@ -1136,10 +1074,10 @@ export default {
 }
 
 #dataname {
-  width: 100%;
-  font-size: 14px;
+  /*width: 100%;*/
+  /*font-size: 14px;*/
   word-break: break-all;
-
+  font-weight: 600;
 }
 
 .entryWindow {
@@ -1196,37 +1134,22 @@ export default {
 }
 
 .flight {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
   font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
+  font-weight: 700;
   text-transform: uppercase;
   color: #EB9040;
 }
 
 .range {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
   font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
+  font-weight: 700;
   text-transform: uppercase;
   color: #60B56C;
 }
 
 .rating {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
   font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
+  font-weight: 700;
   text-transform: uppercase;
   color: #E9637D;
 }
