@@ -59,7 +59,7 @@
                     <span class="feature-title">Seismicity</span><br>
                     <span class="feature-desc">The seismicity tab allows users to display earthquakes in a region over a specified period.</span>
                 </div>
-                <!-- 
+                <!--
                 <div class="col inner-section">
                 <b-button class="btn btn-circle" @click="goToMap('/nowcast')">
                         <i class="fas fa-map"></i>
