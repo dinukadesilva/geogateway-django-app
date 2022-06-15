@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 bg-light p-2" style="max-width: 300px;">
+  <div class="w-100 bg-light p-2 overflow-auto" style="max-width: 300px;">
     <router-view></router-view>
   </div>
   <!--  <div id="sidebar-1" class="overflow-auto">-->

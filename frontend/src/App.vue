@@ -11,7 +11,7 @@
     import 'vue-router';
     import {bus} from './main';
     export default {
-        name: 'app',        
+        name: 'app',
         created () {
             document.title = "GeoGateway";
         },
@@ -24,7 +24,7 @@
                     console.log(e.name);
                     if (e.name != 'NavigationDuplicated') {throw e}
                 }
-                
+
             });
         }
     }
@@ -38,7 +38,11 @@
         text-align: center;
         color: #2c3e50;
         width: 100%;
-        min-height: 100vh;
+        /*min-height: 100vh;*/
+      height: calc(100% - 40px);
+      position: fixed;
+      top: 40px;
+      left: 0px;
     }
     .toolInfo {
       width: auto;
@@ -61,7 +65,7 @@
     overflow-y: hidden;
     padding-left: 20px;
     width: max-content;
-    
+
     }
     .aboutIcon{
         color: #2F7CF6;
@@ -78,7 +82,7 @@
         align-items: center;
         color: #95ABB1;
         margin-top: 10px;
-        overflow:hidden; 
+        overflow:hidden;
         white-space:nowrap;
         color: #95ABB1;
     }
@@ -160,12 +164,12 @@ color: #E9637D;
 }
 
 .sectionLine{
-    display:inline-block; 
-    width:100%; 
+    display:inline-block;
+    width:100%;
     margin: auto;
 }
 .functionSection{
-    overflow:hidden; 
+    overflow:hidden;
     white-space:nowrap;
     color: #95ABB1;
 }

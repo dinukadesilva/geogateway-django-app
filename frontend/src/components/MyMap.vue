@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 h-100 d-flex flex-column">
+  <div class="w-100 h-100 d-flex flex-column overflow-auto">
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -7,7 +7,7 @@
 
     <TopNav/>
 
-    <div class="w-100 d-flex flex-fill">
+    <div class="w-100 d-flex flex-fill overflow-auto">
       <ToolTabs/>
 
 
@@ -34,7 +34,7 @@
       <!--            <div id="dygraph-LOS"></div>-->
       <!--        </div>-->
 
-      <div id="map" class="flex-fill">
+      <div id="map" class="flex-fill overflow-auto">
       </div>
     </div>
 
