@@ -1,18 +1,18 @@
 <template>
 
-  <div class="window">
+  <div class="window p-2">
     <b-navbar class="navbar-custom" id="top" toggleable="lg">
       <img id="logo" src="../assets/LogoDark.png" alt="GeoGateway Logo" v-on:click="move_logo_right">
 
 
-      <b-button class="miscButton" size="sm" @click="feedbackPopup=true">
+      <b-button variant="link text-secondary" @click="feedbackPopup=true">
         Feedback
       </b-button>
 
-      <b-button class="miscButton" size="sm" @click="helpPopup=true">
+      <b-button variant="link text-secondary" @click="helpPopup=true">
         Help
       </b-button>
-      <b-button size="sm" id="login" href="/auth/login">
+      <b-button variant="outline-primary" href="/auth/login">
         <b-icon-person></b-icon-person>
         Login
       </b-button>
@@ -74,15 +74,22 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+// Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap';
+// BootstrapVue and its default variables
+@import '~bootstrap-vue/src/index.scss';
+
 .navbar-custom {
   height: 40px;
-  background: #FFFFFF;
+  background: $white;
   justify-content: right;
 }
 
 .window {
-  background: #FFFFFF;
+  background: $white;
+  box-shadow: 1px 1px 1px 1px lighten($secondary, 30%);
+  z-index: 99999;
 }
 
 #logo {
@@ -106,7 +113,6 @@ export default {
   display: flex;
   align-items: flex-start;
 
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -119,7 +125,6 @@ export default {
 .miscButton {
   background: none;
   border: none;
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;

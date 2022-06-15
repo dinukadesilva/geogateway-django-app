@@ -480,7 +480,6 @@ a:link, a:visited {
    padding: 5px;
 }
 .card-text{
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;

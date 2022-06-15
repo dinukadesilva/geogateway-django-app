@@ -34,13 +34,9 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   width: 100%;
-  /*min-height: 100vh;*/
   height: calc(100% - 40px);
   position: fixed;
   top: 40px;
@@ -80,7 +76,6 @@ export default {
 
 .inputLabel {
   left: 0%;
-  font-family: Inter;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
@@ -98,7 +93,6 @@ export default {
   background: #2F7CF6;
   box-shadow: 0px 4px 5px rgba(217, 229, 235, 0.5);
   border-radius: 5px;
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -110,7 +104,6 @@ export default {
   border: none;
   color: #2F7CF6;
   background: transparent;
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -122,7 +115,6 @@ export default {
   border: 1px solid #A2B8BF;
   box-sizing: border-box;
   border-radius: 5px;
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -139,7 +131,6 @@ export default {
   height: 15px;
   left: 30px;
   top: 253px;
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 12px;
@@ -151,7 +142,6 @@ export default {
 }
 
 .green {
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 12px;
@@ -163,7 +153,6 @@ export default {
 }
 
 .red {
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 12px;
