@@ -7,22 +7,22 @@
 
     <TopNav/>
     <ToolTabs class="tools"/>
-    
-    
+
+
     <ToolBar class="tools"/>
     <DraggableDiv v-resize @resize="resizeLOS" class="col-11" v-if="plotActive" id="plot-window">
-        
-    
-      <vue-resize ></vue-resize>
+
+
+      <vue-resize></vue-resize>
       <template slot="header">
         <p style="color: #000000">Line of Sight Displacement</p>
       </template>
       <template>
-      <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
+        <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
       </template>
       <div id="losLegend">
       </div>
-        <template slot="main" >
+      <template slot="main">
         <div id="dygraph-LOS" v-bind:style="losStyle"></div>
       </template>
 
@@ -33,9 +33,7 @@
     <!--        </div>-->
 
     <div id="map">
-   </div>
-   
-
+    </div>
 
 
   </div>
@@ -58,7 +56,7 @@ import Dygraph from "dygraphs";
 import 'dygraphs/dist/dygraph.css';
 import DraggableDiv from "./DraggableDiv";
 import 'leaflet-kmz';
-import { mapFields } from 'vuex-map-fields';
+import {mapFields} from 'vuex-map-fields';
 import 'vue-resize/dist/vue-resize.css'
 import VueResize from 'vue-resize';
 // import axios from "axios";
@@ -104,7 +102,7 @@ export default {
   },
   computed: {
     ...mapFields(['uavsar.uavsarLayers', 'map.globalMap', 'map.layers', 'map.drawControl'
-      ,'map.uavsarLegend', 'map.plotActive', 'uavsar.csv_final']),
+      , 'map.uavsarLegend', 'map.plotActive', 'uavsar.csv_final']),
   },
   mounted() {
 
@@ -116,7 +114,7 @@ export default {
     // load basemap
     //this.tileLayer();
     this.basemapLayers();
-    
+
     //set zoom control position
     //this.globalMap.zoomControl.setPosition('bottomleft');
     this.globalMap.options.minZoom = 3;
@@ -125,7 +123,7 @@ export default {
     var legend2 = L.control({position: 'bottomleft'});
     legend2.onAdd = function () {
       var div = L.DomUtil.create('div', 'info legend2');
-      div.setAttribute("style","padding-left:60px;");
+      div.setAttribute("style", "padding-left:60px;");
       div.innerHTML = '<img src="https://raw.githubusercontent.com/GeoGateway/geogateway-portal/master/html/images/logos/logo_black.png" style="height: 30px; width: 82px">';
       return div;
     };
@@ -173,7 +171,7 @@ export default {
 
     bus.$on('displaySave', (layers) =>
         this.displaySave(layers));
-    bus.$on('hidePlot', ()=> {
+    bus.$on('hidePlot', () => {
       bus.$emit('resetPlot');
     });
     bus.$on('clearSaveLayer', (layers) =>
@@ -204,10 +202,10 @@ export default {
 
 
   methods: {
-    toggleBar(){
+    toggleBar() {
       bus.$emit('ToggleBar');
     },
-    toggleNav(){
+    toggleNav() {
       bus.$emit('ToggleNav');
     },
 
@@ -216,17 +214,17 @@ export default {
     },
 
 
-    seismicityDraw(){
+    seismicityDraw() {
       new L.Draw.Rectangle(this.globalMap, this.drawControl.options.rectangle).enable();
 
       this.drawListener('seismicity');
     },
-    gnssDraw(){
+    gnssDraw() {
       new L.Draw.Rectangle(this.globalMap, this.drawControl.options.rectangle).enable();
 
       this.drawListener('gnss');
     },
-    drawListener(tool){
+    drawListener(tool) {
       this.globalMap.on('draw:created', function (e) {
         var type = e.layerType;
         if (type === 'rectangle') {
@@ -241,11 +239,11 @@ export default {
           this.removeLayer(layer)
 
 
-          if(tool === 'uavsar'){
+          if (tool === 'uavsar') {
             bus.$emit('uavsarDrawQuery', this.maxLat, this.minLon, this.minLat, this.maxLon, this.centerLat, this.centerLng);
-          }else if(tool === 'seismicity'){
+          } else if (tool === 'seismicity') {
             bus.$emit('seisDrawQuery', this.maxLat, this.minLon, this.minLat, this.maxLon, this.centerLat, this.centerLng);
-          }else if(tool === 'gnss'){
+          } else if (tool === 'gnss') {
             bus.$emit('gnssDrawQuery', this.maxLat, this.minLon, this.minLat, this.maxLon, this.centerLat, this.centerLng);
           }
 
@@ -273,10 +271,11 @@ export default {
       this.losPlot = new Dygraph(
           document.getElementById("dygraph-LOS"),
           csv_final, {
-            labels:['distance','grc','dem'],
-            series:{'grc':{axis:'y',drawPoints: true,pointSize: 2,strokeWidth: 0.0,showInRangeSelector: true},
-              'dem':{axis:'y2',strokeWidth:1.0,drawPoints:false,showInRangeSelector: false},
-              },
+            labels: ['distance', 'grc', 'dem'],
+            series: {
+              'grc': {axis: 'y', drawPoints: true, pointSize: 2, strokeWidth: 0.0, showInRangeSelector: true},
+              'dem': {axis: 'y2', strokeWidth: 1.0, drawPoints: false, showInRangeSelector: false},
+            },
             // drawPoints: true,
             // pointSize: 2,
             // strokeWidth: 0.0,
@@ -288,35 +287,35 @@ export default {
             y2label: 'Ground Elevation (m) (line)',
             //maxNumberWidth: 5,
             sigFigs: 2,
-            digitsAfterDecimal:2,
+            digitsAfterDecimal: 2,
             //legend: 'always',
             showRangeSelector: true,
             axes: {
               y: {
-              valueFormatter: y => y.toFixed(3),
-              ticker: Dygraph.numericTicks,
-              axisLabelFormatter: y => y.toFixed(1),
-              pixelsPerLabel: 15,	      
+                valueFormatter: y => y.toFixed(3),
+                ticker: Dygraph.numericTicks,
+                axisLabelFormatter: y => y.toFixed(1),
+                pixelsPerLabel: 15,
               },
               y2: {
-              valueFormatter: y => y.toFixed(3),
-              ticker: Dygraph.numericTicks,
-              axisLabelFormatter: y => y.toFixed(1),
-              axisLabelWidth: 75,
-              pixelsPerLabel: 15,
+                valueFormatter: y => y.toFixed(3),
+                ticker: Dygraph.numericTicks,
+                axisLabelFormatter: y => y.toFixed(1),
+                axisLabelWidth: 75,
+                pixelsPerLabel: 15,
               },
               x: {
-              valueFormatter: x => x.toFixed(3),
-              ticker: Dygraph.numericTicks,
-              axisLabelFormatter: x => x.toFixed(1),
-              pixelsPerLabel: 35,
+                valueFormatter: x => x.toFixed(3),
+                ticker: Dygraph.numericTicks,
+                axisLabelFormatter: x => x.toFixed(1),
+                pixelsPerLabel: 35,
               }
             }
           }
       )
     },
-    resizeLOS(e){
-      if(this.losPlot != null) {
+    resizeLOS(e) {
+      if (this.losPlot != null) {
         let width = e.detail.width - 150;
         let height = e.detail.height - 110;
         // this.losPlot.updateOptions({'width': width - 30, 'height': height - 5})
@@ -371,16 +370,16 @@ export default {
     },
 
     // load basemap layer
-    basemapLayers() { 
+    basemapLayers() {
 
-      var  tileProviders = [
+      var tileProviders = [
         {
           name: 'ArcGIS Topo Map',
           visible: true,
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
           attribution:
-            'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
-          token:'',
+              'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+          token: '',
           //zIndex: 1 
         },
         {
@@ -388,8 +387,8 @@ export default {
           visible: false,
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
           attribution:
-            'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
-          token:'',
+              'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+          token: '',
           //zIndex: 1 
         },
 
@@ -397,18 +396,18 @@ export default {
           name: 'ArcGIS Light Map',
           visible: false,
           attribution:
-            'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+              'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-          token:'',
+          token: '',
           //zIndex: 2
-         },
+        },
         {
           name: 'ArcGIS Dark Map',
           visible: false,
           attribution:
-            'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+              'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-          token:'',
+          token: '',
           //zIndex:3
         }
       ];
@@ -416,9 +415,11 @@ export default {
       var basemaps = {};
       var baseLayer;
       for (var tile of tileProviders) {
-        baseLayer = L.tileLayer(tile.url,{attribution:tile.attribution});
-        basemaps[tile['name']]=baseLayer;
-        if (tile.visible == true) {baseLayer.addTo(this.globalMap);}
+        baseLayer = L.tileLayer(tile.url, {attribution: tile.attribution});
+        basemaps[tile['name']] = baseLayer;
+        if (tile.visible == true) {
+          baseLayer.addTo(this.globalMap);
+        }
       }
       L.control.layers(basemaps).addTo(this.globalMap);
     },
@@ -452,7 +453,6 @@ export default {
           });
 
     },
-
 
 
     seismicityPlots(data, lat, lon) {
@@ -505,7 +505,7 @@ export default {
         this.usgsLegend = L.control({position: 'bottomleft'});
         this.usgsLegend.onAdd = function () {
           var div = L.DomUtil.create('div', 'usgsLegend');
-          div.innerHTML = "<b>"+startDate.toISOString().slice(0,10) +"</b> -- <b>"+endDate.toISOString().slice(0,10)+"</b>";
+          div.innerHTML = "<b>" + startDate.toISOString().slice(0, 10) + "</b> -- <b>" + endDate.toISOString().slice(0, 10) + "</b>";
           div.innerHTML += "<br>"
           div.innerHTML += '<img  width="150" height="20" src="https://raw.githubusercontent.com/GeoGateway/GeoGatewayStaticResources/master/icons/rsz_gradient_linear.png">';
           return div;
@@ -603,15 +603,17 @@ export default {
 #losLegend {
   background-color: #222222;
 }
-.dygraph-axis-label-y{
+
+.dygraph-axis-label-y {
   float: right !important;
 }
 
-.tools{
-background: #F5F9FB;
+.tools {
+  background: #F5F9FB;
 
 }
-.overlay{
+
+.overlay {
   background-color: transparent;
 }
 
