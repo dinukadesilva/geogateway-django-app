@@ -1,11 +1,14 @@
 <template>
-  <div id="sidebar-1">
-    <b-collapse id="toolbar" v-model="toolbar" visible>
-      <b-card-text id="toolbarContent">
-        <router-view></router-view>
-      </b-card-text>
-    </b-collapse>
+  <div class="w-100 bg-light p-2" style="max-width: 300px;">
+    <router-view></router-view>
   </div>
+  <!--  <div id="sidebar-1" class="overflow-auto">-->
+  <!--    <b-collapse id="toolbar" v-model="toolbar" visible>-->
+  <!--      <b-card-text id="toolbarContent">-->
+  <!--        <router-view></router-view>-->
+  <!--      </b-card-text>-->
+  <!--    </b-collapse>-->
+  <!--  </div>-->
 </template>
 
 <script>
@@ -116,39 +119,39 @@ export default {
 
 <style scoped>
 
-#sidebar-1 {
-  height: 100%;
-  /*width: 27%;*/
-  width: fit-content;
-  overflow-y: scroll;
-  float: left;
-  background: none;
-  -webkit-transition: none;
-  transition: none;
-}
+/*#sidebar-1 {*/
+/*  height: 100%;*/
+/*  !*width: 27%;*!*/
+/*  width: fit-content;*/
+/*  overflow-y: scroll;*/
+/*  float: left;*/
+/*  background: none;*/
+/*  -webkit-transition: none;*/
+/*  transition: none;*/
+/*}*/
 
-#toolbar {
-  padding: 10px;
-}
+/*#toolbar {*/
+/*  padding: 10px;*/
+/*}*/
 
-.nav-toggle {
-  pointer-events: auto;
-  color: #2F7CF6;
-  background: #FFFFFF;
-}
+/*.nav-toggle {*/
+/*  pointer-events: auto;*/
+/*  color: #2F7CF6;*/
+/*  background: #FFFFFF;*/
+/*}*/
 
-#toolbarContent {
-  margin-top: 3%;
-}
+/*#toolbarContent {*/
+/*  margin-top: 3%;*/
+/*}*/
 
-.togbutton {
-  background-color: #862e9c;
-  color: #efefef;
-  border: none;
-  text-align: center;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
+/*.togbutton {*/
+/*  background-color: #862e9c;*/
+/*  color: #efefef;*/
+/*  border: none;*/
+/*  text-align: center;*/
+/*  padding: 10px 20px;*/
+/*  border-radius: 5px;*/
+/*}*/
 
 
 </style>

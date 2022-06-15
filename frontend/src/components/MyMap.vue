@@ -1,38 +1,41 @@
 <template>
-  <div id="map-window">
+  <div class="w-100 h-100 d-flex flex-column">
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
           crossorigin=""/>
 
     <TopNav/>
-    <ToolTabs class="tools"/>
+
+    <div class="w-100 d-flex flex-fill">
+      <ToolTabs/>
 
 
-    <ToolBar class="tools"/>
-    <DraggableDiv v-resize @resize="resizeLOS" class="col-11" v-if="plotActive" id="plot-window">
+      <ToolBar/>
+      <DraggableDiv v-resize @resize="resizeLOS" class="col-11" v-if="plotActive" id="plot-window">
 
 
-      <vue-resize></vue-resize>
-      <template slot="header">
-        <p style="color: #000000">Line of Sight Displacement</p>
-      </template>
-      <template>
-        <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
-      </template>
-      <div id="losLegend">
+        <vue-resize></vue-resize>
+        <template slot="header">
+          <p style="color: #000000">Line of Sight Displacement</p>
+        </template>
+        <template>
+          <b-button @click=toggleNav() class="toggle"><i class="fas fa-bars"></i></b-button>
+        </template>
+        <div id="losLegend">
+        </div>
+        <template slot="main">
+          <div id="dygraph-LOS" v-bind:style="losStyle"></div>
+        </template>
+
+      </DraggableDiv>
+      <!--        <div v-if="plotActive" class="plot-window">-->
+      <!--            <div id="los-header"><h4>LOS Plot</h4></div>-->
+      <!--            <div id="dygraph-LOS"></div>-->
+      <!--        </div>-->
+
+      <div id="map" class="flex-fill">
       </div>
-      <template slot="main">
-        <div id="dygraph-LOS" v-bind:style="losStyle"></div>
-      </template>
-
-    </DraggableDiv>
-    <!--        <div v-if="plotActive" class="plot-window">-->
-    <!--            <div id="los-header"><h4>LOS Plot</h4></div>-->
-    <!--            <div id="dygraph-LOS"></div>-->
-    <!--        </div>-->
-
-    <div id="map">
     </div>
 
 
@@ -539,22 +542,23 @@ export default {
 <style scoped>
 #map {
 
-  position: relative;
-  height: 100%;
-  /*z-index: 30000;*/
-  width: auto;
-  margin-left: auto;
-  margin-bottom: auto;
+  /*flex: 1;*/
+  /*!*position: relative;*!*/
+  /*height: 100%;*/
+  /*!*z-index: 30000;*!*/
+  /*!*width: auto;*!*/
+  /*margin-left: auto;*/
+  /*margin-bottom: auto;*/
   /*float: right;*/
 
 }
 
 #map-window {
-  position: inherit;
-  height: calc(100% - 40px);
-  /*z-index: 30000;*/
-  width: auto;
-  padding: 0;
+  /*position: inherit;*/
+  /*height: calc(100% - 40px);*/
+  /*!*z-index: 30000;*!*/
+  /*width: auto;*/
+  /*padding: 0;*/
   /*float: right;*/
 }
 

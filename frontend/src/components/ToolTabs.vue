@@ -1,54 +1,14 @@
 <template>
-  <div id="sidebar">
-    <b-row>
-      <b-col>
-        <b-collapse v-model="navbar" visible>
-          <b-tabs id="tabs" vertical v-model="tabIndex" small pills card>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>Map Tools</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>UAVSAR</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>GNSS</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>Seismicity</strong></span></template>
-            </b-tab>
-            <!-- <b-tab no-body><template #title> <span style="font-size:14px"><strong>Nowcast</strong></span></template></b-tab> -->
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>Magnitude</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>Disloc</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>Studies</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>3D Imaging</strong></span></template>
-            </b-tab>
-            <b-tab no-body>
-              <template #title><span style="font-size:14px"><strong>Help</strong></span></template>
-            </b-tab>
-
-          </b-tabs>
-        </b-collapse>
-      </b-col>
-
-      <b-col syle=" width: fit-content;">
-        <b-button-group vertical v-if="navbar || toolbar">
-          <b-button v-if="navbar" class="icon-btn is-right" syle="pointer-events: all;" @click="closeNav">
-            <i class="fa fa-times" aria-hidden="true"></i>
-          </b-button>
-          <b-button v-if="!navbar" @click="navbar=true" class="nav-toggle"><i class="fas fa-bars"></i></b-button>
-          <b-button v-if="toolbar" @click="closeBar()" class="bar-toggle"><i class="fas fa-angle-left"></i></b-button>
-          <b-button v-if="!toolbar" @click="openBar()" class="bar-toggle"><i class="fas fa-angle-right"></i></b-button>
-        </b-button-group>
-      </b-col>
-    </b-row>
-
+  <div class="w-100 overflow-auto" style="max-width: 150px;">
+    <ul class="w-100">
+      <li v-for="(menu, menuIndex) in menus" :key="menuIndex">
+        <router-link :to="menu.to" v-slot="{href, navigate, isActive, isExactActive}">
+          <a :href="href" @click="navigate" :class="{'active': isExactActive}">
+            {{ menu.label }}
+          </a>
+        </router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -68,6 +28,19 @@ export default {
       navbar: true,
       toolbar: true,
       toggleButton: null,
+
+      menus: [
+        {to: "maptools", label: "Map tools"},
+        {to: "uavsar", label: "UAVSAR"},
+        {to: "gnss", label: "GNSS"},
+        {to: "seismicity", label: "Seismicity"},
+        {to: "momentmagnitude", label: "Magnitude"},
+        {to: "disloc", label: "Disloc"},
+        {to: "specialstudies", label: "Studies"},
+        {to: "3dimaging", label: "3D imaging"},
+        {to: "report", label: "Report"},
+        {to: "help", label: "Help"}
+      ]
     }
   },
 
@@ -187,86 +160,120 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+// Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap';
+// BootstrapVue and its default variables
+@import '~bootstrap-vue/src/index.scss';
 
-#sidebar {
-  overflow-y: scroll;
-  float: left;
-  background-color: #FFFFFF;
-  -webkit-transition: none;
-  transition: none;
+ul {
+  list-style: none;
+  padding: 0px;
 }
 
-.nav {
-  background-color: #FFFFFF;
+ul li a {
+  text-align: left;
+  letter-spacing: 0px;
+  color: $secondary;
+  background-color: $white;
+  padding: 10px 15px;
+  border-left: 4px solid $white;
+  border-right: 2px solid lighten($secondary, 48%);
+  font-size: 1rem;
+  font-weight: 500;
+  display: block;
 }
 
-#tabs {
-  min-height: 100vh;
-  background-color: #FFFFFF;
-
+ul li a:hover {
+  color: $primary;
 }
 
-.tab-text {
-  width: auto;
-  position: relative;
-  align-content: center;
-  height: 100%;
-  overflow: auto;
-
+ul li a.active {
+  color: $primary;
+  background-color: $light;
+  border-left: 4px solid $primary;
+  border-right: 2px solid $light;
 }
 
 
-h3 {
-  font-size: 20px !important;
-}
-
-.nav-pills .nav-link.active {
-  background-color: #343a40;
-
-}
-
-.nav-link.tab {
-  color: #343a40;
-}
-
-label {
-  color: #343a40;
-}
-
-p {
-  color: #343a40;
-}
-
-.bar-toggle {
-  pointer-events: auto;
-  color: #2F7CF6;
-  background: transparent;
-  border: none;
-  height: 80vh;
-}
-
-.nav-toggle {
-  color: #2F7CF6;
-  background: #FFFFFF;
-}
-
-.icon-btn {
-  background: transparent;
-  border: none;
-  color: #2F7CF6
-}
-
-button:active {
-  outline: none;
-  border: none;
-  box-shadow: none;
-}
-
-button:focus {
-  outline: none;
-  border: none;
-  box-shadow: none !important;
-}
+//#sidebar {
+//  overflow-y: scroll;
+//  float: left;
+//  background-color: #FFFFFF;
+//  -webkit-transition: none;
+//  transition: none;
+//}
+//
+//.nav {
+//  background-color: #FFFFFF;
+//}
+//
+//#tabs {
+//  min-height: 100vh;
+//  background-color: #FFFFFF;
+//
+//}
+//
+//.tab-text {
+//  width: auto;
+//  position: relative;
+//  align-content: center;
+//  height: 100%;
+//  overflow: auto;
+//
+//}
+//
+//
+//h3 {
+//  font-size: 20px !important;
+//}
+//
+//.nav-pills .nav-link.active {
+//  background-color: #343a40;
+//
+//}
+//
+//.nav-link.tab {
+//  color: #343a40;
+//}
+//
+//label {
+//  color: #343a40;
+//}
+//
+//p {
+//  color: #343a40;
+//}
+//
+//.bar-toggle {
+//  pointer-events: auto;
+//  color: #2F7CF6;
+//  background: transparent;
+//  border: none;
+//  height: 80vh;
+//}
+//
+//.nav-toggle {
+//  color: #2F7CF6;
+//  background: #FFFFFF;
+//}
+//
+//.icon-btn {
+//  background: transparent;
+//  border: none;
+//  color: #2F7CF6
+//}
+//
+//button:active {
+//  outline: none;
+//  border: none;
+//  box-shadow: none;
+//}
+//
+//button:focus {
+//  outline: none;
+//  border: none;
+//  box-shadow: none !important;
+//}
 
 </style>
