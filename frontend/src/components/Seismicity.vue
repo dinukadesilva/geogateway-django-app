@@ -1,17 +1,18 @@
 <template>
-  <div class="tab-window">
-
-    <b-card>
-    <span class="icon is-right" syle="pointer-events: all;" @click="seismInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span>&ensp; About Seismicity
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="seismInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Seismicity
+    </b-alert>
 
     Recent Earthquakes from USGS
 
     <div id="panel_forecast" style="margin-top: 10px; margin-bottom:10px;">
 
-     <span class="inputLabel">Recent Earthquakes from USGS</span><hr>
+      <span class="inputLabel">Recent Earthquakes from USGS</span>
+      <hr>
       <b-form-radio-group>
         <b-form-radio
             type="radio"
@@ -19,7 +20,8 @@
             value="day"
             @change="showSelected('day')"
             name="group1"
-        > M > 1.0, Last Day</b-form-radio>
+        > M > 1.0, Last Day
+        </b-form-radio>
         <br/>
         <b-form-radio
             type="radio"
@@ -27,7 +29,8 @@
             value="week"
             @change="showSelected('week')"
             name="group1"
-        >M > 2.5, Last Week</b-form-radio>
+        >M > 2.5, Last Week
+        </b-form-radio>
         <br/>
         <b-form-radio
             type="radio"
@@ -35,7 +38,8 @@
             v-model="selected"
             @change="showSelected('month')"
             name="group1"
-        >M > 4.5, Last Month</b-form-radio>
+        >M > 4.5, Last Month
+        </b-form-radio>
       </b-form-radio-group>
 
       <!--        is this necessary? -->
@@ -63,23 +67,26 @@
       <hr/> -->
 
 
-      <span class="inputLabel">Search Earthquake Catalog</span><hr>
+      <span class="inputLabel">Search Earthquake Catalog</span>
+      <hr>
       <b-button id="sp_windowpicker" class="btn btn_blue" @click="seisDrawRect()">
-      Draw an area on the map</b-button>
-      <b-button 
+        Draw an area on the map
+      </b-button>
+      <b-button
           v-if="areaLayer!=null || 
                 selected!=null || 
                 geoUri !== '' || 
-                kmlUri !== ''" 
+                kmlUri !== ''"
           class="btn_white" id="clearUsgs" @click="clearUsgs()">
-        Clear USGS Layers</b-button>
+        Clear USGS Layers
+      </b-button>
       <br/><br/>
-      
+
       <span class="inputLabel">Min Lat</span>
       <b-input-group>
         <b-form-input v-model="minLat" placeholder="1 degree" name="minLat" value="32.0"></b-form-input>
       </b-input-group>
-      
+
       <span class="inputLabel">Min Lon</span>
       <b-input-group>
         <b-form-input v-model="minLon" placeholder="1 degree" name="minLon" value="-130.0"></b-form-input>
@@ -87,7 +94,7 @@
 
       <span class="inputLabel">Max Lat</span>
       <b-input-group>
-        <b-form-input v-model="maxLat" placeholder="1 degree" name="maxLat" ></b-form-input>
+        <b-form-input v-model="maxLat" placeholder="1 degree" name="maxLat"></b-form-input>
       </b-input-group>
 
       <span class="inputLabel">Max Lon</span>
@@ -131,38 +138,39 @@
         <b-form-input v-model="iconScale" placeholder="1 degree" name="iconScale"></b-form-input>
       </b-input-group>
       <br/>
-      <button  class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runSeismicity()">Search
+      <button class="btn btn-success" id="gs_submit" name="submit" type="submit" v-on:click.prevent="runSeismicity()">
+        Search
       </button>
-      <br />
-      <br />
+      <br/>
+      <br/>
       <div class="toolInfo" v-if="geoUri !== '' || kmlUri !== ''">
-      <a :href="kmlUri">Download USGS KML</a>
-      <br />
-      <a target="_blank" :href="geoUri">Download USGS GeoJSON</a>
+        <a :href="kmlUri">Download USGS KML</a>
+        <br/>
+        <a target="_blank" :href="geoUri">Download USGS GeoJSON</a>
       </div>
     </div>
 
     <!-- info  popup -->
-    <b-modal 
-    v-model="seismInfo"
-            title="Seismicity">
-            <p class="my-4">
-              The seismicity tab allows users to display earthquakes in a region over a specified 
-              period. The tab is split into two sections, “Recent Earthquakes from USGS” and 
-              “Search Earthquake Catalog.” 
-            </p>
-            <p>
-              The tab allows users to view recent earthquakes from USGS data. The USGS data
-              can also be found on the USGS website 
-              <strong><a href="https://earthquake.usgs.gov/earthquakes/map/" 
-              target="_blank">earthquake.usgs.gov/earthquakes/map/</a></strong>
-              . The displayed earthquake events are color coded with the hotter
-              colors representing recent events and the cooler colors representing less recent
-              events.
-            </p>
-            <div slot="modal-footer" class="w-100">
-            </div>
-          </b-modal>
+    <b-modal
+        v-model="seismInfo"
+        title="Seismicity">
+      <p class="my-4">
+        The seismicity tab allows users to display earthquakes in a region over a specified
+        period. The tab is split into two sections, “Recent Earthquakes from USGS” and
+        “Search Earthquake Catalog.”
+      </p>
+      <p>
+        The tab allows users to view recent earthquakes from USGS data. The USGS data
+        can also be found on the USGS website
+        <strong><a href="https://earthquake.usgs.gov/earthquakes/map/"
+                   target="_blank">earthquake.usgs.gov/earthquakes/map/</a></strong>
+        . The displayed earthquake events are color coded with the hotter
+        colors representing recent events and the cooler colors representing less recent
+        events.
+      </p>
+      <div slot="modal-footer" class="w-100">
+      </div>
+    </b-modal>
 
   </div>
 </template>
@@ -171,8 +179,9 @@
 import axios from "axios";
 import {bus} from '../main'
 import 'leaflet-ajax';
-import { mapFields } from 'vuex-map-fields';
+import {mapFields} from 'vuex-map-fields';
 import L from "leaflet";
+
 export default {
   name: "seismicity",
   data() {
@@ -208,20 +217,20 @@ export default {
     ])
   },
   methods: {
-    clearUsgs(){
+    clearUsgs() {
       this.geoUri = '';
       this.kmlUri = '';
       bus.$emit('ClearUsgs', 'usgs_layer');
       let vm = this;
-      if (vm.areaLayer!=null){
+      if (vm.areaLayer != null) {
         vm.globalMap.removeLayer(vm.areaLayer);
         vm.areaLayer = null;
       }
-      this.selected=null;
+      this.selected = null;
       this.minLat = null;
-      this.minLon=null;
-      this.maxLat=null;
-      this.maxLon=null;
+      this.minLon = null;
+      this.maxLat = null;
+      this.maxLon = null;
     },
     showSelected(time) {
       var dFilter = this.dFilter;
@@ -233,42 +242,43 @@ export default {
         case 'day':
           timeUrl = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_day.geojson'
           startD = new Date();
-          startD.setDate(startD.getDate()-1);
+          startD.setDate(startD.getDate() - 1);
           break;
         case 'week':
           timeUrl = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson'
           startD = new Date();
-          startD.setDate(startD.getDate()-7);
+          startD.setDate(startD.getDate() - 7);
           break;
         case 'month':
           timeUrl = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson'
           startD = new Date();
           //rough estimate of month ago
-          startD.setDate(startD.getDate()-30);
+          startD.setDate(startD.getDate() - 30);
           break;
       }
       axios.get('/geogateway_django_app/seismicity', {
         params: {
           "fullUri": timeUrl,
-        }}).then(function(response){
+        }
+      }).then(function (response) {
         bus.$emit('filterCat', response.data, dFilter, mFilter, 1, startD, endD)
       })
     },
-    runSeismicity(){
+    runSeismicity() {
       let vm = this;
       var iconScale = this.iconScale;
       var startD = new Date(this.startDate);
       var endD = new Date(this.endDate);
-      var urlBase="https://earthquake.usgs.gov/fdsnws/event/1/query?";
-      var fullUri = urlBase + "format=geojson" +'&' +
+      var urlBase = "https://earthquake.usgs.gov/fdsnws/event/1/query?";
+      var fullUri = urlBase + "format=geojson" + '&' +
           "starttime=" + this.startDate + 'T' + this.startTime + '&' +
           "endtime=" + this.endDate + 'T' + this.endTime + '&' +
           "minmagnitude=" + this.minMag + '&' +
           "minlatitude=" + this.minLat + '&' +
-          "maxlatitude=" + this.maxLat +'&' +
-          "minlongitude=" + this.minLon +'&' +
+          "maxlatitude=" + this.maxLat + '&' +
+          "minlongitude=" + this.minLon + '&' +
           "maxlongitude=" + this.maxLon;
-      if (vm.areaLayer!=null){
+      if (vm.areaLayer != null) {
         vm.globalMap.removeLayer(vm.areaLayer);
         vm.areaLayer = null;
       }
@@ -278,18 +288,18 @@ export default {
         params: {
           "fullUri": fullUri,
         }
-      }).then(function (response){
+      }).then(function (response) {
         bus.$emit('filterCat', response.data, '', '', iconScale, startD, endD)
       })
     },
-    seisDrawRect(){
+    seisDrawRect() {
       let vm = this;
       vm.rectDraw = new L.Draw.Rectangle(vm.globalMap, vm.drawControl.options.rectangle);
       vm.rectDraw.enable();
       vm.globalMap.on('draw:created', function (e) {
         var type = e.layerType;
         if (type === 'rectangle') {
-          if (vm.areaLayer!=null){
+          if (vm.areaLayer != null) {
             vm.globalMap.removeLayer(vm.areaLayer);
           }
           var layer = e.layer;
@@ -300,10 +310,11 @@ export default {
           vm.maxLon = layer.getLatLngs()[0][2].lng.toFixed(5);
           vm.minLat = layer.getLatLngs()[0][3].lat.toFixed(5);
           vm.minLon = layer.getLatLngs()[0][0].lng.toFixed(5);
-          vm.areaLayer=layer;
+          vm.areaLayer = layer;
           vm.rectDraw = null;
           // vm.geometryActive = false;
-        }});
+        }
+      });
     },
     // eslint-disable-next-line no-unused-vars
     setRect(maxLat, minLon, minLat, maxLon, centerLat, centerLng) {
@@ -321,9 +332,11 @@ export default {
 i {
   color: #2e6da4;
 }
+
 label {
   font-weight: bold;
 }
+
 /*#buttonText {*/
 /*    color: white;*/
 /*}*/
@@ -333,8 +346,5 @@ img {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 25px;
   height: 50px;
-}
-a {
-  color: black;
 }
 </style>

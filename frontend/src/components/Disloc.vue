@@ -1,12 +1,12 @@
-
-
 <template>
-  <div class="tab-window">
-   <b-card>
-    <span class="icon is-right" syle="pointer-events: all;" @click="disclocInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span>&ensp; About Discloc 
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="disclocInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Discloc
+    </b-alert>
+
     <hr/>
 
     <div id="upload-container">
@@ -63,47 +63,50 @@
       </b-button>
 
 
-
-      <div  v-for="entry in results" :key="entry.exp.name" class="collapsed">
+      <div v-for="entry in results" :key="entry.exp.name" class="collapsed">
 
         <div>
-          <div @click="extendEntry(entry)" v-bind:style="{backgroundColor: entry.activeBackground}" class="clickableName">
-            {{entry.exp.name}}
+          <div @click="extendEntry(entry)" v-bind:style="{backgroundColor: entry.activeBackground}"
+               class="clickableName">
+            {{ entry.exp.name }}
           </div>
           <div v-if="entry.extended">
-              <b>Experiment Status:</b> {{entry.exp.experimentStatus.name}}
-              <br />
+            <b>Experiment Status:</b> {{ entry.exp.experimentStatus.name }}
+            <br/>
             <div v-if="entry.exp.experimentStatus.name === 'COMPLETED'">
-              <input type="checkbox" v-model="entry.active" @change="showHideLayers(entry)">Show Synthetic Interferograms
-              <br />
+              <input type="checkbox" v-model="entry.active" @change="showHideLayers(entry)">Show Synthetic
+              Interferograms
+              <br/>
               <a :href="entry.result2.url">Download CSV</a>&ensp;
               <a :href="entry.result.url">Download KMZ</a>
             </div>
 
-            </div>
+          </div>
         </div>
         <!--&lt;!&ndash;          {{entry.exp}}&ndash;&gt;-->
-      </div> <br>
+      </div>
+      <br>
     </div>
 
-     <!-- info  popup -->
+    <!-- info  popup -->
     <b-modal
-    v-model="disclocInfo"
-            title="Discloc">
-            <p class="my-4">
-              Elastic dislocation models are commonly used to analyze inversion on faults 
-              following the event of an earthquake (Chen et al., 2020). In 1985, Yoshimitsu 
-              Okada (Ph.D.) proposed a formula which calculated displacement in an isotropic, 
-              uniform elastic half space. The formula can calculate coseismic deformation 
-              caused by any fault within the elastic half space (Okada, 1985). Okada’s dislocation 
-              theory, which is the most commonly used dislocation theory, is often used with 
-              InSAR. InSAR monitors the surface coseismic deformation field, and subsequently, Okada’s theory is used to conduct 
-              fault slip inversion, calculating the coseismic strain stress field (Chen et al., 2020). 
-              deformation of an elastic medium due to slip from active faults (Avouac, n.d.).
-            </p>
-            <div slot="modal-footer" class="w-100">
-            </div>
-          </b-modal>
+        v-model="disclocInfo"
+        title="Discloc">
+      <p class="my-4">
+        Elastic dislocation models are commonly used to analyze inversion on faults
+        following the event of an earthquake (Chen et al., 2020). In 1985, Yoshimitsu
+        Okada (Ph.D.) proposed a formula which calculated displacement in an isotropic,
+        uniform elastic half space. The formula can calculate coseismic deformation
+        caused by any fault within the elastic half space (Okada, 1985). Okada’s dislocation
+        theory, which is the most commonly used dislocation theory, is often used with
+        InSAR. InSAR monitors the surface coseismic deformation field, and subsequently, Okada’s theory is used to
+        conduct
+        fault slip inversion, calculating the coseismic strain stress field (Chen et al., 2020).
+        deformation of an elastic medium due to slip from active faults (Avouac, n.d.).
+      </p>
+      <div slot="modal-footer" class="w-100">
+      </div>
+    </b-modal>
 
   </div>
 </template>
@@ -118,14 +121,15 @@ import 'axios'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
-import { mapFields } from 'vuex-map-fields';
+import {mapFields} from 'vuex-map-fields';
 import L from "leaflet";
+
 export default {
 
   name: "Disloc",
-  data(){
+  data() {
     return {
-        disclocInfo: false,
+      disclocInfo: false,
 
     }
   },
@@ -172,7 +176,7 @@ export default {
     bus.$on('updateDisloc', (html) =>
         this.fileInfo = html);
     // eslint-disable-next-line no-undef
-    const { models, services, session, utils } = AiravataAPI;
+    const {models, services, session, utils} = AiravataAPI;
     this.models = models;
     this.services = services;
     this.session = session;
@@ -181,14 +185,14 @@ export default {
 
   },
   methods: {
-    handleFileUpload(event){
+    handleFileUpload(event) {
       this.file = event.target.files[0];
     },
-    extendEntry(entry){
-      if(!entry.fullRetrieved) {
-        if(entry.exp.experimentStatus.name === "COMPLETED"){
+    extendEntry(entry) {
+      if (!entry.fullRetrieved) {
+        if (entry.exp.experimentStatus.name === "COMPLETED") {
           this.loadFullExperiment(entry);
-        }else{
+        } else {
           entry.extended = true;
           //entry.extended ? entry.activeBackground = '#8494a3' : entry.activeBackground = '#7ee04c';
           entry.activeBackground = '#8494a3';
@@ -196,30 +200,30 @@ export default {
       }
 
     },
-    showHideLayers(entry){
+    showHideLayers(entry) {
       let vm = this;
       // let name = entry.exp.name
-      if(entry.active){
+      if (entry.active) {
         entry.layer = L.kmzLayer(entry.result.url);
         vm.globalMap.addLayer(entry.layer);
 
         // });
-      }else {
+      } else {
         this.globalMap.removeLayer(entry.layer);
       }
 
     },
-    submitFile(){
+    submitFile() {
       let vm = this;
       var uploadUrl = '/geogateway_django_app/disloc/';
       let formData = new FormData();
       formData.append('file', this.file);
-      axios.post( uploadUrl, formData
-      ).then(function(response){
+      axios.post(uploadUrl, formData
+      ).then(function (response) {
         var dislocArgs = response.data;
         vm.case_submitexperiment(dislocArgs);
       })
-          .catch(function(response){
+          .catch(function (response) {
             console.log(response)
           });
     },
@@ -232,9 +236,8 @@ export default {
       this.app_id = dislocArgs["app_id"];
 
 
-
       // Load the application interface for the application module with id app_id
-      const loadAppInterface = this.services .ApplicationModuleService.getApplicationInterface({
+      const loadAppInterface = this.services.ApplicationModuleService.getApplicationInterface({
         lookup: this.app_id,
       });
       // Find the compute resource id for the 'this.hostname'
@@ -312,7 +315,7 @@ export default {
             vm.experiment = experiment;
             return this.services.ExperimentService.launch({
               lookup: experiment.experimentId
-            }).then(()=> {
+            }).then(() => {
               vm.loadExperiments();
 
             });
@@ -333,16 +336,18 @@ export default {
         data.results.forEach((exp, index) => {
           let entry = {exp: exp, result: null, active: false, layer: null, extended: false, fullRetrieved: false};
           let currStatus = exp.experimentStatus.name;
-          if(prev.length !== 0) {
+          if (prev.length !== 0) {
             let prevStatus = prev[index].exp.experimentStatus.name;
-            if(prevStatus !== currStatus){
+            if (prevStatus !== currStatus) {
               vm.extendEntry(entry);
             }
           }
 
-          if(currStatus !== "COMPLETED"){
+          if (currStatus !== "COMPLETED") {
             vm.extendEntry(entry);
-          } else {entry.activeBackground = '#7ee04c'}
+          } else {
+            entry.activeBackground = '#7ee04c'
+          }
           vm.results.push(entry);
           // vm.loadFullExperiment(exp, index)
           //sort list
@@ -350,7 +355,7 @@ export default {
 
       });
     },
-    loadFullExperiment(entry){
+    loadFullExperiment(entry) {
       let exp = entry.exp;
       if (exp.experimentStatus === this.models.ExperimentState.COMPLETED) {
         this.services.FullExperimentService.retrieve({
@@ -369,14 +374,14 @@ export default {
               const csvDataProduct = fullDetails.outputDataProducts.find(
                   (dp) => dp.productUri === csv
               );
-              
+
               if (
                   stdoutDataProduct &&
                   stdoutDataProduct.downloadURL
               ) {
-                Promise.all ([fetch(stdoutDataProduct.downloadURL, {credentials: "same-origin",}),
+                Promise.all([fetch(stdoutDataProduct.downloadURL, {credentials: "same-origin",}),
                   fetch(csvDataProduct.downloadURL, {credentials: "same-origin",})
-                  ]).then(([result,result2]) => {
+                ]).then(([result, result2]) => {
                   entry.result = result;
                   entry.result2 = result2;
                   entry.fullRetrieved = true;
@@ -399,6 +404,7 @@ export default {
   float: left;
   text-align: left;
 }
+
 .collapsed {
   width: auto;
   height: auto;
@@ -409,14 +415,9 @@ export default {
   background-color: #A5B9CC;
   /*A5B9CC*/
 }
+
 .clickableName {
   cursor: pointer;
-}
-
-a:link, a:visited {
-  color: black;
-  text-decoration: underline;
-  display: inline-block;
 }
 
 </style>
