@@ -1,15 +1,11 @@
 <template>
-  <div>
-    <!-- save some space
-    <h3>3D Imaging</h3>
-    <hr>
-    -->
-
-    <b-card>
-            <span class="icon is-right" syle="pointer-events: all;" @click="threedInfo=true">
-                <i class="aboutIcon fas fa-info-circle"></i> 
-            </span>&ensp; About 3D Imaging
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="threedInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About 3D Imaging
+    </b-alert>
 
     <div align="left">
       <input
@@ -343,11 +339,4 @@ td {
   padding-bottom: 0px;
   height: 0px
 }
-
-a:link, a:visited {
-  color: black;
-  text-decoration: underline;
-  display: inline-block;
-}
-
 </style>
