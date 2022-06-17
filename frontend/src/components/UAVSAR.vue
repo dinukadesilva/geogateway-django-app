@@ -153,10 +153,11 @@ import axios from "axios";
 import 'leaflet-kmz';
 import L from 'leaflet';
 import 'leaflet-kml'
-import { mapFields } from 'vuex-map-fields';
+import {mapFields} from 'vuex-map-fields';
+
 export default {
   name: "UAVSAR",
-  data(){
+  data() {
     return {
       isFiltered: false,
       uavsarInfo: false,
@@ -194,10 +195,8 @@ export default {
       twoPiLegend: 'https://archive.geo-gateway.org/kmz/highreslegend/2pi_t.png',
     }
   },
-  directives: {
-  },
-  components: {
-  },
+  directives: {},
+  components: {},
   computed: {
     ...mapFields([
       'uavsar.overview',
@@ -269,14 +268,14 @@ export default {
         this.pointQuery(lat, lon));
     bus.$on('showOverview', () =>
         this.showOverview());
-    bus.$on('getCSV', (entry, latlons)=>
+    bus.$on('getCSV', (entry, latlons) =>
         this.getCSV(entry, latlons));
-    bus.$on('chartData', (csv)=>
+    bus.$on('chartData', (csv) =>
         this.chartData(csv));
     // bus.$on('polyDrawn', (latlngs)=>
     //     this.polyQuery(latlngs));
     //tool argument for identifying currently active tool
-    bus.$on('uavsarDrawQuery', (maxLat, minLon, minLat, maxLon, centerLat, centerLng)=>
+    bus.$on('uavsarDrawQuery', (maxLat, minLon, minLat, maxLon, centerLat, centerLng) =>
         this.rectQuery(maxLat, minLon, minLat, maxLon, centerLat, centerLng));
     bus.$on('uavsarHighRes', (entry) =>
         this.uavsarHighRes(entry));
@@ -284,13 +283,13 @@ export default {
         this.resetPlot());
   },
   methods: {
-    uavsarDrawRect(){
+    uavsarDrawRect() {
       this.geometryActive = true;
       let vm = this;
       vm.rectDraw = new L.Draw.Rectangle(vm.globalMap, vm.drawControl.options.rectangle);
       vm.rectDraw.enable();
       vm.globalMap.on('draw:created', function (e) {
-        if (vm.areaLayer!=null){
+        if (vm.areaLayer != null) {
           vm.globalMap.removeLayer(vm.areaLayer);
           vm.areaLayer = null;
         }
@@ -304,56 +303,61 @@ export default {
           vm.maxLon = layer.getLatLngs()[0][2].lng;
           vm.minLat = layer.getLatLngs()[0][3].lat;
           vm.minLon = layer.getLatLngs()[0][0].lng;
-          vm.globalMap.setView([vm.centerLat,vm.centerLng], 7);
+          vm.globalMap.setView([vm.centerLat, vm.centerLng], 7);
           vm.rectDraw = null;
           vm.areaLayer = layer;
           vm.rectQuery(vm.maxLat, vm.minLon, vm.minLat, vm.maxLon, vm.centerLat, vm.centerLng);
           vm.geometryActive = false;
-        }});
+        }
+      });
     },
-    clearFilters(){
-      this.isFiltered=false;
+    clearFilters() {
+      this.isFiltered = false;
       Array.prototype.push.apply(this.uavsarLayersFiltered, this.uavsarLayers);
       this.bracketDate = ''
     },
-    uavsarPinDrop(){
+    uavsarPinDrop() {
       this.geometryActive = true;
       var vm = this;
       this.pinDrop = new L.Draw.Marker(this.globalMap, this.drawControl.options.marker);
       this.pinDrop.enable();
-      if (vm.pinLayer!=null){
-          vm.globalMap.removeLayer(vm.pinLayer);
-          vm.pinLayer = null;
-        }
+      if (vm.pinLayer != null) {
+        vm.globalMap.removeLayer(vm.pinLayer);
+        vm.pinLayer = null;
+      }
       this.globalMap.on('draw:created', function (e) {
         vm.markerLayer = e.layer;
         vm.globalMap.addLayer(e.layer);
         var lat = e.layer.getLatLng().lat;
         var lng = e.layer.getLatLng().lng;
-        vm.pinLayer=e.layer;
-        vm.pointQuery(lat,lng);
+        vm.pinLayer = e.layer;
+        vm.pointQuery(lat, lng);
         vm.pinDrop = null;
         vm.geometryActive = false;
       });
     },
-    drawListenerOff(){
+    drawListenerOff() {
       this.geometryActive = false;
-      if(this.pinDrop){
+      if (this.pinDrop) {
         this.pinDrop.disable();
-      }if (this.rectDraw){
+      }
+      if (this.rectDraw) {
         this.rectDraw.disable();
       }
     },
-    filterHeading(){
+    filterHeading() {
       var pathSearch = this.path;
-      function checkPath(entry){
+
+      function checkPath(entry) {
         return entry.info['heading'].includes(pathSearch);
       }
+
       this.uavsarLayersFiltered = this.uavsarLayers.filter(checkPath);
     },
-    filterDate(){
-      this.isFiltered=true;
+    filterDate() {
+      this.isFiltered = true;
       let vm = this;
+
       function checkDate(entry) {
         let d = entry.info['time1'].replaceAll('-', '/')
         let d2 = entry.info['time2'].replaceAll('-', '/')
@@ -362,56 +366,57 @@ export default {
         let b3 = new Date(vm.bracketDate)
         return (b3 > b1 && b3 < b2);
       }
-      if(this.bracketDate !== '') {
+
+      if (this.bracketDate !== '') {
         this.uavsarLayersFiltered = this.uavsarLayers.filter(checkDate);
       }
     },
-    sortEntries(){
-      if(this.sortBy === 'rating') {
+    sortEntries() {
+      if (this.sortBy === 'rating') {
         this.uavsarLayersFiltered = this.uavsarLayers.sort((a, b) =>
             (a.info['rating'] > b.info['rating']) ? -1 : 1);
       }
     },
-    uavsarQuery(){
+    uavsarQuery() {
       this.activeQuery = true;
-      if(this.lat_lon === '') {
+      if (this.lat_lon === '') {
         if (this.flight_path === '') {
           alert('Please fill one of the input boxes');
         } else {
           this.flightPathQuery(this.flight_path);
         }
-      }else {
+      } else {
         this.pointQuery(this.lat_lon.split(',')[0], this.lat_lon.split(',')[1]);
       }
     },
-    openDataSource(uid){
-      window.open('http://gf2.ucs.indiana.edu/quaketables/uavsar?uid='+uid, '_blank');
+    openDataSource(uid) {
+      window.open('http://gf2.ucs.indiana.edu/quaketables/uavsar?uid=' + uid, '_blank');
     },
-    updateOpacity(value){
-      this.uavsarHighResLayer.setOpacity((value/100));
+    updateOpacity(value) {
+      this.uavsarHighResLayer.setOpacity((value / 100));
     },
-    chartData(csv){
+    chartData(csv) {
       // let vm = this;
       // let csv;
       // axios.get(csvUrl).then(function(response){
       //   csv = response.data;
       // }).then(function (){
-      var csv2=csv.split("\n");
-      var csv_final="";
-      for(var i=0;i<csv2.length;i++) {
-        var csv3=csv2[i].split(",");
+      var csv2 = csv.split("\n");
+      var csv_final = "";
+      for (var i = 0; i < csv2.length; i++) {
+        var csv3 = csv2[i].split(",");
         //                console.log(csv2[i],csv3)
-        if(csv3[2] && csv3[3] && csv3[5]) {
-          csv_final+=csv3[2]+","+csv3[3]+ ","+csv3[5] + "\n";
+        if (csv3[2] && csv3[3] && csv3[5]) {
+          csv_final += csv3[2] + "," + csv3[3] + "," + csv3[5] + "\n";
         }
       }
 //      console.log(csv_final);
       this.csv_final = csv_final;
-      this.LosPlotAvailable= true;
+      this.LosPlotAvailable = true;
       bus.$emit('activatePlot', csv_final);
       // });
     },
-    getCSV(entry, latlon){
+    getCSV(entry, latlon) {
       let vm = this;
       var losLength = this.setLosLength(latlon);
       var azimuth = this.setAzimuth(latlon);
@@ -424,21 +429,21 @@ export default {
       axios.get('/geogateway_django_app/UAVSAR_csv/', {
         params: {
           //'entry':JSON.stringify(entry),
-          'uid':entry['info']['uid'],
-          'dataname':entry['info']['dataname'],
-          'lat1':this.lat1,
-          'lon1':this.lon1,
-          'lat2':this.lat2,
-          'lon2':this.lon2,
-          'losLength':losLength,
-          'azimuth':azimuth,
+          'uid': entry['info']['uid'],
+          'dataname': entry['info']['dataname'],
+          'lat1': this.lat1,
+          'lon1': this.lon1,
+          'lat2': this.lat2,
+          'lon2': this.lon2,
+          'losLength': losLength,
+          'azimuth': azimuth,
         }
-      }).then(function (response){
+      }).then(function (response) {
         vm.chartData(response.data);
       })
     },
-    downloadCSV(entry){
-      
+    downloadCSV(entry) {
+
       var latlon = [this.plottingMarkerEnd.getLatLng().lat, this.plottingMarkerEnd.getLatLng().lng, this.plottingMarkerStart.getLatLng().lat, this.plottingMarkerStart.getLatLng().lng];
       var losLength = this.setLosLength(latlon);
       var azimuth = this.setAzimuth(latlon);
@@ -450,19 +455,20 @@ export default {
       this.lon2 = latlon[3].toFixed(5);
       var imagename = entry.info['dataname'];
       var csvname = imagename + ".csv";
-      axios.get('/geogateway_django_app/los_download/', 
-        
-        {responseType: 'blob', 
-        params: {
-          'entry':JSON.stringify(entry),
-          'lat1':this.lat1,
-          'lon1':this.lon1,
-          'lat2':this.lat2,
-          'lon2':this.lon2,
-          'losLength':losLength,
-          'azimuth':azimuth,
-        }
-      }).then(function (response){
+      axios.get('/geogateway_django_app/los_download/',
+
+          {
+            responseType: 'blob',
+            params: {
+              'entry': JSON.stringify(entry),
+              'lat1': this.lat1,
+              'lon1': this.lon1,
+              'lat2': this.lat2,
+              'lon2': this.lon2,
+              'losLength': losLength,
+              'azimuth': azimuth,
+            }
+          }).then(function (response) {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
@@ -472,32 +478,32 @@ export default {
       })
     },
     findWithAttr(array, attr, value) {
-      for(var i = 0; i < array.length; i += 1) {
-        if(array[i][attr] === value) {
+      for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) {
           return i;
         }
       }
       return -1;
     },
-    extendEntry(entry){
+    extendEntry(entry) {
       var vm = this;
       this.overviewLegend.remove();
       //Reset any previously extended entries.
-      for(let i = 0; i < this.uavsarLayersFiltered.length; i++){
+      for (let i = 0; i < this.uavsarLayersFiltered.length; i++) {
         this.uavsarLayersFiltered[i].extended = false;
-	this.uavsarLayersFiltered[i].activeBackground = '#a8b4bf';
-	//Also, unselect them
-	this.uavsarLayersFiltered[i].displayed = false;	
+        this.uavsarLayersFiltered[i].activeBackground = '#a8b4bf';
+        //Also, unselect them
+        this.uavsarLayersFiltered[i].displayed = false;
       }
-      if(this.uavsarHighResLayer !== null){
+      if (this.uavsarHighResLayer !== null) {
         this.globalMap.removeLayer(this.uavsarHighResLayer);
         this.uavsarLegend.remove();
         // this.headingLegend.remove();
       }
       //Now handle the selected entry
-      if(!entry.extended) {
+      if (!entry.extended) {
         this.extendingActive = true;
-        if(this.plotActive){
+        if (this.plotActive) {
           this.getCSV(entry, [this.plottingMarkerEnd.getLatLng().lat, this.plottingMarkerEnd.getLatLng().lng,
             this.plottingMarkerStart.getLatLng().lat, this.plottingMarkerStart.getLatLng().lng]);
         }
@@ -516,14 +522,17 @@ export default {
             'uid': entry.info['uid'],
             'dataname': entry.info['dataname'],
           }
-        }).then( (response) => {
+        }).then((response) => {
           var datajson = response.data;
           if (Object.prototype.hasOwnProperty.call(datajson, 'hasAlternateColoring')) {
-            vm.hasAlternateColoring = true; }
+            vm.hasAlternateColoring = true;
+          }
           if (Object.prototype.hasOwnProperty.call(datajson, 'hasHighresOverlay')) {
-            vm.hasHighresOverlay = true; }
+            vm.hasHighresOverlay = true;
+          }
           if (Object.prototype.hasOwnProperty.call(datajson, 'lowreskml')) {
-            vm.lowResKML = datajson['lowreskml'];}
+            vm.lowResKML = datajson['lowreskml'];
+          }
           if (vm.alternateColoringChecked) {
             vm.layerFound = true;
             vm.extendedColor = '#CCFFCC'
@@ -539,13 +548,13 @@ export default {
           }
         });
       }
-      entry.displayed=true;      
+      entry.displayed = true;
       vm.extendingActive = false;
     },
     //High Res KML's and CSV LOS plotting methods //////////////////////////////////
     uavsarHighRes(entry, hasAlternateColoring, hasHighresOverlay) {
       var latlon = entry.info.geometry.coordinates[0];
-      for(var i = this.uavsarLayersFiltered.length-1; i >= 0; i--){
+      for (var i = this.uavsarLayersFiltered.length - 1; i >= 0; i--) {
         this.uavsarLayersFiltered[i].displayed = false;
         this.kmlLayerChange(this.uavsarLayersFiltered[i]);
       }
@@ -553,18 +562,18 @@ export default {
         this.uavsarLegend.remove();
       }
       var baseURI, overlayType, legendExten, legendFinal;
-      if(hasAlternateColoring && this.alternateColoringChecked) {
+      if (hasAlternateColoring && this.alternateColoringChecked) {
         baseURI = this.wmsColorUrl;
         overlayType = 'InSAR:';
         legendExten = entry.info['uid'] + '_unw_default.png';
         legendFinal = this.altColorLegend + legendExten;
-      }else {
+      } else {
         baseURI = this.wmsUrl;
         overlayType = 'highres:'
         let uid = parseInt(entry.info['uid']);
-        if(uid <= 369) {
+        if (uid <= 369) {
           legendFinal = this.piLegend;
-        }else {
+        } else {
           legendFinal = this.twoPiLegend;
         }
       }
@@ -582,30 +591,30 @@ export default {
       } else {
         const parser = new DOMParser();
         const kml = parser.parseFromString(this.lowResKML, 'text/xml');
-        const track = new L.KML(kml,{'ignorePlacemark':true});
+        const track = new L.KML(kml, {'ignorePlacemark': true});
         this.uavsarHighResLayer = track;
       }
       this.globalMap.addLayer(this.uavsarHighResLayer);
       //this.uavsarHighResLayer.setOpacity(.75)
       // zoom to image center
       var pos_list = entry.info['geometry']['coordinates'];
-      var lon_sum = 0,lat_sum = 0;
+      var lon_sum = 0, lat_sum = 0;
       for (var j = 0; j < pos_list[0].length; j++) {
         lon_sum += pos_list[0][j][0];
         lat_sum += pos_list[0][j][1];
       }
       lon_sum = lon_sum / pos_list[0].length;
       lat_sum = lat_sum / pos_list[0].length;
-      this.globalMap.setView([lat_sum,lon_sum],9);
+      this.globalMap.setView([lat_sum, lon_sum], 9);
       var headingLegendFinal;
       //var headingLegendBase = 'http://gf2.ucs.indiana.edu/direction_kml/'
       var headingLegendBase = 'https://archive.geo-gateway.org/kmz/direction_kml/'
       var headingRounded = entry.info['heading'].split('.')[0];
       var radarDir = entry.info['radardirection'];
       var radarDirL;
-      if(radarDir === 'Left'){
+      if (radarDir === 'Left') {
         radarDirL = 'left';
-      }else {
+      } else {
         radarDirL = 'right';
       }
       headingLegendFinal = headingLegendBase + headingRounded + '_' + radarDirL + '.png';
@@ -679,7 +688,7 @@ export default {
       }
     },
     resetPlot() {
-      if(this.plottingMarkerEnd != null || this.plottingMarkerStart != null) {
+      if (this.plottingMarkerEnd != null || this.plottingMarkerStart != null) {
         this.plottingMarkerEnd.remove();
         this.plottingMarkerStart.remove();
         this.plotLine.remove();
@@ -690,69 +699,69 @@ export default {
       }
       this.LosPlotAvailable = false;
     },
-    removeAreaLayer(){
+    removeAreaLayer() {
       let vm = this;
-      if (vm.areaLayer!=null){
+      if (vm.areaLayer != null) {
         vm.globalMap.removeLayer(vm.areaLayer);
         vm.areaLayer = null;
       }
     },
-    removePinLayer(){
-      let vm=this;
-      if (vm.pinLayer!=null){
+    removePinLayer() {
+      let vm = this;
+      if (vm.pinLayer != null) {
         vm.globalMap.removeLayer(vm.pinLayer);
       }
-      vm.pinLayer=null;
+      vm.pinLayer = null;
     },
-    showPinLayer(){
+    showPinLayer() {
       let vm = this;
-        if (vm.pinLayer!=null){
-          vm.globalMap.addLayer(vm.pinLayer);
-        }
-      
+      if (vm.pinLayer != null) {
+        vm.globalMap.addLayer(vm.pinLayer);
+      }
+
     },
-    hidePinLayer(){
+    hidePinLayer() {
       let vm = this;
-      if (vm.pinLayer!=null){
+      if (vm.pinLayer != null) {
         vm.globalMap.removeLayer(vm.pinLayer);
       }
     },
 /////////////////////////////////////////////////////////////////////
     /////// Global UAVSAR query methods
-    selDeselAll(){
-      for(var i = this.uavsarLayersFiltered.length-1; i >= 0; i--){
+    selDeselAll() {
+      for (var i = this.uavsarLayersFiltered.length - 1; i >= 0; i--) {
         this.uavsarLayersFiltered[i].displayed = this.selDesel;
         this.kmlLayerChange(this.uavsarLayersFiltered[i]);
       }
       this.selDesel = !this.selDesel;
     },
-    clearQuery(){
-      
-/*
-      //deselect all
-      for(var j = this.uavsarLayersFiltered.length-1; j >= 0; j--){
-        this.uavsarLayersFiltered[j].displayed = this.selDesel;
-        this.kmlLayerChange(this.uavsarLayersFiltered[j]);
-      }
-      this.selDesel = false;
- */
+    clearQuery() {
+
+      /*
+            //deselect all
+            for(var j = this.uavsarLayersFiltered.length-1; j >= 0; j--){
+              this.uavsarLayersFiltered[j].displayed = this.selDesel;
+              this.kmlLayerChange(this.uavsarLayersFiltered[j]);
+            }
+            this.selDesel = false;
+       */
       this.lat_lon = '';
       this.flight_path = '';
       for (var i = 0; i < this.uavsarLayersFiltered.length; i++) {
         let uid = this.uavsarLayersFiltered[i].info['uid'];
-        if(this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
+        if (this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
           this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
         }
       }
       this.resetPlot();
-      if(this.uavsarHighResLayer !== null){
+      if (this.uavsarHighResLayer !== null) {
         this.globalMap.removeLayer(this.uavsarHighResLayer);
         this.uavsarHighResLayer = null;
         this.uavsarLegend.remove();
       }
       //added from showOverview:
-      this.tempFilter=[];
-      this.tempLayers=[];
+      this.tempFilter = [];
+      this.tempLayers = [];
       this.showOverview();
       if (this.overviewLegend === null) {
         this.showOverviewLegend();
@@ -766,7 +775,7 @@ export default {
       this.extendedColor = null;
       this.extendedBorder = null;
       this.removePinLayer();
-      
+
     },
     showOverview() {
       const _ = require('lodash');
@@ -778,34 +787,36 @@ export default {
               zIndex: 10,
             }
         );
-        if(!this.overviewLegend){this.showOverviewLegend();}
-        
-        if (this.tempLayers.length>0){
+        if (!this.overviewLegend) {
+          this.showOverviewLegend();
+        }
+
+        if (this.tempLayers.length > 0) {
           this.uavsarLayers = this.tempLayers;
           console.log("if");
           console.log(this.tempLayers);
-        }else{
-            this.globalMap.addLayer(this.layers['uavsarWMS']);
-            this.layers['uavsarWMS'].setOpacity(.7)
+        } else {
+          this.globalMap.addLayer(this.layers['uavsarWMS']);
+          this.layers['uavsarWMS'].setOpacity(.7)
         }
-        if (this.tempFilter!=[]){
+        if (this.tempFilter != []) {
           this.uavsarLayersFiltered = this.tempFilter;
         }
         this.showPinLayer();
         for (var i = 0; i < this.uavsarLayersFiltered.length; i++) {
-        let uid = this.uavsarLayersFiltered[i].info['uid'];
-        this.globalMap.addLayer(this.uavsarDisplayedLayers[uid]);
+          let uid = this.uavsarLayersFiltered[i].info['uid'];
+          this.globalMap.addLayer(this.uavsarDisplayedLayers[uid]);
         }
       } else {
         for (i = 0; i < this.uavsarLayersFiltered.length; i++) {
-        let uid = this.uavsarLayersFiltered[i].info['uid'];
-        if(this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
-          this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
+          let uid = this.uavsarLayersFiltered[i].info['uid'];
+          if (this.globalMap.hasLayer(this.uavsarDisplayedLayers[uid])) {
+            this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
+          }
         }
-        }
-        
+
         //save user progress
-        this.tempLayers= _.clone(this.uavsarLayers);
+        this.tempLayers = _.clone(this.uavsarLayers);
         this.tempFilter = _.cloneDeep(this.uavsarLayersFiltered);
         this.uavsarLayers = [];
         this.uavsarLayersFiltered = [];
@@ -816,7 +827,7 @@ export default {
         this.hidePinLayer();
       }
     },
-    showOverviewLegend(){
+    showOverviewLegend() {
       this.overviewLegend = L.control({position: 'bottomleft'});
       this.overviewLegend.onAdd = function () {
         var div = L.DomUtil.create('div', 'overviewLegend');
@@ -829,10 +840,10 @@ export default {
       this.overviewLegend.remove();
       this.overviewLegend = null;
     },
-    flightPathQuery(path){
+    flightPathQuery(path) {
       this.activeQuery = true;
       var vm = this;
-      if(this.overview) {
+      if (this.overview) {
         var baseURI = '/geogateway_django_app/UAVSAR_flight/'
         axios.get(baseURI, {
           params: {
@@ -853,11 +864,11 @@ export default {
                   }
                 }))
           }
-          Promise.all(promises).then((responses) =>{
+          Promise.all(promises).then((responses) => {
             if (vm.layers['uavsarWMS']) {
               vm.globalMap.removeLayer(vm.layers['uavsarWMS']);
             }
-            for(let k = 0;k < responses.length;k++){
+            for (let k = 0; k < responses.length; k++) {
               let entry = responses[k].data;
               entry.activeBackground = '#a8b4bf';
               vm.uavsarLayers[k] = entry;
@@ -865,7 +876,7 @@ export default {
               let uid = vm.uavsarLayers[k].info['uid'];
               const parser = new DOMParser();
               const kml = parser.parseFromString(vm.uavsarLayers[k].kml, 'text/xml');
-              const track = new L.KML(kml,{'ignorePlacemark':true});
+              const track = new L.KML(kml, {'ignorePlacemark': true});
               vm.uavsarDisplayedLayers[uid] = track;
               vm.globalMap.addLayer(vm.uavsarDisplayedLayers[uid]);
             }
@@ -874,24 +885,26 @@ export default {
         })
       }
     },
-    pointQuery(lat, lon){
-      function isNumber(n) { return !isNaN(parseFloat(n)) && !isNaN(n - 0) }
+    pointQuery(lat, lon) {
+      function isNumber(n) {
+        return !isNaN(parseFloat(n)) && !isNaN(n - 0)
+      }
+
       this.globalMap.off('draw:created');
       this.activeQuery = true;
       var vm = this;
       //checking if input comes from marker placement or manual entry (numeric string)
-      if(lat.substring && lon.substring){
-        if(isNumber(lat) && isNumber(lon)){
+      if (lat.substring && lon.substring) {
+        if (isNumber(lat) && isNumber(lon)) {
           lat = parseFloat(lat)
           lon = parseFloat(lon)
-        }
-        else {
+        } else {
           alert('Please enter decimal point coordinates')
         }
       }
       lat = lat.toFixed(5)
       lon = lon.toFixed(5)
-      if(this.overview) {
+      if (this.overview) {
         this.lat_lon = lat.toString() + ',' + lon.toString();
         var queryStr = '(' + this.lat_lon + ')'
         var baseURI = '/geogateway_django_app/UAVSAR_geom/'
@@ -915,22 +928,22 @@ export default {
                   }
                 }))
           }
-          Promise.all(promises).then((responses) =>{
+          Promise.all(promises).then((responses) => {
             if (vm.layers['uavsarWMS']) {
               vm.globalMap.removeLayer(vm.layers['uavsarWMS']);
             }
-            for(let k = 0;k < responses.length;k++){
+            for (let k = 0; k < responses.length; k++) {
               let entry = responses[k].data;
               entry.activeBackground = '#a8b4bf';
               //Use the $set function to make these arrays reactive. See https://vuejs.org/v2/guide/reactivity.html#For-Arrays	      
 //              vm.uavsarLayers[k] = entry;
-              vm.$set(vm.uavsarLayers,k,entry);
+              vm.$set(vm.uavsarLayers, k, entry);
 //              vm.uavsarLayersFiltered[k] = entry;
-              vm.$set(vm.uavsarLayersFiltered,k,entry);
+              vm.$set(vm.uavsarLayersFiltered, k, entry);
               let uid = vm.uavsarLayers[k].info['uid'];
               const parser = new DOMParser();
               const kml = parser.parseFromString(vm.uavsarLayers[k].kml, 'text/xml');
-              const track = new L.KML(kml,{'ignorePlacemark':true});
+              const track = new L.KML(kml, {'ignorePlacemark': true});
               vm.uavsarDisplayedLayers[uid] = track;
               vm.globalMap.addLayer(vm.uavsarDisplayedLayers[uid]);
             }
@@ -962,11 +975,11 @@ export default {
     //
     //     })
     // },
-    rectQuery(maxLat, minLon, minLat, maxLon, centerLat, centerLng){
+    rectQuery(maxLat, minLon, minLat, maxLon, centerLat, centerLng) {
       this.activeQuery = true;
       var vm = this;
       this.globalMap.off('draw:created');
-      if(this.overview) {
+      if (this.overview) {
         console.log(centerLng, centerLat);
         var queryStr = '';
         queryStr += '(' + '(' + minLat.toFixed(3) + ',' + minLon.toFixed(3) + '),' + '(' + maxLat.toFixed(3) + ',' + maxLon.toFixed(3) + '))'
@@ -990,11 +1003,11 @@ export default {
                   }
                 }))
           }
-          Promise.all(promises).then((responses) =>{
+          Promise.all(promises).then((responses) => {
             if (vm.layers['uavsarWMS']) {
               vm.globalMap.removeLayer(vm.layers['uavsarWMS']);
             }
-            for(let k = 0;k < responses.length;k++){
+            for (let k = 0; k < responses.length; k++) {
               let entry = responses[k].data;
               entry.activeBackground = '#a8b4bf';
               vm.uavsarLayers[k] = entry;
@@ -1002,7 +1015,7 @@ export default {
               let uid = vm.uavsarLayers[k].info['uid'];
               const parser = new DOMParser();
               const kml = parser.parseFromString(vm.uavsarLayers[k].kml, 'text/xml');
-              const track = new L.KML(kml,{'ignorePlacemark':true});
+              const track = new L.KML(kml, {'ignorePlacemark': true});
               vm.uavsarDisplayedLayers[uid] = track;
               vm.globalMap.addLayer(vm.uavsarDisplayedLayers[uid]);
             }
@@ -1012,15 +1025,15 @@ export default {
         })
       }
     },
-    kmlLayerChange(entry){
+    kmlLayerChange(entry) {
       const uid = entry.info['uid'];
-      if(entry.displayed) {
+      if (entry.displayed) {
         this.globalMap.addLayer(this.uavsarDisplayedLayers[uid]);
-      }else {
+      } else {
         this.globalMap.removeLayer(this.uavsarDisplayedLayers[uid]);
       }
     },
-    setLosLength(latlon){
+    setLosLength(latlon) {
       var latStart = latlon[0];
       var lonStart = latlon[1];
       var latEnd = latlon[2];
@@ -1035,21 +1048,21 @@ export default {
       losLength = losLength.toFixed(3);
       return losLength;
     },
-    setAzimuth(latlon){
+    setAzimuth(latlon) {
       var swLat = latlon[0];
       var swLon = latlon[1];
       var neLat = latlon[2];
       var neLon = latlon[3];
       //Using http://www.movable-type.co.uk/scripts/latlong.html
-      var d2r=Math.PI/180.0;
-      var flatten=1.0/298.247;
-      var theFactor=d2r* Math.cos(d2r * swLat) * 6378.139 * (1.0 - Math.sin(d2r * swLat) * Math.sin(d2r * swLat) * flatten);
-      var x=(neLon-swLon)*theFactor;
-      var y=(neLat-swLat)*111.32;
-      var azimuth=Math.atan2(x,y)/d2r;
-      azimuth=azimuth.toFixed(1);
-      if(azimuth>180) azimuth=azimuth-360;
-      if(azimuth<-180) azimuth=azimuth+360;
+      var d2r = Math.PI / 180.0;
+      var flatten = 1.0 / 298.247;
+      var theFactor = d2r * Math.cos(d2r * swLat) * 6378.139 * (1.0 - Math.sin(d2r * swLat) * Math.sin(d2r * swLat) * flatten);
+      var x = (neLon - swLon) * theFactor;
+      var y = (neLat - swLat) * 111.32;
+      var azimuth = Math.atan2(x, y) / d2r;
+      azimuth = azimuth.toFixed(1);
+      if (azimuth > 180) azimuth = azimuth - 360;
+      if (azimuth < -180) azimuth = azimuth + 360;
       return azimuth;
     }
   }
@@ -1113,9 +1126,6 @@ export default {
   overflow-y: auto;
   /*A5B9CC*/
 }
-</style>
-
-<style>
 
 
 /*html, body {*/
@@ -1154,7 +1164,4 @@ export default {
   color: #E9637D;
 }
 
-hr {
-  margin: 12px 0px 0px 5px;
-}
 </style>
