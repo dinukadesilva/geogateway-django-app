@@ -1,10 +1,12 @@
 <template>
-  <div class="tab-window">
-    <b-card>
-            <span class="icon is-right" syle="pointer-events: all;" @click="specstudInfo=true">
-                <i class="aboutIcon fas fa-info-circle"></i> 
-            </span>&ensp; About Special Studies
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="specstudInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Special Studies
+    </b-alert>
+
     <hr>
     <div align="left">
 
@@ -193,9 +195,4 @@ label {
   padding: 5px;
 }
 
-a:link, a:visited {
-  color: black;
-  text-decoration: underline;
-  display: inline-block;
-}
 </style>
