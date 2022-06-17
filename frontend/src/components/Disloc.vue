@@ -1,10 +1,12 @@
 <template>
-  <div class="tab-window">
-    <b-card>
-    <span class="icon is-right" syle="pointer-events: all;" @click="disclocInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span>&ensp; About Discloc
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="disclocInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Discloc
+    </b-alert>
+
     <hr/>
 
     <div id="upload-container">
@@ -416,12 +418,6 @@ export default {
 
 .clickableName {
   cursor: pointer;
-}
-
-a:link, a:visited {
-  color: black;
-  text-decoration: underline;
-  display: inline-block;
 }
 
 </style>
