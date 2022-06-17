@@ -1,217 +1,212 @@
 <template>
-  <div>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="mapToolsInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Maptools
+    </b-alert>
 
-    <div class="w-100 p-2 bg-light text-left">
-      <b-alert :show="true">
-        <b-link @click="mapToolsInfo=true" href="#">
-          <b-icon icon="info-circle-fill"/>
-        </b-link>&ensp;
-        About Maptools
-      </b-alert>
+    <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
+      <div>Functions</div>
+      <hr class="flex-fill"/>
+    </div>
 
-      <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
-        <div>Functions</div>
-        <hr class="flex-fill"/>
-      </div>
-
-      <b-card>
-        <b-col>
-          <h5 class="orange">Faults</h5>
-          <b-row class="text-center">
-            <b-form-checkbox
-                v-model="ucerf"
-                @change="updateLayer('ucerf')"
-                id="ucerf"
-            ><label for="ucerf"> UCERF3 Fault Model</label>&ensp;
-            </b-form-checkbox>
-            <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
-              <i class="fas fa-info-circle"></i>
-            </a>
-          </b-row>
-        </b-col>
-        <div v-show="this.ucerf">
+    <b-card>
+      <b-col>
+        <h5 class="orange">Faults</h5>
+        <b-row class="text-center">
+          <b-form-checkbox
+              v-model="ucerf"
+              @change="updateLayer('ucerf')"
+              id="ucerf"
+          ><label for="ucerf"> UCERF3 Fault Model</label>&ensp;
+          </b-form-checkbox>
+          <a href="" v-on:click.stop.prevent="openWindow('https://www.scec.org/ucerf')">
+            <i class="fas fa-info-circle"></i>
+          </a>
+        </b-row>
+      </b-col>
+      <div v-show="this.ucerf">
         <span class="card-text">
           Select a color for the falut
         </span>
-          <b-form-radio-group v-model="selectedColor">
+        <b-form-radio-group v-model="selectedColor">
 
-            <b-row>
-              <b-col>
-                <b-form-radio label="black" name="some-radios" value="black" v-model="selectedColor"
-                              @change="updateColor('black')"><p>black</p></b-form-radio>
-              </b-col>
-              <b-col>
-                <b-form-radio label="yellow" name="some-radios" value="yellow" v-model="selectedColor"
-                              @change="updateColor('yellow')"><p>yellow</p></b-form-radio>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col>
-                <b-form-radio label="red" name="some-radios" value="red" v-model="selectedColor"
-                              @change="updateColor('red')"><p>red</p></b-form-radio>
-              </b-col>
-              <b-col>
-                <b-form-radio label="grey" name="some-radios" value="grey" v-model="selectedColor"
-                              @change="updateColor('grey')"><p>grey</p></b-form-radio>
-              </b-col>
-            </b-row>
-          </b-form-radio-group>
-        </div>
-      </b-card>
-
-      <b-card>
-        <b-col>
-          <h5 class="orange">Faults</h5>
           <b-row>
-            <b-form-checkbox
-                type="checkbox"
-                v-model="qfaults"
-                @change="updateLayer('qfaults')"
-                id="qfaults"
-            ><label for="boundaries">Quaternary Faults</label>&ensp;
-            </b-form-checkbox>
-            <a href="" v-on:click.stop.prevent="openWindow('https://doi.org/10.5066/F7S75FJM')">
-              <i class="fas fa-info-circle"></i>
-            </a>
+            <b-col>
+              <b-form-radio label="black" name="some-radios" value="black" v-model="selectedColor"
+                            @change="updateColor('black')"><p>black</p></b-form-radio>
+            </b-col>
+            <b-col>
+              <b-form-radio label="yellow" name="some-radios" value="yellow" v-model="selectedColor"
+                            @change="updateColor('yellow')"><p>yellow</p></b-form-radio>
+            </b-col>
           </b-row>
-        </b-col>
-        <div id="div_qfautls" v-show="this.qfaults" align="left">
-          <br><span class="card-text">Source: USGS Faults Database</span>
-          <!-- <img src="../assets/qfaultslegend.jpg" alt="qfaults_legend" width="80%" height="80%" style="border:1px solidblack"> -->
-          <b-form-group>
-            <b-form-checkbox-group
-                id="qfaults_type"
-                v-model="qfaults_selected"
-                stacked
-            >
-              <b-form-checkbox value="historic"><span style="color:#ff0000;font-weight: bold;">&#9473;&#9473;</span>
-                Historic (150 yr)
-              </b-form-checkbox>
-              <b-form-checkbox value="latest Quaternary"><span
-                  style="color:#ffaa00;font-weight: bold;">&#9473;&#9473;</span> Latest Quaternary (15,000 yr)
-              </b-form-checkbox>
-              <b-form-checkbox value="late Quaternary"><span
-                  style="color:#55ff00;font-weight: bold;">&#9473;&#9473;</span> Late Quaternary (130,000 yr)
-              </b-form-checkbox>
-              <b-form-checkbox value="middle and late Quaternary"><span style="color:#0070ff;font-weight: bold;">&#9473;&#9473;</span>
-                Middle and Late Quaternary (750,000 yr)
-              </b-form-checkbox>
-              <b-form-checkbox value="undifferentiated Quaternary"><span style="color:#000000;font-weight: bold;">&#9473;&#9473;</span>
-                Undifferentiated Quaternary (1.6 millions yr)
-              </b-form-checkbox>
-              <b-form-checkbox value="unspecified"><span style="color:#dfe000;font-weight: bold;">&#9473;&#9473;</span>
-                Unspecified Age
-              </b-form-checkbox>
-              <b-form-checkbox value="class B"><span style="color:#9c9c9c;font-weight: bold;">&#9473;&#9473;</span>
-                Class B
-              </b-form-checkbox>
-            </b-form-checkbox-group>
-          </b-form-group>
-        </div>
-      </b-card>
-
-      <b-card>
-        <b-col>
-          <h5 class="red">Geology</h5>
           <b-row>
-            <b-form-checkbox
-                type="checkbox"
-                v-model="kml"
-                @change="updateLayer('kml')"
-                id="kml"
-            ><label for="kml">KML/KMZ Uploader</label>&ensp;
+            <b-col>
+              <b-form-radio label="red" name="some-radios" value="red" v-model="selectedColor"
+                            @change="updateColor('red')"><p>red</p></b-form-radio>
+            </b-col>
+            <b-col>
+              <b-form-radio label="grey" name="some-radios" value="grey" v-model="selectedColor"
+                            @change="updateColor('grey')"><p>grey</p></b-form-radio>
+            </b-col>
+          </b-row>
+        </b-form-radio-group>
+      </div>
+    </b-card>
+
+    <b-card>
+      <b-col>
+        <h5 class="orange">Faults</h5>
+        <b-row>
+          <b-form-checkbox
+              type="checkbox"
+              v-model="qfaults"
+              @change="updateLayer('qfaults')"
+              id="qfaults"
+          ><label for="boundaries">Quaternary Faults</label>&ensp;
+          </b-form-checkbox>
+          <a href="" v-on:click.stop.prevent="openWindow('https://doi.org/10.5066/F7S75FJM')">
+            <i class="fas fa-info-circle"></i>
+          </a>
+        </b-row>
+      </b-col>
+      <div id="div_qfautls" v-show="this.qfaults" align="left">
+        <br><span class="card-text">Source: USGS Faults Database</span>
+        <!-- <img src="../assets/qfaultslegend.jpg" alt="qfaults_legend" width="80%" height="80%" style="border:1px solidblack"> -->
+        <b-form-group>
+          <b-form-checkbox-group
+              id="qfaults_type"
+              v-model="qfaults_selected"
+              stacked
+          >
+            <b-form-checkbox value="historic"><span style="color:#ff0000;font-weight: bold;">&#9473;&#9473;</span>
+              Historic (150 yr)
             </b-form-checkbox>
-            <span class="icon is-right" syle="pointer-events: all;" @click="kmlInfo=true">
-          <i class="clickable fas fa-info-circle"></i> 
+            <b-form-checkbox value="latest Quaternary"><span
+                style="color:#ffaa00;font-weight: bold;">&#9473;&#9473;</span> Latest Quaternary (15,000 yr)
+            </b-form-checkbox>
+            <b-form-checkbox value="late Quaternary"><span
+                style="color:#55ff00;font-weight: bold;">&#9473;&#9473;</span> Late Quaternary (130,000 yr)
+            </b-form-checkbox>
+            <b-form-checkbox value="middle and late Quaternary"><span style="color:#0070ff;font-weight: bold;">&#9473;&#9473;</span>
+              Middle and Late Quaternary (750,000 yr)
+            </b-form-checkbox>
+            <b-form-checkbox value="undifferentiated Quaternary"><span style="color:#000000;font-weight: bold;">&#9473;&#9473;</span>
+              Undifferentiated Quaternary (1.6 millions yr)
+            </b-form-checkbox>
+            <b-form-checkbox value="unspecified"><span style="color:#dfe000;font-weight: bold;">&#9473;&#9473;</span>
+              Unspecified Age
+            </b-form-checkbox>
+            <b-form-checkbox value="class B"><span style="color:#9c9c9c;font-weight: bold;">&#9473;&#9473;</span>
+              Class B
+            </b-form-checkbox>
+          </b-form-checkbox-group>
+        </b-form-group>
+      </div>
+    </b-card>
+
+    <b-card>
+      <b-col>
+        <h5 class="red">Geology</h5>
+        <b-row>
+          <b-form-checkbox
+              type="checkbox"
+              v-model="kml"
+              @change="updateLayer('kml')"
+              id="kml"
+          ><label for="kml">KML/KMZ Uploader</label>&ensp;
+          </b-form-checkbox>
+          <span class="icon is-right" syle="pointer-events: all;" @click="kmlInfo=true">
+          <i class="clickable fas fa-info-circle"></i>
         </span>
-          </b-row>
-        </b-col>
+        </b-row>
+      </b-col>
 
-        <div v-if="this.kml">
-          <br/>
-          <h4>KML/KMZ File Upload</h4>
-          <p>Upload a KML or KMZ from your local file system</p>
-          <b-form-file
-              no-drop
-              id="file"
-              ref="file"
-              @change="handleFileUpload"
-              placeholder="Choose a file..."
-          ></b-form-file>
+      <div v-if="this.kml">
+        <br/>
+        <h4>KML/KMZ File Upload</h4>
+        <p>Upload a KML or KMZ from your local file system</p>
+        <b-form-file
+            no-drop
+            id="file"
+            ref="file"
+            @change="handleFileUpload"
+            placeholder="Choose a file..."
+        ></b-form-file>
 
 
-          <b-button @click="submitFile()">Submit</b-button>
-          <div v-for="entry in kmlLayers" :key="entry">
-            <div class="fileEntry">
-              <input type="checkbox" v-model="entry.active" @change="kmlLayerChange(entry)"> <span
-                style="font-size: 15px; color: #222222">{{ entry.name }}</span><br>
-            </div>
+        <b-button @click="submitFile()">Submit</b-button>
+        <div v-for="entry in kmlLayers" :key="entry">
+          <div class="fileEntry">
+            <input type="checkbox" v-model="entry.active" @change="kmlLayerChange(entry)"> <span
+              style="font-size: 15px; color: #222222">{{ entry.name }}</span><br>
           </div>
-          <!--            <div v-if="boundaries">-->
-          <!--                <label for="opacity">Example range with min and max</label>-->
-          <!--                <b-form-input id="opacity" @change="updateOpacity(value)" v-model="value" type="range" min="0" max="100"></b-form-input>-->
-          <!--                <div class="mt-2">Value: {{ value }}</div>-->
-          <!--            </div>-->
         </div>
+        <!--            <div v-if="boundaries">-->
+        <!--                <label for="opacity">Example range with min and max</label>-->
+        <!--                <b-form-input id="opacity" @change="updateOpacity(value)" v-model="value" type="range" min="0" max="100"></b-form-input>-->
+        <!--                <div class="mt-2">Value: {{ value }}</div>-->
+        <!--            </div>-->
+      </div>
 
 
-      </b-card>
-      <b-card>
-        <b-col>
-          <h5 class="green">Topology</h5>
-          <b-row class="maptool">
-            <b-form-checkbox
-                type="checkbox"
-                v-model="boundaries"
-                @change="updateLayer('boundaries')"
-                id="boundaries"
-            ><label for="boundaries">Show State Boundaries</label>&ensp;
-            </b-form-checkbox>
-            <span class="icon is-right" syle="pointer-events: all;" @click="boundariesInfo=true">
-          <i class="clickable fas fa-info-circle"></i> 
+    </b-card>
+    <b-card>
+      <b-col>
+        <h5 class="green">Topology</h5>
+        <b-row class="maptool">
+          <b-form-checkbox
+              type="checkbox"
+              v-model="boundaries"
+              @change="updateLayer('boundaries')"
+              id="boundaries"
+          ><label for="boundaries">Show State Boundaries</label>&ensp;
+          </b-form-checkbox>
+          <span class="icon is-right" syle="pointer-events: all;" @click="boundariesInfo=true">
+          <i class="clickable fas fa-info-circle"></i>
         </span>
-          </b-row>
-        </b-col>
-      </b-card>
+        </b-row>
+      </b-col>
+    </b-card>
 
-      <b-card>
-        <b-col>
-          <h5 class="green">Topology</h5>
-          <b-row class="maptool">
-            <b-form-checkbox
-                type="checkbox"
-                v-model="coasts"
-                @change="updateLayer('coasts')"
-                id="coasts"
-            ><label for="coasts">Show Coastlines</label>&ensp;
-            </b-form-checkbox>
-            <span class="icon is-right" syle="pointer-events: all;" @click="coastlinesInfo=true">
-          <i class="clickable fas fa-info-circle"></i> 
+    <b-card>
+      <b-col>
+        <h5 class="green">Topology</h5>
+        <b-row class="maptool">
+          <b-form-checkbox
+              type="checkbox"
+              v-model="coasts"
+              @change="updateLayer('coasts')"
+              id="coasts"
+          ><label for="coasts">Show Coastlines</label>&ensp;
+          </b-form-checkbox>
+          <span class="icon is-right" syle="pointer-events: all;" @click="coastlinesInfo=true">
+          <i class="clickable fas fa-info-circle"></i>
         </span>
-          </b-row>
-        </b-col>
-      </b-card>
+        </b-row>
+      </b-col>
+    </b-card>
 
-      <b-card>
-        <b-col>
-          <h5 class="green">Topology</h5>
-          <b-row>
-            <b-form-checkbox
-                type="checkbox"
-                v-model="currLoc"
-                @change="getLocation()"
-                id="loc"
-            ><label for="loc">Show Current Location</label>&ensp;
-            </b-form-checkbox>
-            <span class="icon is-right" syle="pointer-events: all;" @click="currentLocationInfo=true">
-          <i class="clickable fas fa-info-circle"></i> 
+    <b-card>
+      <b-col>
+        <h5 class="green">Topology</h5>
+        <b-row>
+          <b-form-checkbox
+              type="checkbox"
+              v-model="currLoc"
+              @change="getLocation()"
+              id="loc"
+          ><label for="loc">Show Current Location</label>&ensp;
+          </b-form-checkbox>
+          <span class="icon is-right" syle="pointer-events: all;" @click="currentLocationInfo=true">
+          <i class="clickable fas fa-info-circle"></i>
         </span>
-          </b-row>
-        </b-col>
-      </b-card>
-
-    </div>
-
+        </b-row>
+      </b-col>
+    </b-card>
 
     <!-- info  popups -->
     <b-modal
@@ -260,8 +255,6 @@
       <div slot="modal-footer" class="w-100">
       </div>
     </b-modal>
-
-
   </div>
 </template>
 
