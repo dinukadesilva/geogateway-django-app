@@ -1,11 +1,11 @@
 <template>
-  <div class="tab-window">
-
-    <b-card>
-    <span class="icon is-right" syle="pointer-events: all;" @click="seismInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span>&ensp; About Seismicity
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="seismInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Seismicity
+    </b-alert>
 
     Recent Earthquakes from USGS
 
@@ -346,9 +346,5 @@ img {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 25px;
   height: 50px;
-}
-
-a {
-  color: black;
 }
 </style>
