@@ -1,14 +1,18 @@
 <template>
-  <div class="tab-window">
+  <div>
 
-    <div>
-      <b-card>
-    <span class="icon is-right" syle="pointer-events: all;" @click="mapToolsInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span>&ensp; About Maptools
-      </b-card>
-      <span class="inputLabel">Functions <hr class="sectionLine"/></span>
-      <br>
+    <div class="w-100 p-2 bg-light text-left">
+      <b-alert :show="true">
+        <b-link @click="mapToolsInfo=true" href="#">
+          <b-icon icon="info-circle-fill"/>
+        </b-link>&ensp;
+        About Maptools
+      </b-alert>
+
+      <div class="w-100 pt-2 pb-2 d-flex flex-row text-secondary">
+        <div>Functions</div>
+        <hr class="flex-fill"/>
+      </div>
 
       <b-card>
         <b-col>
@@ -488,11 +492,11 @@ export default {
   margin-bottom: 5px;
 }
 
-a:link, a:visited {
-  color: black;
-  text-decoration: underline;
-  display: inline-block;
-}
+/*a:link, a:visited {*/
+/*  color: black;*/
+/*  text-decoration: underline;*/
+/*  display: inline-block;*/
+/*}*/
 
 
 .maptool {
