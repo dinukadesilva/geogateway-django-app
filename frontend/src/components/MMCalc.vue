@@ -1,11 +1,11 @@
 <template>
-  <div class="tab-window">
-
-    <b-card>
-            <span class="icon is-right" syle="pointer-events: all;" @click="mmInfo=true">
-            <i class="aboutIcon fas fa-info-circle"></i> 
-            </span>&ensp; About Moment Magnitude Calculator
-    </b-card>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="mmInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About Moment Magnitude Calculator
+    </b-alert>
 
     <hr/>
     <b-input-group prepend="Length" append="km">
