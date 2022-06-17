@@ -1,195 +1,196 @@
 <template>
-  <div id="tab-window">
-    <div>
-      <b-card>
-      <span class="icon is-right" syle="pointer-events: all;" @click="gnssInfo=true">
-      <i class="aboutIcon fas fa-info-circle"></i> 
-    </span> &ensp; About GNSS data Analysis
-      </b-card>
-      <span class="inputLabel">Outputs <hr class="sectionLine"/></span>
-      <br>
-      <b-card>
-        <div v-if="gnssLayers.length!==0 && !activeGnssQuery">
-          <strong>Output</strong>
-          <div v-for="layer in gnssLayers" :key="layer.name">
-            <b-card v-if="layer.type !== 'table.txt'">
-              <b-form-checkbox :value="layer.active" v-model="layer.active"
-                               @change="showHideLayers(layer.active, layer)">
-                <span class="checkbox-label"> <a :href="layer.url">{{ layer.pre }} {{ layer.type }}</a> </span>
-              </b-form-checkbox>
-            </b-card>
-            <div v-else><a style="color:#EB9040;" target="_blank" :href="layer.url">{{ layer.name }}</a></div>
-          </div>
+  <div class="w-100 p-2 bg-light text-left">
+    <b-alert :show="true">
+      <b-link @click="gnssInfo=true" href="#">
+        <b-icon icon="info-circle-fill"/>
+      </b-link>&ensp;
+      About GNSS data Analysis
+    </b-alert>
+
+    <span class="inputLabel">Outputs <hr class="sectionLine"/></span>
+    <br>
+    <b-card>
+      <div v-if="gnssLayers.length!==0 && !activeGnssQuery">
+        <strong>Output</strong>
+        <div v-for="layer in gnssLayers" :key="layer.name">
+          <b-card v-if="layer.type !== 'table.txt'">
+            <b-form-checkbox :value="layer.active" v-model="layer.active"
+                             @change="showHideLayers(layer.active, layer)">
+              <span class="checkbox-label"> <a :href="layer.url">{{ layer.pre }} {{ layer.type }}</a> </span>
+            </b-form-checkbox>
+          </b-card>
+          <div v-else><a style="color:#EB9040;" target="_blank" :href="layer.url">{{ layer.name }}</a></div>
         </div>
-        <div v-else><span style="color:#95ABB1;">No models applied!</span></div>
-      </b-card>
+      </div>
+      <div v-else><span style="color:#95ABB1;">No models applied!</span></div>
+    </b-card>
 
 
-      <span class="inputLabel">Functions <hr class="sectionLine"/></span>
-      <br>
+    <span class="inputLabel">Functions <hr class="sectionLine"/></span>
+    <br>
 
-      <span class="inputLabel">GNSS data models</span>
-      <br>
+    <span class="inputLabel">GNSS data models</span>
+    <br>
 
-      <!-- <label for="sel1">Select list:</label> -->
-      <select class="form-control" v-model="kmltype_sel" id="kmltype_sel">
-        <option disabled value='null'>Select a GNSS data model</option>
-        <option value='getvelocities'>Velocities</option>
-        <option value='getcoseismic'>Coseismic</option>
-        <option value='getpostseismic'>Postseismic</option>
-        <option value='getdisplacement'>Displacement</option>
-        <option value='getmodel'>Model</option>
-      </select>
+    <!-- <label for="sel1">Select list:</label> -->
+    <select class="form-control" v-model="kmltype_sel" id="kmltype_sel">
+      <option disabled value='null'>Select a GNSS data model</option>
+      <option value='getvelocities'>Velocities</option>
+      <option value='getcoseismic'>Coseismic</option>
+      <option value='getpostseismic'>Postseismic</option>
+      <option value='getdisplacement'>Displacement</option>
+      <option value='getmodel'>Model</option>
+    </select>
 
-      <div v-if="kmltype_sel!=null">
-        <b-button style="margin-top: 10px; margin-bottom: 10px;" v-if="!geometryActive" id="sp_windowpicker"
-                  class="btn_blue" @click="gnssDrawRect()">
-          Draw an area on the map
-        </b-button>
-        <b-button v-if="gnssLayers.length>0 || areaLayer!=null" class="btn_white" id="clearGnss" @click="clearGnss()">
-          Clear Layers
-        </b-button>
+    <div v-if="kmltype_sel!=null">
+      <b-button style="margin-top: 10px; margin-bottom: 10px;" v-if="!geometryActive" id="sp_windowpicker"
+                class="btn_blue" @click="gnssDrawRect()">
+        Draw an area on the map
+      </b-button>
+      <b-button v-if="gnssLayers.length>0 || areaLayer!=null" class="btn_white" id="clearGnss" @click="clearGnss()">
+        Clear Layers
+      </b-button>
+      <br/>
+
+      <div v-if="geometryActive">
         <br/>
-
-        <div v-if="geometryActive">
-          <br/>
-          <b-button class="btn_white" @click="drawListenerOff">
-            Unselect 'Draw an Area'
-          </b-button>
-          <br/>
-        </div>
-        <br>
-        <span class="inputLabel">Center Latitude</span>
-        <b-input-group>
-          <b-form-input v-model="gs_latitude" name="gs_latitude"></b-form-input>
-        </b-input-group>
-
-        <span class="inputLabel">Center Longitude</span>
-        <b-input-group>
-          <b-form-input v-model="gs_longitude" placeholder="" name="gs_longitude"></b-form-input>
-        </b-input-group>
-
-        <span class="inputLabel">Longitude Span</span>
-        <b-input-group>
-          <b-form-input v-model="gs_width" name="gs_width" placeholder="1 degree"></b-form-input>
-        </b-input-group>
-
-        <span class="inputLabel">Latitude Span</span>
-        <b-input-group>
-          <b-form-input v-model="gs_height" placeholder="1 degree" name="gs_height"></b-form-input>
-        </b-input-group>
-
-        <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Epoch</span>
-        <div class="input-group" id="epoch_show"
-             v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
-          <b-input-group>
-            <b-form-input v-model="gs_epoch" placeholder="YYYY-MM-DD" name="gs_epoch"></b-form-input>
-          </b-input-group>
-        </div>
-
-        <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'" class="inputLabel">Epoch 1</span>
-        <b-input-group v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
-          <b-form-input v-model="gs_epoch1" placeholder="YYYY-MM-DD" name="gs_epoch1"></b-form-input>
-        </b-input-group>
-
-        <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'" class="inputLabel">Epoch 2 </span>
-        <b-input-group v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
-          <b-form-input v-model="gs_epoch2" placeholder="YYYY-MM-DD" name="gs_epoch2"></b-form-input>
-        </b-input-group>
-
-        <span class="inputLabel">Ref. Site</span>
-        <b-input-group>
-          <b-form-input v-model="gs_refsite" placeholder="4-letter code" name="gs_refsite"></b-form-input>
-          <b-input-group-append>
-            <b-button variant="outline-primary" href="https://sideshow.jpl.nasa.gov/post/tables/table2.html"
-                      target="_blank">Stations
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
-
-        <span class="inputLabel">Scale</span>
-        <b-input-group>
-          <b-form-input v-model="gs_scale" placeholder="320 mm/yr/deg" name="gs_scale"></b-form-input>
-        </b-input-group>
-
-        <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Coseismic Win.</span>
-        <b-input-group v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
-          <b-form-input v-model="gs_ctwin" name="gs_ctwin" placeholder="0.1 years"></b-form-input>
-        </b-input-group>
-
-        <span v-if="this.kmltype_sel === 'getpostseismic' " class="inputLabel">Postseismic Win.</span>
-        <b-input-group v-if="this.kmltype_sel === 'getpostseismic' ">
-          <b-form-input v-model="gs_ptwin" name="gs_ptwin" placeholder="2 years"></b-form-input>
-        </b-input-group>
-
-        <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 1</span>
-        <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
-          <b-form-input v-model="gs_dwin1" name="gs_dwin1" placeholder="10 days"></b-form-input>
-        </b-input-group>
-
-        <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 2</span>
-        <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
-          <b-form-input v-model="gs_dwin2" name="gs_dwin2" placeholder="10 days"></b-form-input>
-        </b-input-group>
-
-        <span class="inputLabel">Output Prefix</span>
-        <b-input-group>
-          <b-form-input v-model="gs_outputprefix" name="gs_outputprefix"></b-form-input>
-        </b-input-group>
-        <b-col class="miscOptions">
-          <b-row class="checkbox" style="text-align: left" v-if="this.kmltype_sel === 'getdisplacement'">
-            <label class="checkbox">
-              <input v-model="gs_analysisCenter" name="analysisCenter" type="checkbox" id="gs_analysisCenter"/>
-              Use NGL data
-            </label>
-          </b-row>
-
-
-          <b-row class="checkbox" style="text-align: left">
-            <label class="checkbox">
-              <b-form-checkbox v-model="markerSize" name="vabs" type="checkbox" id="markerSize"/>
-              Minimize Marker Size
-            </label>
-          </b-row>
-          <b-row class="checkbox" style="text-align: left">
-            <label class="checkbox">
-              <input v-model="gs_vabs" name="vabs" type="checkbox" id="gs_vabs" value=""/>
-              Display absolute verticals
-            </label>
-          </b-row>
-          <b-row class="checkbox" style="text-align: left">
-            <label class="checkbox">
-              <input v-model="gs_eon" name="mon" type="checkbox" id="gs_eon" value=""/>
-              Include error ellipses
-            </label>
-          </b-row>
-
-
-          <b-row>
-            <button class="btn btn-success" id="gs_submit" name="submit" type="submit"
-                    v-on:click.prevent="runButtonClick()"> Run
-            </button>
-          </b-row>
-          <br/>
-          <b-row>
-            <div style="float: left; text-align: left"><strong>Data source: <br/><a
-                href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a></strong>
-            </div>
-          </b-row>
-        </b-col>
-
-        <b-col>
-        </b-col>
-
-
-        <div v-if="activeGnssQuery" style="overflow: hidden">
-          <br/>
-          <b-spinner variant="success" label="Spinning"></b-spinner>
-        </div>
+        <b-button class="btn_white" @click="drawListenerOff">
+          Unselect 'Draw an Area'
+        </b-button>
         <br/>
       </div>
+      <br>
+      <span class="inputLabel">Center Latitude</span>
+      <b-input-group>
+        <b-form-input v-model="gs_latitude" name="gs_latitude"></b-form-input>
+      </b-input-group>
+
+      <span class="inputLabel">Center Longitude</span>
+      <b-input-group>
+        <b-form-input v-model="gs_longitude" placeholder="" name="gs_longitude"></b-form-input>
+      </b-input-group>
+
+      <span class="inputLabel">Longitude Span</span>
+      <b-input-group>
+        <b-form-input v-model="gs_width" name="gs_width" placeholder="1 degree"></b-form-input>
+      </b-input-group>
+
+      <span class="inputLabel">Latitude Span</span>
+      <b-input-group>
+        <b-form-input v-model="gs_height" placeholder="1 degree" name="gs_height"></b-form-input>
+      </b-input-group>
+
+      <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'"
+            class="inputLabel">Epoch</span>
+      <div class="input-group" id="epoch_show"
+           v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
+        <b-input-group>
+          <b-form-input v-model="gs_epoch" placeholder="YYYY-MM-DD" name="gs_epoch"></b-form-input>
+        </b-input-group>
+      </div>
+
+      <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'"
+            class="inputLabel">Epoch 1</span>
+      <b-input-group v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
+        <b-form-input v-model="gs_epoch1" placeholder="YYYY-MM-DD" name="gs_epoch1"></b-form-input>
+      </b-input-group>
+
+      <span v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'"
+            class="inputLabel">Epoch 2 </span>
+      <b-input-group v-if="this.kmltype_sel === 'getdisplacement' || this.kmltype_sel === 'getmodel'">
+        <b-form-input v-model="gs_epoch2" placeholder="YYYY-MM-DD" name="gs_epoch2"></b-form-input>
+      </b-input-group>
+
+      <span class="inputLabel">Ref. Site</span>
+      <b-input-group>
+        <b-form-input v-model="gs_refsite" placeholder="4-letter code" name="gs_refsite"></b-form-input>
+        <b-input-group-append>
+          <b-button variant="outline-primary" href="https://sideshow.jpl.nasa.gov/post/tables/table2.html"
+                    target="_blank">Stations
+          </b-button>
+        </b-input-group-append>
+      </b-input-group>
+
+      <span class="inputLabel">Scale</span>
+      <b-input-group>
+        <b-form-input v-model="gs_scale" placeholder="320 mm/yr/deg" name="gs_scale"></b-form-input>
+      </b-input-group>
+
+      <span v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'" class="inputLabel">Coseismic Win.</span>
+      <b-input-group v-if="this.kmltype_sel === 'getcoseismic' || this.kmltype_sel === 'getpostseismic'">
+        <b-form-input v-model="gs_ctwin" name="gs_ctwin" placeholder="0.1 years"></b-form-input>
+      </b-input-group>
+
+      <span v-if="this.kmltype_sel === 'getpostseismic' " class="inputLabel">Postseismic Win.</span>
+      <b-input-group v-if="this.kmltype_sel === 'getpostseismic' ">
+        <b-form-input v-model="gs_ptwin" name="gs_ptwin" placeholder="2 years"></b-form-input>
+      </b-input-group>
+
+      <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 1</span>
+      <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
+        <b-form-input v-model="gs_dwin1" name="gs_dwin1" placeholder="10 days"></b-form-input>
+      </b-input-group>
+
+      <span v-if="this.kmltype_sel === 'getdisplacement'" class="inputLabel">Av. Win. 2</span>
+      <b-input-group v-if="this.kmltype_sel === 'getdisplacement'">
+        <b-form-input v-model="gs_dwin2" name="gs_dwin2" placeholder="10 days"></b-form-input>
+      </b-input-group>
+
+      <span class="inputLabel">Output Prefix</span>
+      <b-input-group>
+        <b-form-input v-model="gs_outputprefix" name="gs_outputprefix"></b-form-input>
+      </b-input-group>
+      <b-col class="miscOptions">
+        <b-row class="checkbox" style="text-align: left" v-if="this.kmltype_sel === 'getdisplacement'">
+          <label class="checkbox">
+            <input v-model="gs_analysisCenter" name="analysisCenter" type="checkbox" id="gs_analysisCenter"/>
+            Use NGL data
+          </label>
+        </b-row>
 
 
+        <b-row class="checkbox" style="text-align: left">
+          <label class="checkbox">
+            <b-form-checkbox v-model="markerSize" name="vabs" type="checkbox" id="markerSize"/>
+            Minimize Marker Size
+          </label>
+        </b-row>
+        <b-row class="checkbox" style="text-align: left">
+          <label class="checkbox">
+            <input v-model="gs_vabs" name="vabs" type="checkbox" id="gs_vabs" value=""/>
+            Display absolute verticals
+          </label>
+        </b-row>
+        <b-row class="checkbox" style="text-align: left">
+          <label class="checkbox">
+            <input v-model="gs_eon" name="mon" type="checkbox" id="gs_eon" value=""/>
+            Include error ellipses
+          </label>
+        </b-row>
+
+
+        <b-row>
+          <button class="btn btn-success" id="gs_submit" name="submit" type="submit"
+                  v-on:click.prevent="runButtonClick()"> Run
+          </button>
+        </b-row>
+        <br/>
+        <b-row>
+          <div style="float: left; text-align: left"><strong>Data source: <br/><a
+              href="https://sideshow.jpl.nasa.gov/post/series.html" target="_blank">GNSS Time Series</a></strong>
+          </div>
+        </b-row>
+      </b-col>
+
+      <b-col>
+      </b-col>
+
+
+      <div v-if="activeGnssQuery" style="overflow: hidden">
+        <br/>
+        <b-spinner variant="success" label="Spinning"></b-spinner>
+      </div>
+      <br/>
     </div>
 
     <!-- info  popup -->
@@ -210,8 +211,6 @@
     </b-modal>
 
   </div>
-
-
 </template>
 
 <script>
@@ -546,9 +545,4 @@ strong {
   position: absolute;
 }
 
-a:link {
-  color: black;
-  background-color: transparent;
-  text-decoration: underline;
-}
 </style>
