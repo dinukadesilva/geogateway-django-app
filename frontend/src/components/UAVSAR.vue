@@ -284,6 +284,15 @@ export default {
   },
   methods: {
     uavsarDrawRect() {
+      if (this.rectDraw) {
+        // Toggle the selection.
+        this.rectDraw.disable();
+        this.rectDraw = null;
+        return;
+      } else {
+        this.pinDrop = null;
+      }
+
       this.geometryActive = true;
       let vm = this;
       vm.rectDraw = new L.Draw.Rectangle(vm.globalMap, vm.drawControl.options.rectangle);
@@ -317,6 +326,15 @@ export default {
       this.bracketDate = ''
     },
     uavsarPinDrop() {
+      if (this.pinDrop) {
+        // Toggle the selection.
+        this.pinDrop.disable();
+        this.pinDrop = null;
+        return;
+      } else {
+        this.rectDraw = null;
+      }
+
       this.geometryActive = true;
       var vm = this;
       this.pinDrop = new L.Draw.Marker(this.globalMap, this.drawControl.options.marker);
