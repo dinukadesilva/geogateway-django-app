@@ -143,15 +143,18 @@
         </div>
 
         <div class="w-100 p-2">
-          <b-button class="file-upload-button w-100" v-on:click="triggerFileUploadClick" :disabled="kmlFile">
+          <b-button variant="outline-secondary" class="file-upload-button w-100" v-on:click="triggerFileUploadClick"
+                    :disabled="kmlFile">
             <span class="text-primary">UPLOAD</span>&nbsp;<span class="text-secondary">a KML/KMZ file.</span>
           </b-button>
         </div>
 
-        <div v-for="entry in kmlLayers" :key="entry">
-          <div class="fileEntry">
-            <input type="checkbox" v-model="entry.active" @change="kmlLayerChange(entry)"> <span
-              style="font-size: 15px; color: #222222">{{ entry.name }}</span><br>
+        <div v-for="(entry, entryId) in kmlLayers" :key="entryId" class="w-100 d-flex flex-row mt-1">
+          <div class="p-1">
+            <b-form-checkbox type="checkbox" :id="`kmlLayers-${entryId}`" v-model="entry.active"
+                             @change="kmlLayerChange(entry)" class="flex-fill">
+              {{ entry.name }}
+            </b-form-checkbox>
           </div>
         </div>
         <!--            <div v-if="boundaries">-->
