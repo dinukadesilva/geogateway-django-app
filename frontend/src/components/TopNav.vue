@@ -13,7 +13,7 @@
         Help
       </b-button>
       <b-button variant="outline-primary" href="/auth/login">
-        <b-icon-person></b-icon-person>
+        <b-icon icon="person-circle"/>
         Login
       </b-button>
     </b-navbar>
